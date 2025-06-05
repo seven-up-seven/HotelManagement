@@ -7,6 +7,8 @@ module com.example.frontendquanlikhachsan {
     requires org.kordamp.bootstrapfx.core;
     requires com.almasb.fxgl.all;
     requires annotations;
+    requires static lombok;
+    requires com.fasterxml.jackson.annotation;
 
     opens com.example.frontendquanlikhachsan to javafx.fxml;
     opens com.example.frontendquanlikhachsan.controllers to javafx.fxml;
