@@ -1,6 +1,7 @@
 package com.example.frontendquanlikhachsan.entity.room;
 
 import com.example.frontendquanlikhachsan.entity.rentalForm.RentalForm;
+import com.example.frontendquanlikhachsan.entity.roomType.RoomType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 

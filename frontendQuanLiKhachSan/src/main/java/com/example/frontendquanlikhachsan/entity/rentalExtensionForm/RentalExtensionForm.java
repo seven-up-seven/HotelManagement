@@ -1,5 +1,6 @@
 package com.example.frontendquanlikhachsan.entity.rentalExtensionForm;
 
+import com.example.frontendquanlikhachsan.entity.rentalForm.RentalForm;
 import com.example.frontendquanlikhachsan.entity.staff.Staff;
 import lombok.Data;
 

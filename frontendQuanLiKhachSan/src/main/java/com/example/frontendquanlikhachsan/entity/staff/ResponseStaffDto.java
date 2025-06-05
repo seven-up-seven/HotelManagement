@@ -1,5 +1,8 @@
 package com.example.frontendquanlikhachsan.entity.staff;
 
+import com.example.frontendquanlikhachsan.entity.account.Account;
+import com.example.frontendquanlikhachsan.entity.enums.Sex;
+import com.example.frontendquanlikhachsan.entity.position.Position;
 import lombok.Data;
 
 import java.util.List;

@@ -1,6 +1,7 @@
 package com.example.frontendquanlikhachsan.entity.revenueReportDetail;
 
 import com.example.frontendquanlikhachsan.entity.revenueReport.RevenueReport;
+import com.example.frontendquanlikhachsan.entity.roomType.RoomType;
 import lombok.Data;
 
 @Data

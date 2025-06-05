@@ -1,5 +1,11 @@
 package com.example.frontendquanlikhachsan.entity.staff;
 
+import com.example.frontendquanlikhachsan.entity.account.Account;
+import com.example.frontendquanlikhachsan.entity.enums.Sex;
+import com.example.frontendquanlikhachsan.entity.invoice.Invoice;
+import com.example.frontendquanlikhachsan.entity.position.Position;
+import com.example.frontendquanlikhachsan.entity.rentalExtensionForm.RentalExtensionForm;
+import com.example.frontendquanlikhachsan.entity.rentalForm.RentalForm;
 import lombok.Data;
 
 import java.util.List;

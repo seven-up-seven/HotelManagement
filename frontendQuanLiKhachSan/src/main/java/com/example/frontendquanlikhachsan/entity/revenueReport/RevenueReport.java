@@ -1,5 +1,6 @@
 package com.example.frontendquanlikhachsan.entity.revenueReport;
 
+import com.example.frontendquanlikhachsan.entity.revenueReportDetail.RevenueReportDetail;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 

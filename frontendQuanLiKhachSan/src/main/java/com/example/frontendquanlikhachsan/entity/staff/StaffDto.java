@@ -1,5 +1,6 @@
 package com.example.frontendquanlikhachsan.entity.staff;
 
+import com.example.frontendquanlikhachsan.entity.enums.Sex;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
