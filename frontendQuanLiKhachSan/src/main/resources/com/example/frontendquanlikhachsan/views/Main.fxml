@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.frontendquanlikhachsan.controllers.MainController"
+            prefWidth="800" prefHeight="600">
+
+    <left>
+        <AnchorPane fx:id="sidebarContainer" prefWidth="200.0">
+            <VBox fx:id="taskbar" spacing="10" alignment="TOP_CENTER" layoutX="0" layoutY="0"
+                  style="-fx-padding: 15; -fx-background-color: #2c3e50;">
+                <Button text="⇦" onAction="#toggleSidebar" style="-fx-min-width: 120px;" />
+                <Button text="🏠 Home" onAction="#openHomeTab" style="-fx-text-fill: white; -fx-min-width: 120px;" />
+                <Button text="📆 Booking" onAction="#openBookingTab" style="-fx-text-fill: white; -fx-min-width: 120px;" />
+            </VBox>
+        </AnchorPane>
+    </left>
+
+    <center>
+        <TabPane fx:id="tabPane" tabClosingPolicy="ALL_TABS" />
+    </center>
+</BorderPane>
