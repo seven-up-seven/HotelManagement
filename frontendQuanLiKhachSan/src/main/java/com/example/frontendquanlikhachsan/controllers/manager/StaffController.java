@@ -1,5 +1,6 @@
 package com.example.frontendquanlikhachsan.controllers.manager;
 
+import com.example.frontendquanlikhachsan.entity.staff.ResponseStaffDto;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
