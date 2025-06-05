@@ -74,6 +74,10 @@ public class MainController {
         openTab("Đặt phòng", "/com/example/frontendquanlikhachsan/views/Booking.fxml");
     }
 
+    public void openStaffTab() {
+        openTab("qlnv", "/com/example/frontendquanlikhachsan/views/manager/Staff.fxml");
+    }
+
     @FXML
     public void toggleSidebar() {
         isPinned = !isPinned;

@@ -12,5 +12,6 @@ module com.example.frontendquanlikhachsan {
 
     opens com.example.frontendquanlikhachsan to javafx.fxml;
     opens com.example.frontendquanlikhachsan.controllers to javafx.fxml;
+    opens com.example.frontendquanlikhachsan.controllers.manager to javafx.fxml;
     exports com.example.frontendquanlikhachsan;
 }

@@ -14,6 +14,7 @@
                 <Button onAction="#toggleSidebar" prefHeight="35.0" prefWidth="160.0" text="Ghim" />
                 <Button onAction="#openHomeTab" prefHeight="35.0" prefWidth="160.0" style="-fx-text-fill: white;" text="🏠 Home" />
                 <Button onAction="#openBookingTab" prefHeight="35.0" prefWidth="160.0" style="-fx-text-fill: white;" text="📆 Booking" />
+                <Button onAction="#openStaffTab" prefHeight="35.0" prefWidth="160.0" style="-fx-text-fill: white;" text="👨‍🦳Staff"/>
             </VBox>
         </AnchorPane>
     </left>

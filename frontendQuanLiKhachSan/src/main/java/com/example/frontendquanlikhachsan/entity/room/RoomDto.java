@@ -1,5 +1,6 @@
 package com.example.frontendquanlikhachsan.entity.room;
 
+import com.example.frontendquanlikhachsan.entity.enums.RoomState;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
