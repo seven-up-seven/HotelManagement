@@ -1,6 +1,8 @@
 package com.example.frontendquanlikhachsan.controllers.manager;
 
 import com.example.frontendquanlikhachsan.ApiHttpClientCaller;
+import com.example.frontendquanlikhachsan.entity.position.PositionDropdownChoice;
+import com.example.frontendquanlikhachsan.entity.position.ResponsePositionDto;
 import com.example.frontendquanlikhachsan.entity.staff.ResponseStaffDto;
 import com.example.frontendquanlikhachsan.entity.staff.StaffDto;
 import com.example.frontendquanlikhachsan.entity.enums.Sex;
@@ -209,6 +211,7 @@ public class StaffController {
         // 3. CMND/CCCD
         grid.add(makeLabel.apply("CMND/CCCD:"), 0, 2);
         TextField tfIdNum = new TextField(Optional.ofNullable(staff.getIdentificationNumber()).orElse(""));
+        tfIdNum.setPromptText("12 số, không dấu cách");
         grid.add(tfIdNum, 1, 2);
 
         // 4. Địa chỉ
@@ -226,13 +229,13 @@ public class StaffController {
         // 6. Hệ số lương
         grid.add(makeLabel.apply("Hệ số lương:"), 0, 5);
         TextField tfSalaryMul = new TextField(Optional.ofNullable(staff.getSalaryMultiplier()).map(Object::toString).orElse(""));
-        tfSalaryMul.setPromptText("VD: 1.2");
+        tfSalaryMul.setPromptText("Ví dụ: 1.2");
         grid.add(tfSalaryMul, 1, 5);
 
         // 7. Chức vụ
         grid.add(makeLabel.apply("Chức vụ:"), 0, 6);
-        ComboBox<Position> cbPosition = new ComboBox<>(FXCollections.observableArrayList(getAllPositions()));
-        for (Position p : cbPosition.getItems()) {
+        ComboBox<PositionDropdownChoice> cbPosition = new ComboBox<>(FXCollections.observableArrayList(getAllPositions()));
+        for (PositionDropdownChoice p : cbPosition.getItems()) {
             if (p.getId() == staff.getPositionId()) {
                 cbPosition.setValue(p);
                 break;
@@ -253,7 +256,7 @@ public class StaffController {
                 String address = tfAddress.getText().trim();
                 Sex sex = cbSex.getValue();
                 Float salaryMul = Float.parseFloat(tfSalaryMul.getText().trim());
-                Position selPos = cbPosition.getValue();
+                PositionDropdownChoice selPos = cbPosition.getValue();
                 Integer positionId = (selPos != null ? selPos.getId() : null);
 
                 StaffDto dto = StaffDto.builder()
@@ -310,6 +313,7 @@ public class StaffController {
         // 3. CMND/CCCD
         grid.add(makeLabel.apply("CMND/CCCD:"), 0, 2);
         TextField tfIdNum = new TextField();
+        tfIdNum.setPromptText("12 số, không dấu cách");
         grid.add(tfIdNum, 1, 2);
 
         // 4. Địa chỉ
@@ -323,16 +327,16 @@ public class StaffController {
         ComboBox<Sex> cbSex = new ComboBox<>(FXCollections.observableArrayList(Sex.values()));
         grid.add(cbSex, 1, 4);
 
-        // 6. Hệ số lương
-        grid.add(makeLabel.apply("Hệ số lương:"), 0, 5);
-        TextField tfSalaryMul = new TextField();
-        tfSalaryMul.setPromptText("VD: 1.2");
-        grid.add(tfSalaryMul, 1, 5);
+//        // 6. Hệ số lương
+//        grid.add(makeLabel.apply("Hệ số lương:"), 0, 5);
+//        TextField tfSalaryMul = new TextField();
+//        tfSalaryMul.setPromptText("VD: 1.2");
+//        grid.add(tfSalaryMul, 1, 5);
 
         // 7. Chức vụ
-        grid.add(makeLabel.apply("Chức vụ:"), 0, 6);
-        ComboBox<Position> cbPosition = new ComboBox<>(FXCollections.observableArrayList(getAllPositions()));
-        grid.add(cbPosition, 1, 6);
+        grid.add(makeLabel.apply("Chức vụ:"), 0, 5);
+        ComboBox<PositionDropdownChoice> cbPosition = new ComboBox<>(FXCollections.observableArrayList(getAllPositions()));
+        grid.add(cbPosition, 1, 5);
 
         HBox btnBox = new HBox(12);
         btnBox.setPadding(new Insets(12, 0, 0, 0));
@@ -346,8 +350,8 @@ public class StaffController {
                 String idNum = tfIdNum.getText().trim();
                 String address = tfAddress.getText().trim();
                 Sex sex = cbSex.getValue();
-                Float salaryMul = Float.parseFloat(tfSalaryMul.getText().trim());
-                Position selPos = cbPosition.getValue();
+//                Float salaryMul = Float.parseFloat(tfSalaryMul.getText().trim());
+                PositionDropdownChoice selPos = cbPosition.getValue();
                 Integer positionId = (selPos != null ? selPos.getId() : null);
 
                 StaffDto dto = StaffDto.builder()
@@ -356,7 +360,7 @@ public class StaffController {
                         .identificationNumber(idNum)
                         .address(address)
                         .sex(sex)
-                        .salaryMultiplier(salaryMul)
+//                        .salaryMultiplier(salaryMul) default 1.0
                         .positionId(positionId)
                         .accountId(null)
                         .build();
@@ -375,11 +379,20 @@ public class StaffController {
     }
 
     // --- Cung cấp danh sách Position (có thể đổi thành gọi API nếu có endpoint) ---
-    private List<Position> getAllPositions() {
-        Position ql = new Position(); ql.setId(1); ql.setName("Quản lý");
-        Position nv = new Position(); nv.setId(2); nv.setName("Nhân viên");
-        Position kt = new Position(); kt.setId(3); kt.setName("Kế toán");
-        return List.of(ql, nv, kt);
+    private List<PositionDropdownChoice> getAllPositions() {
+        try {
+            // Gọi API GET /positions để lấy về List<ResponsePositionDto>
+            String json = ApiHttpClientCaller.call("position", ApiHttpClientCaller.Method.GET, null, token);
+            List<ResponsePositionDto> posList = mapper.readValue(json, new TypeReference<List<ResponsePositionDto>>() {});
+            // Chuyển mỗi ResponsePositionDto thành đối tượng Position (chỉ map id + name)
+            return posList.stream()
+                    .map(rpd -> new PositionDropdownChoice(rpd.getId(), rpd.getName(), rpd.getBaseSalary()))
+                    .toList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            showErrorAlert("Lỗi tải Position", "Không thể lấy danh sách chức vụ từ server.");
+            return List.of(); // trả về list rỗng nếu lỗi
+        }
     }
 
     // --- Alert tiện ích ---
