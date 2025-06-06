@@ -27,7 +27,7 @@ public class ResponseStaffDto {
 
     private String positionName;
 
-    private int accountId;
+    private Integer accountId;
 
     private String accountUsername;
 

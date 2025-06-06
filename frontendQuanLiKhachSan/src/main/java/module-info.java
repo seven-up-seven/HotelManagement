@@ -15,5 +15,9 @@ module com.example.frontendquanlikhachsan {
     opens com.example.frontendquanlikhachsan.controllers to javafx.fxml;
     opens com.example.frontendquanlikhachsan.controllers.manager to javafx.fxml;
     opens com.example.frontendquanlikhachsan.testfolder to javafx.fxml;
+    opens com.example.frontendquanlikhachsan.entity.account to com.fasterxml.jackson.databind;
+    opens com.example.frontendquanlikhachsan.entity.staff to com.fasterxml.jackson.databind;
+    opens com.example.frontendquanlikhachsan.entity.enums to com.fasterxml.jackson.databind;
     exports com.example.frontendquanlikhachsan;
 }
+
