@@ -11,6 +11,8 @@ public class ResponseUserRoleDto {
     private String name;
 
     private List<Integer> accountIds;
+    private List<String> accountUsernames;
 
     private List<Integer> permissionIds;
+    private List<String> permissionNames;
 }

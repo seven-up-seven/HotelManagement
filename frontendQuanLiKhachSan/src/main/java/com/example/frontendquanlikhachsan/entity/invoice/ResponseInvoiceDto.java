@@ -11,8 +11,12 @@ import java.util.List;
 public class ResponseInvoiceDto {
     private int id;
     private double totalReservationCost;
-    private Guest payingGuest;
-    private Staff staff;
+    private String payingGuestName;
+    private int payingGuestId;
+    private String staffName;
+    private int staffId;
     private LocalDateTime createdAt;
+    //related invoice details and rental forms
     private List<Integer> invoiceDetailIds;
+    private List<Integer> rentalFormIds;
 }

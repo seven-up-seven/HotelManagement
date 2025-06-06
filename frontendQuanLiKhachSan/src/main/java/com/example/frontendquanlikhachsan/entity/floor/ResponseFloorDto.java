@@ -8,10 +8,9 @@ import java.util.List;
 @Data
 public class ResponseFloorDto {
     private int id;
-
     private String name;
-
     private List<Integer> roomIds;
-
-    private Block block;
+    private List<String> roomNames;
+    private String blockName;
+    private int blockId;
 }

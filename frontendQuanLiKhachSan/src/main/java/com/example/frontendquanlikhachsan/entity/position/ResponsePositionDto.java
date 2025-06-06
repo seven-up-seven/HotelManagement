@@ -10,4 +10,5 @@ public class ResponsePositionDto {
     private String name;
     private double baseSalary;
     private List<Integer> staffIds;
+    private List<String> staffNames;
 }

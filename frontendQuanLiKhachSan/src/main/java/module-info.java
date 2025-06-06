@@ -8,10 +8,12 @@ module com.example.frontendquanlikhachsan {
     requires com.almasb.fxgl.all;
     requires annotations;
     requires static lombok;
-    requires com.fasterxml.jackson.annotation;
+    requires com.fasterxml.jackson.databind;
+    requires java.net.http;
 
     opens com.example.frontendquanlikhachsan to javafx.fxml;
     opens com.example.frontendquanlikhachsan.controllers to javafx.fxml;
     opens com.example.frontendquanlikhachsan.controllers.manager to javafx.fxml;
+    opens com.example.frontendquanlikhachsan.testfolder to javafx.fxml;
     exports com.example.frontendquanlikhachsan;
 }

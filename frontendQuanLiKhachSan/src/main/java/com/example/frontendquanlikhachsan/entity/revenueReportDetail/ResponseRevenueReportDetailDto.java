@@ -10,7 +10,8 @@ public class ResponseRevenueReportDetailDto {
 
     private Double totalRoomRevenue;
 
-    private RevenueReport revenueReport;
+    private int revenueReportId;
 
-    private RoomType roomType;
+    private int roomTypeId;
+    private String roomTypeName;
 }

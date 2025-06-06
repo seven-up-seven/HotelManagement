@@ -17,9 +17,13 @@ public class ResponseRoomDto {
 
     private RoomState roomState;
 
-    private RoomType roomType;
+    private int roomTypeId;
 
-    private Floor floor;
+    private String roomTypeName;
+
+    private int floorId;
+
+    private String floorName;
 
     private List<Integer> bookingConfirmationFormIds;
 

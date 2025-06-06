@@ -8,7 +8,12 @@ import lombok.Data;
 public class ResponseRentalFormDetailDto {
     private Integer id;
 
-    private RentalForm rentalForm;
+    private int rentalFormId;
 
-    private Guest guest;
+    private int guestId;
+
+    private String guestName;
+    private String guestPhoneNumber;
+    private String guestEmail;
+    private String guestIdentificationNumber;
 }

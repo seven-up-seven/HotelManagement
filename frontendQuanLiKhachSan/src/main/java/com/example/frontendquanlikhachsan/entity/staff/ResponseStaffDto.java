@@ -23,22 +23,17 @@ public class ResponseStaffDto {
 
     private Float salaryMultiplier;
 
-    private Position position;
+    private int positionId;
 
-    private Account account;
+    private String positionName;
+
+    private int accountId;
+
+    private String accountUsername;
 
     private List<Integer> invoiceIds;
 
     private List<Integer> rentalExtensionFormIds;
 
     private List<Integer> rentalFormIds;
-
-    public ResponseStaffDto(int i, String nguyễnVănA, int i1, String number, String s, Sex sex, float v, Position position, Object o, List<Integer> list, List<Integer> list1, List<Integer> list2) {
-        this.id = i;
-        this.fullName = nguyễnVănA;
-        this.age = i1;
-        this.identificationNumber = number;
-        this.address = s;
-        this.position = position;
-    }
 }

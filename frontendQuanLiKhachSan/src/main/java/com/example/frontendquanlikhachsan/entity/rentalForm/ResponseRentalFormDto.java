@@ -10,9 +10,11 @@ import java.util.List;
 public class ResponseRentalFormDto {
     private Integer id;
 
-    private Room room;
+    private int roomId;
+    private String roomName;
 
-    private Staff staff;
+    private int staffId;
+    private String staffName;
 
     private LocalDateTime rentalDate;
 

@@ -8,9 +8,14 @@ import lombok.Data;
 @Data
 public class ResponseRentalExtensionFormDto {
 
-    private RentalForm rentalForm;
+    private int id;
+
+    private int rentalFormId;
+
+    private String rentalFormRoomName;
 
     private Short numberOfRentalDays;
 
-    private Staff staff;
+    private int staffId;
+    private String staffName;
 }

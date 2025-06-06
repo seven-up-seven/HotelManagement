@@ -8,9 +8,9 @@ import java.security.Permission;
 
 @Data
 public class ResponseUserRolePermissionDto {
-    private Integer userRoleId;
+    private int userRoleId;
+    private String userRoleName;
 
-    private UserRole role;
-
-    private Permission permission;
+    private int permissionId;
+    private String permissionName;
 }
