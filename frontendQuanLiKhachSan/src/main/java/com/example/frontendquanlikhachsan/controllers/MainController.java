@@ -78,6 +78,18 @@ public class MainController {
         openTab("qlnv", "/com/example/frontendquanlikhachsan/views/manager/Staff.fxml");
     }
 
+    public void openGuestTab() {
+        openTab("qlkh", "/com/example/frontendquanlikhachsan/views/manager/Guest.fxml");
+    }
+
+    public void openPositionTab() {
+        openTab("qlcv", "/com/example/frontendquanlikhachsan/views/manager/Position.fxml");
+    }
+
+    public void openRentalExtensionFormTab() {
+        openTab("qlcv", "/com/example/frontendquanlikhachsan/views/manager/RentalExtensionForm.fxml");
+    }
+
     @FXML
     public void toggleSidebar() {
         isPinned = !isPinned;

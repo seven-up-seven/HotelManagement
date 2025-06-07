@@ -8,17 +8,18 @@ module com.example.frontendquanlikhachsan {
     requires com.almasb.fxgl.all;
     requires annotations;
     requires static lombok;
-    requires com.fasterxml.jackson.databind;
     requires java.net.http;
+    requires com.fasterxml.jackson.datatype.jsr310;
+    requires com.fasterxml.jackson.databind;
 
     opens com.example.frontendquanlikhachsan to javafx.fxml;
     opens com.example.frontendquanlikhachsan.controllers to javafx.fxml;
     opens com.example.frontendquanlikhachsan.controllers.manager to javafx.fxml;
-    opens com.example.frontendquanlikhachsan.testfolder to javafx.fxml;
     opens com.example.frontendquanlikhachsan.entity.account to com.fasterxml.jackson.databind;
     opens com.example.frontendquanlikhachsan.entity.staff to com.fasterxml.jackson.databind;
     opens com.example.frontendquanlikhachsan.entity.position to com.fasterxml.jackson.databind;
+    opens com.example.frontendquanlikhachsan.entity.guest to com.fasterxml.jackson.databind;
     opens com.example.frontendquanlikhachsan.entity.enums to com.fasterxml.jackson.databind;
+    opens com.example.frontendquanlikhachsan.entity.rentalExtensionForm to com.fasterxml.jackson.databind;
     exports com.example.frontendquanlikhachsan;
 }
-

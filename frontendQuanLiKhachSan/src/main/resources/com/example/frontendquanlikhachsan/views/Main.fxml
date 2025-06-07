@@ -12,9 +12,12 @@
         <AnchorPane fx:id="sidebarContainer" prefWidth="200.0" BorderPane.alignment="CENTER_LEFT">
             <VBox fx:id="taskbar" alignment="TOP_CENTER" spacing="10" style="-fx-padding: 15; -fx-background-color: #2c3e50;" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
                 <Button onAction="#toggleSidebar" prefHeight="35.0" prefWidth="160.0" text="Ghim" />
-                <Button onAction="#openHomeTab" prefHeight="35.0" prefWidth="160.0" style="-fx-text-fill: white;" text="🏠 Home" />
-                <Button onAction="#openBookingTab" prefHeight="35.0" prefWidth="160.0" style="-fx-text-fill: white;" text="📆 Booking" />
-                <Button onAction="#openStaffTab" prefHeight="35.0" prefWidth="160.0" style="-fx-text-fill: white;" text="👨‍🦳Staff"/>
+                <Button onAction="#openHomeTab" prefHeight="35.0" prefWidth="160.0" style="-fx-text-fill: black;" text="🏠 Home" />
+                <Button onAction="#openBookingTab" prefHeight="35.0" prefWidth="160.0" style="-fx-text-fill: black;" text="📆 Booking" />
+                <Button onAction="#openStaffTab" prefHeight="35.0" prefWidth="160.0" style="-fx-text-fill: black;" text="👨‍🦳Staff"/>
+                <Button onAction="#openGuestTab" prefHeight="35.0" prefWidth="160.0" style="-fx-text-fill: black;" text="👨Guest"/>
+                <Button onAction="#openPositionTab" prefHeight="35.0" prefWidth="160.0" style="-fx-text-fill: black;" text="Position"/>                <Button onAction="#openPositionTab" prefHeight="35.0" prefWidth="160.0" style="-fx-text-fill: black;" text="Position"/>
+                <Button onAction="#openRentalExtensionFormTab" prefHeight="35.0" prefWidth="160.0" style="-fx-text-fill: black;" text="RentalExtend"/>
             </VBox>
         </AnchorPane>
     </left>

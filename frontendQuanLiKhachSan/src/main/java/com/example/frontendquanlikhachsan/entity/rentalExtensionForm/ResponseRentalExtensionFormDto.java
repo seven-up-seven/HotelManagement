@@ -18,4 +18,5 @@ public class ResponseRentalExtensionFormDto {
 
     private int staffId;
     private String staffName;
+    private Integer dayRemains;
 }
