@@ -6,15 +6,77 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="rootPane" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.frontendquanlikhachsan.controllers.MainController">
+<?import javafx.scene.control.TitledPane?>
+<BorderPane fx:id="rootPane" prefHeight="600.0" prefWidth="800.0"
+            xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            stylesheets="@../assets/css/NavBar.css"
+            fx:controller="com.example.frontendquanlikhachsan.controllers.MainController">
 
     <left>
-        <AnchorPane fx:id="sidebarContainer" prefWidth="200.0" BorderPane.alignment="CENTER_LEFT">
-            <VBox fx:id="taskbar" alignment="TOP_CENTER" spacing="10" style="-fx-padding: 15; -fx-background-color: #2c3e50;" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
-                <Button onAction="#toggleSidebar" prefHeight="35.0" prefWidth="160.0" text="Ghim" />
-                <Button onAction="#openHomeTab" prefHeight="35.0" prefWidth="160.0" style="-fx-text-fill: white;" text="🏠 Home" />
-                <Button onAction="#openBookingTab" prefHeight="35.0" prefWidth="160.0" style="-fx-text-fill: white;" text="📆 Booking" />
-                <Button onAction="#openStaffTab" prefHeight="35.0" prefWidth="160.0" style="-fx-text-fill: white;" text="👨‍🦳Staff"/>
+        <AnchorPane fx:id="sidebarContainer" prefWidth="220.0" BorderPane.alignment="CENTER_LEFT">
+            <VBox fx:id="taskbar" alignment="TOP_CENTER" spacing="10"
+                  style="-fx-padding: 15; -fx-background-color: #2c3e50;"
+                  AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
+                  AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+
+            <!-- Ghim và Home -->
+                <Button onAction="#toggleSidebar" text="Ghim"
+                        prefWidth="180.0" prefHeight="40.0"
+                        styleClass="sidebar-button" />
+                <Button onAction="#openHomeTab" text="🏠 Home"
+                        prefWidth="180.0" prefHeight="40.0"
+                        styleClass="sidebar-button" />
+
+                <!-- Quan tri vien -->
+                <TitledPane text="👨‍💼 Quản trị viên" expanded="false"
+                            prefWidth="180.0" prefHeight="40.0"
+                            styleClass="sidebar-titledpane">
+                    <VBox spacing="5" style="-fx-padding: 10;">
+                        <!--                        <Button onAction="#openAdminUserManagement" text="Quản lý người dùng"-->
+                        <!--                                prefWidth="160.0" styleClass="submenu-button"/>-->
+                        <!--                        <Button onAction="#openAdminSettings" text="Thiết lập hệ thống"-->
+                        <!--                                prefWidth="160.0" styleClass="submenu-button"/>-->
+                    </VBox>
+                </TitledPane>
+
+                <!-- Lễ tân -->
+                <TitledPane text="🛎 Lễ tân" expanded="false"
+                            prefWidth="180.0" prefHeight="40.0"
+                            styleClass="sidebar-titledpane">
+                    <VBox spacing="5" style="-fx-padding: 10;">
+                        <Button onAction="#openBookingTab" text="Đặt phòng"
+                                prefWidth="160.0" styleClass="submenu-button"/>
+                        <Button onAction="#openRoomRentingTab" text="Thuê phòng"
+                                prefWidth="160.0" styleClass="submenu-button"/>
+        <!--                <Button onAction="#openGuestViewTab" text="Tra cứu và thêm khách hàng"-->
+        <!--                        prefWidth="160.0" styleClass="submenu-button"/>-->
+                    </VBox>
+                </TitledPane>
+
+                <!-- Quản lí -->
+                <TitledPane text="📋 Quản lí" expanded="false"
+                            prefWidth="180.0" prefHeight="40.0"
+                            styleClass="sidebar-titledpane">
+                    <VBox spacing="5" style="-fx-padding: 10;">
+                        <Button onAction="#openStaffTab" text="Quản lý nhân viên"
+                                prefWidth="160.0" styleClass="submenu-button"/>
+        <!--                <Button onAction="#openGuestManagingTab" text="Quản lí khách hàng"-->
+        <!--                        prefWidth="160.0" styleClass="submenu-button"/>-->
+                    </VBox>
+                </TitledPane>
+
+                <!-- Kế toán -->
+                <TitledPane text="💰 Kế toán" expanded="false"
+                            prefWidth="180.0" prefHeight="40.0"
+                            styleClass="sidebar-titledpane">
+                    <VBox spacing="5" style="-fx-padding: 10;">
+                        <!--                        <Button onAction="#openInvoiceManagement" text="Quản lý hóa đơn"-->
+                        <!--                                prefWidth="160.0" styleClass="submenu-button"/>-->
+                        <!--                        <Button onAction="#openRevenueReport" text="Báo cáo doanh thu"-->
+                        <!--                                prefWidth="160.0" styleClass="submenu-button"/>-->
+                    </VBox>
+                </TitledPane>
             </VBox>
         </AnchorPane>
     </left>
