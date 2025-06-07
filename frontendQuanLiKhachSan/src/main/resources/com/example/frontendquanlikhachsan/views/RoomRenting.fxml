@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="TOP_CENTER" spacing="20" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.frontendquanlikhachsan.controllers.RoomRentingController">
+
+    <padding>
+        <Insets bottom="20" left="20" right="20" top="20" />
+    </padding>
+
+    <!-- Title -->
+    <Label text="Phiếu Thuê Phòng">
+        <font>
+            <Font size="24" />
+        </font>
+    </Label>
+
+    <!-- Room Picker -->
+    <VBox spacing="10">
+        <Label text="Chọn Phòng:" />
+        <ComboBox fx:id="roomPicker" promptText="Tìm và chọn phòng..." />
+    </VBox>
+
+    <!-- Rental Details -->
+    <VBox spacing="10">
+        <Label text="Ngày tạo phiếu: " />
+        <DatePicker fx:id="creationDatePicker" />
+        <CheckBox fx:id="immediateReturnCheckbox" text="Khách hàng trả tiền ngay lúc tạo" />
+        <Label text="Số ngày thuê:" />
+        <TextField fx:id="rentalDaysField" promptText="Nhập số ngày thuê" />
+        <Label text="Ghi chú:" />
+        <TextArea fx:id="noteArea" promptText="Nhập ghi chú..." />
+    </VBox>
+
+    <!-- Customer List -->
+    <VBox spacing="10">
+        <Label text="Danh sách khách hàng thuê phòng:" />
+
+        <!-- Customer Inputs -->
+        <VBox fx:id="customerList" spacing="10">
+            <!-- Dynamically added customer rows will go here -->
+        </VBox>
+
+        <!-- Add Customer Button -->
+        <Button fx:id="addCustomerButton" text="Thêm Khách Hàng" />
+    </VBox>
+
+</VBox>

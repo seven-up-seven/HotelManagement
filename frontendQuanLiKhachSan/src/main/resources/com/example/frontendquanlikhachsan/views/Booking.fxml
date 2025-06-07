@@ -8,7 +8,7 @@
 
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.frontendquanlikhachsan.controllers.receptionist.BookingController" alignment="CENTER" spacing="10" prefWidth="600" prefHeight="400">
+      fx:controller="com.example.frontendquanlikhachsan.controllers.BookingController" alignment="CENTER" spacing="10" prefWidth="600" prefHeight="400">
 <Label text="Trang đặt phòng" style="-fx-font-size: 18px;" />
 <TextField promptText="Tên khách hàng" />
 <DatePicker promptText="Ngày đặt" />
