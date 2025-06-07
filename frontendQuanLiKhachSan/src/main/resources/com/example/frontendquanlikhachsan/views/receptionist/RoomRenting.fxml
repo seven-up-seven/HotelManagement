@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<SplitPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.example.frontendquanlikhachsan.controllers.receptionist.RoomRentingController"
+           prefWidth="1000.0" prefHeight="600.0">
+
+    <!-- LEFT: Rental Form -->
+    <items>
+        <VBox spacing="12.0" prefWidth="400.0" style="-fx-background-color: #f4f6f8;">
+            <padding>
+                <Insets top="16.0" right="16.0" bottom="16.0" left="16.0" />
+            </padding>
+
+            <!-- Title -->
+            <Label text="Phiếu Thuê Phòng"
+                   style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+
+            <!-- Room Picker -->
+            <VBox spacing="8.0">
+                <Label text="Chọn Phòng:" />
+                <ComboBox fx:id="roomPicker" promptText="Tìm và chọn phòng..." />
+            </VBox>
+
+            <!-- Rental Details -->
+            <VBox spacing="8.0">
+                <Label text="Ngày tạo phiếu:" />
+                <DatePicker fx:id="creationDatePicker" />
+                <CheckBox fx:id="immediateReturnCheckbox" text="Khách hàng trả tiền ngay lúc tạo" />
+                <Label text="Số ngày thuê:" />
+                <TextField fx:id="rentalDaysField" promptText="Nhập số ngày thuê" />
+                <Label text="Ghi chú:" />
+                <TextArea fx:id="noteArea" promptText="Nhập ghi chú..." />
+            </VBox>
+
+            <!-- Customer List -->
+            <VBox spacing="8.0">
+                <Label text="Danh sách khách hàng thuê phòng:" />
+                <TableView fx:id="customerTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colCustomerId" text="ID" prefWidth="40.0" />
+                        <TableColumn fx:id="colCustomerName" text="Họ và Tên" prefWidth="150.0" />
+                        <TableColumn fx:id="colCustomerGender" text="Giới tính" prefWidth="80.0" />
+                        <TableColumn fx:id="colCustomerIdCard" text="CMND/CCCD" prefWidth="120.0" />
+                    </columns>
+                </TableView>
+                <!-- Add Customer Button -->
+                <Button fx:id="addCustomerButton" text="➕ Thêm Khách Hàng"
+                        style="-fx-font-weight: bold;" />
+            </VBox>
+
+        </VBox>
+
+        <!-- RIGHT: Customer or Room Detail -->
+        <VBox prefWidth="600.0" style="-fx-background-color: #ffffff;">
+            <padding>
+                <Insets top="16.0" right="16.0" bottom="16.0" left="16.0" />
+            </padding>
+
+            <Label text="Thông Tin Chi Tiết"
+                   style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
+                <content>
+                    <VBox fx:id="detailPane" spacing="12.0" />
+                </content>
+            </ScrollPane>
+        </VBox>
+    </items>
+</SplitPane>

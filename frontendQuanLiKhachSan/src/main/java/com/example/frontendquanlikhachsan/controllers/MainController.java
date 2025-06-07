@@ -71,11 +71,23 @@ public class MainController {
     }
 
     public void openBookingTab() {
-        openTab("Đặt phòng", "/com/example/frontendquanlikhachsan/views/Booking.fxml");
+        openTab("Đặt phòng", "/com/example/frontendquanlikhachsan/views/receptionist/Booking.fxml");
     }
 
     public void openStaffTab() {
         openTab("qlnv", "/com/example/frontendquanlikhachsan/views/manager/Staff.fxml");
+    }
+
+    public void openRoomRentingTab() {
+        openTab("Thuê phòng", "/com/example/frontendquanlikhachsan/views/receptionist/RoomRenting.fxml");
+    }
+
+    public void openGuestViewTab() {
+        openTab("Tra cứu và thêm khách hàng", "/com/example/frontendquanlikhachsan/views/receptionist/GuestForStaff.fxml");
+    }
+
+    public void openGuestManagingTab() {
+        openTab("Quản lí khách hàng", "/com/example/frontendquanlikhachsan/views/manager/GuestManaging.fxml");
     }
 
     @FXML
