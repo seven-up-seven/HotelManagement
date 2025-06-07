@@ -21,6 +21,7 @@ import javafx.scene.layout.VBox;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 public class StaffController {
 
@@ -87,80 +88,112 @@ public class StaffController {
         }
     }
 
-    // --- Hiển thị chi tiết nhân viên ---
     private void showStaffDetail(ResponseStaffDto staff) {
         detailPane.getChildren().clear();
 
+        // Tiêu đề
         Label title = new Label("» Thông tin nhân viên – ID: " + staff.getId());
-        title.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 0 0 8 0;");
+        title.setStyle("-fx-font-size:16px; -fx-font-weight:bold; -fx-padding:0 0 8 0;");
 
+        // GridPane hiển thị info cơ bản
         GridPane grid = new GridPane();
         grid.setHgap(12);
         grid.setVgap(12);
         grid.setPadding(new Insets(8));
 
-        // Helper: tạo Label trái in đậm
-        java.util.function.Function<String, Label> makeLabel = txt -> {
+        Function<String,Label> makeLabel = txt -> {
             Label lb = new Label(txt);
-            lb.setStyle("-fx-font-weight: bold;");
+            lb.setStyle("-fx-font-weight:bold;");
             return lb;
         };
 
-        // 1. Họ & Tên
         grid.add(makeLabel.apply("Họ & Tên:"), 0, 0);
         grid.add(new Label(staff.getFullName()), 1, 0);
 
-        // 2. Tuổi
         grid.add(makeLabel.apply("Tuổi:"), 0, 1);
         grid.add(new Label(staff.getAge().toString()), 1, 1);
 
-        // 3. CMND/CCCD
         grid.add(makeLabel.apply("CMND/CCCD:"), 0, 2);
         grid.add(new Label(Optional.ofNullable(staff.getIdentificationNumber()).orElse("–")), 1, 2);
 
-        // 4. Địa chỉ
         grid.add(makeLabel.apply("Địa chỉ:"), 0, 3);
         grid.add(new Label(Optional.ofNullable(staff.getAddress()).orElse("–")), 1, 3);
 
-        // 5. Giới tính
         grid.add(makeLabel.apply("Giới tính:"), 0, 4);
         grid.add(new Label(Optional.ofNullable(staff.getSex()).map(Sex::toString).orElse("–")), 1, 4);
 
-        // 6. Hệ số lương
         grid.add(makeLabel.apply("Hệ số lương:"), 0, 5);
         grid.add(new Label(Optional.ofNullable(staff.getSalaryMultiplier()).map(Object::toString).orElse("–")), 1, 5);
 
-        // 7. Chức vụ
         grid.add(makeLabel.apply("Chức vụ:"), 0, 6);
         grid.add(new Label(Optional.ofNullable(staff.getPositionName()).orElse("–")), 1, 6);
 
-        // 8. Trạng thái tài khoản (badge)
+        // Badge tài khoản
         grid.add(makeLabel.apply("Tài khoản:"), 0, 7);
         Label badge = new Label();
-        badge.setStyle("-fx-padding: 4 8; -fx-background-radius: 4; -fx-text-fill: white;");
-        if (staff.getAccountId() == 0) {
+        badge.setStyle("-fx-padding:4 8; -fx-background-radius:4; -fx-text-fill:white;");
+        if (staff.getAccountId() == null) {
             badge.setText("Chưa có tài khoản");
-            badge.setStyle(badge.getStyle() + "-fx-background-color: #9e9e9e;"); // xám
+            badge.setStyle(badge.getStyle() + "-fx-background-color:#9e9e9e;");
         } else {
             badge.setText("Đã có tài khoản");
-            badge.setStyle(badge.getStyle() + "-fx-background-color: #4caf50;"); // xanh lá
+            badge.setStyle(badge.getStyle() + "-fx-background-color:#4caf50;");
         }
         grid.add(badge, 1, 7);
 
-        // Action buttons
+        // Accordion cho các list liên quan
+        Accordion accordion = new Accordion();
+
+        // Hóa đơn
+        if (!staff.getInvoiceIds().isEmpty()) {
+            ListView<String> lvInv = new ListView<>();
+            lvInv.setFixedCellSize(24);
+            for (Integer id : staff.getInvoiceIds()) {
+                lvInv.getItems().add("Hóa đơn #" + id);
+            }
+            lvInv.setPrefHeight(lvInv.getItems().size() * lvInv.getFixedCellSize() + 2);
+            TitledPane tpInv = new TitledPane("Hóa đơn", lvInv);
+            accordion.getPanes().add(tpInv);
+        }
+
+        // Phiếu gia hạn thuê
+        if (!staff.getRentalExtensionFormIds().isEmpty()) {
+            ListView<String> lvExt = new ListView<>();
+            lvExt.setFixedCellSize(24);
+            for (Integer id : staff.getRentalExtensionFormIds()) {
+                lvExt.getItems().add("Gia hạn thuê #" + id);
+            }
+            lvExt.setPrefHeight(lvExt.getItems().size() * lvExt.getFixedCellSize() + 2);
+            TitledPane tpExt = new TitledPane("Phiếu gia hạn", lvExt);
+            accordion.getPanes().add(tpExt);
+        }
+
+        // Phiếu thuê gốc
+        if (!staff.getRentalFormIds().isEmpty()) {
+            ListView<String> lvRent = new ListView<>();
+            lvRent.setFixedCellSize(24);
+            for (Integer id : staff.getRentalFormIds()) {
+                lvRent.getItems().add("Phiếu thuê #" + id);
+            }
+            lvRent.setPrefHeight(lvRent.getItems().size() * lvRent.getFixedCellSize() + 2);
+            TitledPane tpRent = new TitledPane("Phiếu thuê", lvRent);
+            accordion.getPanes().add(tpRent);
+        }
+
+        // Thêm title, grid, accordion vào detailPane
+        detailPane.getChildren().addAll(title, grid, accordion);
+
+        // Nút Sửa / Xóa
         HBox actionBox = new HBox(12);
         actionBox.setPadding(new Insets(12, 0, 0, 0));
-
         Button btnEdit = new Button("✏️ Chỉnh sửa");
         btnEdit.setOnAction(evt -> showEditForm(staff));
-
         Button btnDelete = new Button("🗑️ Xóa");
         btnDelete.setOnAction(evt -> deleteStaff(staff));
-
         actionBox.getChildren().addAll(btnEdit, btnDelete);
-
-        detailPane.getChildren().addAll(title, grid, actionBox);
+        detailPane.getChildren().add(actionBox);
     }
+
 
     // --- Xóa nhân viên ---
     private void deleteStaff(ResponseStaffDto staff) {

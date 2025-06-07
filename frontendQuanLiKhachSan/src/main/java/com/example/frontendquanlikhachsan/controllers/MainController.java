@@ -81,6 +81,18 @@ public class MainController {
     public void openRoomRentingTab() {
         openTab("Thuê phòng", "/com/example/frontendquanlikhachsan/views/receptionist/RoomRenting.fxml");
     }
+    
+    public void openGuestTab() {
+        openTab("qlkh", "/com/example/frontendquanlikhachsan/views/manager/Guest.fxml");
+    }
+
+    public void openPositionTab() {
+        openTab("qlcv", "/com/example/frontendquanlikhachsan/views/manager/Position.fxml");
+    }
+
+    public void openRentalExtensionFormTab() {
+        openTab("qlcv", "/com/example/frontendquanlikhachsan/views/manager/RentalExtensionForm.fxml");
+    }
 
     @FXML
     public void toggleSidebar() {
