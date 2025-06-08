@@ -1,11 +1,15 @@
 package com.example.frontendquanlikhachsan.controllers.receptionist;
 
 import com.example.frontendquanlikhachsan.ApiHttpClientCaller;
+import com.example.frontendquanlikhachsan.entity.enums.RoomState;
 import com.example.frontendquanlikhachsan.entity.enums.Sex;
 import com.example.frontendquanlikhachsan.entity.guest.ResponseGuestDto;
+import com.example.frontendquanlikhachsan.entity.page.PageResponse;
 import com.example.frontendquanlikhachsan.entity.room.ResponseRoomDto;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -55,7 +59,7 @@ public class RoomRentingController {
     private ObservableList<ResponseGuestDto> guestList = FXCollections.observableArrayList();
     private ObservableList<ResponseRoomDto> roomList = FXCollections.observableArrayList();
 
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule()).configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);;
     private final String token = "";
 
     @FXML
@@ -63,7 +67,18 @@ public class RoomRentingController {
         loadRoom();
         loadGuest();
         customerTable.setItems(guestList);
+        roomPicker.setEditable(true);
         roomPicker.setItems(roomList);
+        roomPicker.getEditor().textProperty().addListener((obs, oldText, newText) -> {
+            if (newText == null || newText.isEmpty()) {
+                roomPicker.setItems(roomList);
+            } else {
+                ObservableList<ResponseRoomDto> filteredList = roomList.filtered(room ->
+                        room.getName().toLowerCase().contains(newText.toLowerCase())
+                );
+                roomPicker.setItems(filteredList);
+            }
+        });
         roomPicker.setCellFactory(param -> new ListCell<>() {
             @Override
             protected void updateItem(ResponseRoomDto item, boolean empty) {
@@ -73,6 +88,12 @@ public class RoomRentingController {
                 } else {
                     setText(item.getName() + " (" + item.getRoomTypeName() + ")");
                 }
+            }
+        });
+        roomPicker.setOnAction(e -> {
+            ResponseRoomDto selected = roomPicker.getSelectionModel().getSelectedItem();
+            if (selected != null) {
+                roomPicker.getEditor().setText(selected.getName() + " (" + selected.getRoomTypeName() + ")");
             }
         });
         roomPicker.setButtonCell(new ListCell<>() {
@@ -99,8 +120,10 @@ public class RoomRentingController {
 
     private void loadRoom() {
         try {
-            String json= ApiHttpClientCaller.call("room", ApiHttpClientCaller.Method.GET, "", token);
-            List<ResponseRoomDto> rooms=mapper.readValue(json, new TypeReference<>() {});
+            String path="room/room-state/"+ RoomState.READY_TO_SERVE.name()+"?page=0&size=10";
+            String json= ApiHttpClientCaller.call(path, ApiHttpClientCaller.Method.GET, null, token);
+            PageResponse<ResponseRoomDto> pageResponse=mapper.readValue(json, new TypeReference<>() {});
+            List<ResponseRoomDto> rooms=pageResponse.getContent();
             roomList.clear();
             roomList.addAll(rooms);
         }
@@ -112,10 +135,10 @@ public class RoomRentingController {
 
     private void loadGuest() {
         try {
-            String json=ApiHttpClientCaller.call("guest", ApiHttpClientCaller.Method.GET, "", token);
+            String json=ApiHttpClientCaller.call("guest", ApiHttpClientCaller.Method.GET, null, token);
             List<ResponseGuestDto> guests=mapper.readValue(json, new TypeReference<>() {});
             guestList.clear();
-            guestList.addAll(guests);
+            guestList.setAll(guests);
         }
         catch (Exception e) {
             e.printStackTrace();

@@ -20,9 +20,9 @@ module com.example.frontendquanlikhachsan {
     opens com.example.frontendquanlikhachsan.entity.guest to com.fasterxml.jackson.databind;
     opens com.example.frontendquanlikhachsan.entity.room to com.fasterxml.jackson.databind;
     opens com.example.frontendquanlikhachsan.entity.position to com.fasterxml.jackson.databind;
-    opens com.example.frontendquanlikhachsan.entity.guest to com.fasterxml.jackson.databind;
     opens com.example.frontendquanlikhachsan.entity.enums to com.fasterxml.jackson.databind;
     opens com.example.frontendquanlikhachsan.entity.rentalExtensionForm to com.fasterxml.jackson.databind;
+    opens com.example.frontendquanlikhachsan.entity.page to com.fasterxml.jackson.databind;
     exports com.example.frontendquanlikhachsan;
     opens com.example.frontendquanlikhachsan.controllers.receptionist to javafx.fxml;
 }
