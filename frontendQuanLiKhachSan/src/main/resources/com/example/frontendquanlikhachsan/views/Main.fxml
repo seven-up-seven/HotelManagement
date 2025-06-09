@@ -16,8 +16,9 @@
                 <Button onAction="#openBookingTab" prefHeight="35.0" prefWidth="160.0" style="-fx-text-fill: black;" text="📆 Booking" />
                 <Button onAction="#openStaffTab" prefHeight="35.0" prefWidth="160.0" style="-fx-text-fill: black;" text="👨‍🦳Staff"/>
                 <Button onAction="#openGuestTab" prefHeight="35.0" prefWidth="160.0" style="-fx-text-fill: black;" text="👨Guest"/>
-                <Button onAction="#openPositionTab" prefHeight="35.0" prefWidth="160.0" style="-fx-text-fill: black;" text="Position"/>                <Button onAction="#openPositionTab" prefHeight="35.0" prefWidth="160.0" style="-fx-text-fill: black;" text="Position"/>
+                <Button onAction="#openPositionTab" prefHeight="35.0" prefWidth="160.0" style="-fx-text-fill: black;" text="Position"/>
                 <Button onAction="#openRentalExtensionFormTab" prefHeight="35.0" prefWidth="160.0" style="-fx-text-fill: black;" text="RentalExtend"/>
+                <Button onAction="#openRentalFormTab" prefHeight="35.0" prefWidth="160.0" style="-fx-text-fill: black;" text="RentalForm"/>
             </VBox>
         </AnchorPane>
     </left>
