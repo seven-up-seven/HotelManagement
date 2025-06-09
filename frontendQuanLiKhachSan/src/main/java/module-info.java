@@ -26,6 +26,7 @@ module com.example.frontendquanlikhachsan {
     opens com.example.frontendquanlikhachsan.entity.rentalExtensionForm to com.fasterxml.jackson.databind;
     opens com.example.frontendquanlikhachsan.entity.rentalForm to com.fasterxml.jackson.databind;
     opens com.example.frontendquanlikhachsan.entity.rentalFormDetail to com.fasterxml.jackson.databind;
+    opens com.example.frontendquanlikhachsan.entity.page to com.fasterxml.jackson.databind;
     exports com.example.frontendquanlikhachsan;
     opens com.example.frontendquanlikhachsan.controllers.receptionist to javafx.fxml;
 }
