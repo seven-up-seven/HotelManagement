@@ -79,7 +79,7 @@ public class GuestController {
             guestList.clear();
             guestList.setAll(list);
         } catch (Exception e) {
-            e.printStackTrace(); showErrorAlert("Lỗi tải dữ liệu", "Không thể tải danh sách Guests.");
+            e.printStackTrace(); showErrorAlert("Lỗi tải dữ liệu", "Không thể tải danh sách khách hàng.");
         }
     }
 
