@@ -14,26 +14,25 @@
             </padding>
             <Label text="Danh sách Gia hạn thuê"
                    style="-fx-font-size:18px; -fx-font-weight:bold;"/>
-            <Button text="➕ Tạo gia hạn mới"
-                    onAction="#onCreateExtension"
+            <Button text="➕ Tạo phiếu gia hạn"
+                    onAction="#onCreateOrEditExtension"
                     style="-fx-font-weight:bold;"/>
             <TableView fx:id="tableExtension" VBox.vgrow="ALWAYS">
                 <columns>
                     <TableColumn fx:id="colId" text="ID" prefWidth="40.0"/>
                     <TableColumn fx:id="colRentalFormId" text="ID Phiếu thuê" prefWidth="100.0"/>
                     <TableColumn fx:id="colRoomName" text="Phòng" prefWidth="120.0"/>
-                    <TableColumn fx:id="colDays" text="Số ngày" prefWidth="80.0"/>
+                    <TableColumn fx:id="colDays" text="Số ngày gia hạn" prefWidth="80.0"/>
                     <TableColumn fx:id="colStaffName" text="Nhân viên" prefWidth="150.0"/>
-                    <TableColumn fx:id="colDayRemains" text="Ngày còn lại" prefWidth="100.0"/>
                 </columns>
             </TableView>
         </VBox>
-        <!-- RIGHT: Detail Pane -->
+        <!-- RIGHT: Detail & Form Pane -->
         <VBox prefWidth="600.0" style="-fx-background-color:#ffffff;">
             <padding>
                 <Insets top="16.0" right="16.0" bottom="16.0" left="16.0"/>
             </padding>
-            <Label text="Chi tiết Gia hạn"
+            <Label text="Chi tiết &amp; Tạo/Sửa Gia hạn"
                    style="-fx-font-size:18px; -fx-font-weight:bold;"/>
             <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
                 <content>

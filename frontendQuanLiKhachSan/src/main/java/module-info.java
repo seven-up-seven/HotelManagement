@@ -12,6 +12,8 @@ module com.example.frontendquanlikhachsan {
     requires com.fasterxml.jackson.datatype.jsr310;
     requires com.fasterxml.jackson.databind;
     requires java.management;
+    requires jakarta.validation;
+    requires spring.context;
 
     opens com.example.frontendquanlikhachsan to javafx.fxml;
     opens com.example.frontendquanlikhachsan.controllers to javafx.fxml;
@@ -23,6 +25,8 @@ module com.example.frontendquanlikhachsan {
     opens com.example.frontendquanlikhachsan.entity.position to com.fasterxml.jackson.databind;
     opens com.example.frontendquanlikhachsan.entity.enums to com.fasterxml.jackson.databind;
     opens com.example.frontendquanlikhachsan.entity.rentalExtensionForm to com.fasterxml.jackson.databind;
+    opens com.example.frontendquanlikhachsan.entity.rentalForm to com.fasterxml.jackson.databind;
+    opens com.example.frontendquanlikhachsan.entity.rentalFormDetail to com.fasterxml.jackson.databind;
     opens com.example.frontendquanlikhachsan.entity.page to com.fasterxml.jackson.databind;
     opens com.example.frontendquanlikhachsan.auth to com.fasterxml.jackson.databind;
     exports com.example.frontendquanlikhachsan;

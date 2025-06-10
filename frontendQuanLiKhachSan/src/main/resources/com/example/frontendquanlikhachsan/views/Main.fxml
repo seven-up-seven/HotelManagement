@@ -88,8 +88,11 @@
                                 prefWidth="160.0"
                                 style="-fx-text-fill: black;"
                                 text="Position"/>
-                        <!--                <Button onAction="#openGuestManagingTab" text="Quản lí khách hàng"-->
-                        <!--                        prefWidth="160.0" styleClass="submenu-button"/>-->
+                        <Button onAction="#openGuestTab" text="Quản lí khách hàng"
+                                prefWidth="160.0" styleClass="submenu-button"/>
+                        <Button onAction="#openRentalFormTab"
+                                prefHeight="35.0" prefWidth="160.0"
+                                style="-fx-text-fill: black;" text="RentalForm"/>
                     </VBox>
                 </TitledPane>
 

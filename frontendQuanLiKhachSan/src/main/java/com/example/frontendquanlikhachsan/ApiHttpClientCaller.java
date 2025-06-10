@@ -1,7 +1,10 @@
 package com.example.frontendquanlikhachsan;
 
 import com.example.frontendquanlikhachsan.auth.TokenHolder;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.net.URI;
 import java.net.http.*;
@@ -9,7 +12,11 @@ import java.net.http.*;
 public class ApiHttpClientCaller {
     private static final String BASE_URL = "http://localhost:8080/api/";
     private static final HttpClient client = HttpClient.newHttpClient();
-    private static final ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper mapper = new ObjectMapper()
+            .registerModule(new JavaTimeModule())
+            .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+            .configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
 
     public enum Method {
         GET, POST, PUT, DELETE
@@ -50,40 +57,5 @@ public class ApiHttpClientCaller {
         }
         return response.body();
     }
-
-//    public static boolean refreshAccessToken() {
-//        try {
-//            String refreshToken = TokenHolder.getInstance().getRefreshToken();
-//            RefreshDto refreshDto = new RefreshDto(refreshToken);
-//
-//            String jsonResponse = call(
-//                    "authentication/refresh",
-//                    Method.POST,
-//                    refreshDto,
-//                    null
-//            );
-//            ResponseRefreshDto response = mapper.readValue(jsonResponse, ResponseRefreshDto.class);
-//            TokenHolder.getInstance().setAccessToken(response.accessToken());
-//            return true;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return false;
-//        }
-//    }
-//
-//    public static String callWithAutoRefresh(String path, Method method, Object body) throws Exception {
-//        String token = TokenHolder.getInstance().getAccessToken();
-//        try {
-//            return call(path, method, body, token);
-//        } catch (UnauthorizedException e) {
-//            boolean refreshed = refreshAccessToken();
-//            if (refreshed) {
-//                token = TokenHolder.getInstance().getAccessToken();
-//                return call(path, method, body, token);
-//            } else {
-//                throw new RuntimeException("Session expired. Please login again.");
-//            }
-//        }
-//    }
 }
 

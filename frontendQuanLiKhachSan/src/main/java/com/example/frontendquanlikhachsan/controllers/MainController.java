@@ -94,6 +94,10 @@ public class MainController {
         openTab("qlcv", "/com/example/frontendquanlikhachsan/views/manager/RentalExtensionForm.fxml");
     }
 
+    public void openRentalFormTab() {
+        openTab("qlpt", "/com/example/frontendquanlikhachsan/views/manager/RentalForm.fxml");
+    }
+
     @FXML
     public void toggleSidebar() {
         isPinned = !isPinned;
