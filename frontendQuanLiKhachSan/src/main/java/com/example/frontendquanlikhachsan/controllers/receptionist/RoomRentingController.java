@@ -1,6 +1,7 @@
 package com.example.frontendquanlikhachsan.controllers.receptionist;
 
 import com.example.frontendquanlikhachsan.ApiHttpClientCaller;
+import com.example.frontendquanlikhachsan.auth.TokenHolder;
 import com.example.frontendquanlikhachsan.entity.enums.RoomState;
 import com.example.frontendquanlikhachsan.entity.enums.Sex;
 import com.example.frontendquanlikhachsan.entity.guest.ResponseGuestDto;
@@ -10,17 +11,22 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.StringConverter;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RoomRentingController {
     @FXML
@@ -57,28 +63,91 @@ public class RoomRentingController {
     private ComboBox<ResponseRoomDto> roomPicker;
 
     private ObservableList<ResponseGuestDto> guestList = FXCollections.observableArrayList();
+    private ObservableList<ResponseGuestDto> allGuests=FXCollections.observableArrayList();
     private ObservableList<ResponseRoomDto> roomList = FXCollections.observableArrayList();
 
+    private int currentPage = 0;
+    private final int PAGE_SIZE = 10;
+    private boolean isLoading = false;
+    private boolean hasMoreData = true;
+    private final Map<RoomState, Integer> statePageMap = new HashMap<>();
+
     private final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule()).configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);;
-    private final String token = "";
 
     @FXML
     public void initialize() {
-        loadRoom();
+        initRoomPicker();
+        loadFirstRoomPage();
         loadGuest();
-        customerTable.setItems(guestList);
-        roomPicker.setEditable(true);
-        roomPicker.setItems(roomList);
-        roomPicker.getEditor().textProperty().addListener((obs, oldText, newText) -> {
-            if (newText == null || newText.isEmpty()) {
-                roomPicker.setItems(roomList);
+
+        customerTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSel, newSel) -> {
+            if (newSel != null) {
+                showGuestDetail(newSel);
             } else {
-                ObservableList<ResponseRoomDto> filteredList = roomList.filtered(room ->
-                        room.getName().toLowerCase().contains(newText.toLowerCase())
-                );
-                roomPicker.setItems(filteredList);
+                clearDetailPane();
             }
         });
+
+        addCustomerButton.setOnAction(e -> showCreateGuestForm());
+        clearDetailPane();
+    }
+
+    private void loadRoom() {
+        try {
+            roomList.clear();
+            RoomState[] states = {RoomState.READY_TO_SERVE, RoomState.BEING_RENTED, RoomState.BOOKED};
+            for (RoomState state : states) {
+                int page = 0;
+                while (true) {
+                    String path = "room/state/" + state.name() + "?page=" + page + "&size=10";
+                    String json = ApiHttpClientCaller.call(path, ApiHttpClientCaller.Method.GET, null);
+                    PageResponse<ResponseRoomDto> pageResponse = mapper.readValue(json, new TypeReference<>() {});
+                    List<ResponseRoomDto> rooms = pageResponse.getContent();
+                    if (rooms == null || rooms.isEmpty()) {
+                        break;
+                    }
+                    roomList.addAll(rooms);
+                    page++;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            showErrorAlert("Lỗi tải dữ liệu", "Không thể lấy dữ liệu danh sách phòng");
+        }
+    }
+
+    private void initRoomPicker() {
+        roomPicker.setEditable(true);
+
+        FilteredList<ResponseRoomDto> filteredRooms = new FilteredList<>(roomList, p -> true);
+        roomPicker.setItems(filteredRooms);
+
+        roomPicker.getEditor().textProperty().addListener((obs, oldText, newText) -> {
+            final String filter = newText == null ? "" : newText.toLowerCase();
+            filteredRooms.setPredicate(room -> {
+                if (filter.isEmpty()) return true;
+                return room.getName().toLowerCase().contains(filter);
+            });
+        });
+
+        roomPicker.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(ResponseRoomDto room) {
+                if (room == null) {
+                    return "";
+                }
+                return room.getName() + " (" + room.getRoomTypeName() + ")";
+            }
+
+            @Override
+            public ResponseRoomDto fromString(String string) {
+                return roomList.stream()
+                        .filter(r -> (r.getName() + " (" + r.getRoomTypeName() + ")").equals(string))
+                        .findFirst()
+                        .orElse(null);
+            }
+        });
+
         roomPicker.setCellFactory(param -> new ListCell<>() {
             @Override
             protected void updateItem(ResponseRoomDto item, boolean empty) {
@@ -90,12 +159,7 @@ public class RoomRentingController {
                 }
             }
         });
-        roomPicker.setOnAction(e -> {
-            ResponseRoomDto selected = roomPicker.getSelectionModel().getSelectedItem();
-            if (selected != null) {
-                roomPicker.getEditor().setText(selected.getName() + " (" + selected.getRoomTypeName() + ")");
-            }
-        });
+
         roomPicker.setButtonCell(new ListCell<>() {
             @Override
             protected void updateItem(ResponseRoomDto item, boolean empty) {
@@ -107,35 +171,78 @@ public class RoomRentingController {
                 }
             }
         });
-        customerTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSel, newSel) -> {
-            if (newSel != null) {
-                showGuestDetail(newSel);
-            } else {
-                clearDetailPane();
+
+        roomPicker.setOnShown(e -> {
+            ScrollBar scrollBar = (ScrollBar) roomPicker.lookup(".scroll-bar:vertical");
+            if (scrollBar != null) {
+                scrollBar.valueProperty().addListener((obs, oldVal, newVal) -> {
+                    if (newVal.doubleValue() == 1.0) { // Kéo tới cuối
+                        loadNextRoomPage();
+                    }
+                });
             }
         });
-        addCustomerButton.setOnAction(e -> showCreateGuestForm());
-        clearDetailPane();
     }
 
-    private void loadRoom() {
-        try {
-            String path="room/room-state/"+ RoomState.READY_TO_SERVE.name()+"?page=0&size=10";
-            String json= ApiHttpClientCaller.call(path, ApiHttpClientCaller.Method.GET, null, token);
-            PageResponse<ResponseRoomDto> pageResponse=mapper.readValue(json, new TypeReference<>() {});
-            List<ResponseRoomDto> rooms=pageResponse.getContent();
-            roomList.clear();
-            roomList.addAll(rooms);
+    private void loadFirstRoomPage() {
+        roomList.clear();
+        hasMoreData = true;
+        isLoading = false;
+        statePageMap.clear();
+        // Khởi tạo page 0 cho mỗi RoomState
+        for (RoomState state : RoomState.values()) {
+            statePageMap.put(state, 0);
         }
-        catch (Exception e) {
-            e.printStackTrace();
-            showErrorAlert("Lỗi tải dữ liệu", "Không thể lấy dữ liệu danh sách phòng");
-        }
+        loadNextRoomPage();
     }
+
+    private void loadNextRoomPage() {
+        if (isLoading || !hasMoreData) {
+            return;
+        }
+
+        isLoading = true;
+
+        new Thread(() -> {
+            try {
+                boolean loadedAny = false; // Kiểm tra xem có load được dữ liệu nào không
+                RoomState[] states = {RoomState.READY_TO_SERVE, RoomState.BEING_RENTED, RoomState.BOOKED};
+
+                for (RoomState state : states) {
+                    int page = statePageMap.getOrDefault(state, 0); // Lấy page hiện tại của trạng thái này
+                    String path = "room/state/" + state.name() + "?page=" + page + "&size=" + PAGE_SIZE;
+                    String json = ApiHttpClientCaller.call(path, ApiHttpClientCaller.Method.GET, null);
+
+                    PageResponse<ResponseRoomDto> pageResponse = mapper.readValue(json, new TypeReference<>() {});
+                    List<ResponseRoomDto> rooms = pageResponse.getContent();
+
+                    if (rooms == null || rooms.isEmpty()) {
+                        // Không load được nữa cho state này, remove nó khỏi map
+                        statePageMap.remove(state);
+                    } else {
+                        Platform.runLater(() -> roomList.addAll(rooms));
+                        // Tăng page cho trạng thái này
+                        statePageMap.put(state, page + 1);
+                        loadedAny = true;
+                    }
+                }
+
+                if (!loadedAny) {
+                    hasMoreData = false; // Không load được thêm phòng nào -> hết data
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Platform.runLater(() -> showErrorAlert("Lỗi tải dữ liệu", "Không thể lấy dữ liệu danh sách phòng"));
+            } finally {
+                isLoading = false;
+            }
+        }).start();
+    }
+
 
     private void loadGuest() {
         try {
-            String json=ApiHttpClientCaller.call("guest", ApiHttpClientCaller.Method.GET, null, token);
+            String json=ApiHttpClientCaller.call("guest", ApiHttpClientCaller.Method.GET, null);
             List<ResponseGuestDto> guests=mapper.readValue(json, new TypeReference<>() {});
             guestList.clear();
             guestList.setAll(guests);
@@ -148,7 +255,7 @@ public class RoomRentingController {
 
     private void clearDetailPane() {
         detailPane.getChildren().clear();
-        Label placeholder = new Label("Chọn khách hàng để xem chi tiết...");
+        Label placeholder = new Label("Chọn thực thể để xem chi tiết...");
         placeholder.setStyle("-fx-font-style: italic; -fx-text-fill: #666;");
         detailPane.getChildren().add(placeholder);
     }

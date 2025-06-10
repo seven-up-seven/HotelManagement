@@ -74,7 +74,7 @@ public class GuestController {
 
     private void loadGuests() {
         try {
-            String json = ApiHttpClientCaller.call("guest", ApiHttpClientCaller.Method.GET, null, token);
+            String json = ApiHttpClientCaller.call("guest", ApiHttpClientCaller.Method.GET, null);
             List<ResponseGuestDto> list = mapper.readValue(json, new TypeReference<>(){});
             guestList.clear();
             guestList.setAll(list);
@@ -161,7 +161,7 @@ public class GuestController {
     private void deleteGuest(ResponseGuestDto g) {
         Alert a=new Alert(Alert.AlertType.CONFIRMATION,"Xóa guest này?", ButtonType.OK, ButtonType.CANCEL);
         a.showAndWait().filter(b->b==ButtonType.OK).ifPresent(b->{
-            try { ApiHttpClientCaller.call("guest/"+g.getId(), ApiHttpClientCaller.Method.DELETE,null,token);
+            try { ApiHttpClientCaller.call("guest/"+g.getId(), ApiHttpClientCaller.Method.DELETE,null);
                 showInfoAlert("Đã xóa","Guest ID:"+g.getId()); loadGuests();
             } catch(Exception ex){ex.printStackTrace(); showErrorAlert("Lỗi","Không thể xóa guest.");}
         });
@@ -194,7 +194,7 @@ public class GuestController {
                         .phoneNumber(tfPhone.getText().trim())
                         .email(tfEmail.getText().trim())
                         .build();
-                ApiHttpClientCaller.call("guest/"+g.getId(), ApiHttpClientCaller.Method.PUT, dto, token);
+                ApiHttpClientCaller.call("guest/"+g.getId(), ApiHttpClientCaller.Method.PUT, dto);
                 showInfoAlert("Cập nhật","Guest đã được cập nhật"); loadGuests();
             } catch(Exception ex){ex.printStackTrace(); showErrorAlert("Lỗi","Không thể cập nhật guest.");}
         });
@@ -227,7 +227,7 @@ public class GuestController {
                         .phoneNumber(tfPhone.getText().trim())
                         .email(tfEmail.getText().trim())
                         .build();
-                ApiHttpClientCaller.call("guest", ApiHttpClientCaller.Method.POST, dto, token);
+                ApiHttpClientCaller.call("guest", ApiHttpClientCaller.Method.POST, dto);
                 showInfoAlert("Tạo thành công","Guest mới đã được thêm"); loadGuests();
             } catch(Exception ex){ ex.printStackTrace(); showErrorAlert("Lỗi","Không thể tạo guest."); }
         });

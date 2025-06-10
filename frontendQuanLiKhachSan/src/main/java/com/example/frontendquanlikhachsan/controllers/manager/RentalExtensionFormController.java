@@ -53,7 +53,7 @@ public class RentalExtensionFormController {
 
     private void loadExtensions() {
         try {
-            String json = ApiHttpClientCaller.call("rental-extension-form", ApiHttpClientCaller.Method.GET, null, token);
+            String json = ApiHttpClientCaller.call("rental-extension-form", ApiHttpClientCaller.Method.GET, null);
             List<ResponseRentalExtensionFormDto> list = mapper.readValue(json, new TypeReference<>(){});
             extList.setAll(list);
         } catch(Exception e) {
@@ -90,7 +90,7 @@ public class RentalExtensionFormController {
         Alert c=new Alert(Alert.AlertType.CONFIRMATION,"Xóa gia hạn này?",ButtonType.OK,ButtonType.CANCEL);
         c.showAndWait().filter(b->b==ButtonType.OK).ifPresent(b->{
             try{
-                ApiHttpClientCaller.call("rental-extension-form/"+dto.getId(),ApiHttpClientCaller.Method.DELETE,null,token);
+                ApiHttpClientCaller.call("rental-extension-form/"+dto.getId(),ApiHttpClientCaller.Method.DELETE,null);
                 loadExtensions();
                 showInfoAlert("Đã xóa","Gia hạn ID:"+dto.getId());
             } catch(Exception ex){ex.printStackTrace();showErrorAlert("Lỗi","Không thể xóa.");}
@@ -123,7 +123,7 @@ public class RentalExtensionFormController {
                 // call day-remains endpoint
                 String jsonRem = ApiHttpClientCaller.call(
                         "rental-extension-form/day-remains/"+formId,
-                        ApiHttpClientCaller.Method.GET, null, token
+                        ApiHttpClientCaller.Method.GET, null
                 );
                 int remains = new ObjectMapper().readValue(jsonRem, Integer.class);
                 if (days >= remains) {
@@ -135,7 +135,7 @@ public class RentalExtensionFormController {
                         .numberOfRentalDays(days)
                         .staffId(staffId)
                         .build();
-                ApiHttpClientCaller.call("rental-extension-form",ApiHttpClientCaller.Method.POST,dto,token);
+                ApiHttpClientCaller.call("rental-extension-form",ApiHttpClientCaller.Method.POST,dto);
                 showInfoAlert("Tạo thành công","Đã tạo gia hạn.");
                 loadExtensions();
             }catch(NumberFormatException nfe){

@@ -78,7 +78,7 @@ public class StaffController {
     // --- Load dữ liệu from API ---
     private void loadStaffs() {
         try {
-            String json = ApiHttpClientCaller.call("staff", ApiHttpClientCaller.Method.GET, null, token);
+            String json = ApiHttpClientCaller.call("staff", ApiHttpClientCaller.Method.GET, null);
             List<ResponseStaffDto> list = mapper.readValue(json, new TypeReference<>() {});
             staffList.clear();
             staffList.addAll(list);
@@ -203,7 +203,7 @@ public class StaffController {
         Optional<ButtonType> res = confirm.showAndWait();
         if (res.isPresent() && res.get() == ButtonType.OK) {
             try {
-                ApiHttpClientCaller.call("staff/" + staff.getId(), ApiHttpClientCaller.Method.DELETE, null, token);
+                ApiHttpClientCaller.call("staff/" + staff.getId(), ApiHttpClientCaller.Method.DELETE, null);
                 showInfoAlert("Xóa thành công", "Đã xóa nhân viên ID: " + staff.getId());
                 loadStaffs();
             } catch (Exception e) {
@@ -302,7 +302,7 @@ public class StaffController {
                         .positionId(positionId)
                         .build();
 
-                ApiHttpClientCaller.call("staff/" + staff.getId(), ApiHttpClientCaller.Method.PUT, dto, token);
+                ApiHttpClientCaller.call("staff/" + staff.getId(), ApiHttpClientCaller.Method.PUT, dto);
                 showInfoAlert("Cập nhật thành công", "Đã cập nhật ID: " + staff.getId());
                 loadStaffs();
             } catch (Exception e) {
@@ -398,7 +398,7 @@ public class StaffController {
                         .accountId(null)
                         .build();
 
-                ApiHttpClientCaller.call("staff", ApiHttpClientCaller.Method.POST, dto, token);
+                ApiHttpClientCaller.call("staff", ApiHttpClientCaller.Method.POST, dto);
                 showInfoAlert("Tạo thành công", "Đã thêm nhân viên mới.");
                 loadStaffs();
             } catch (Exception e) {
@@ -415,7 +415,7 @@ public class StaffController {
     private List<PositionDropdownChoice> getAllPositions() {
         try {
             // Gọi API GET /positions để lấy về List<ResponsePositionDto>
-            String json = ApiHttpClientCaller.call("position", ApiHttpClientCaller.Method.GET, null, token);
+            String json = ApiHttpClientCaller.call("position", ApiHttpClientCaller.Method.GET, null);
             List<ResponsePositionDto> posList = mapper.readValue(json, new TypeReference<List<ResponsePositionDto>>() {});
             // Chuyển mỗi ResponsePositionDto thành đối tượng Position (chỉ map id + name)
             return posList.stream()

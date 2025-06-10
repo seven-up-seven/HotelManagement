@@ -45,7 +45,7 @@ public class PositionController {
 
     private void loadPositions() {
         try {
-            String json = ApiHttpClientCaller.call("position", ApiHttpClientCaller.Method.GET, null, token);
+            String json = ApiHttpClientCaller.call("position", ApiHttpClientCaller.Method.GET, null);
             List<ResponsePositionDto> list = mapper.readValue(json, new TypeReference<>(){});
             positionList.setAll(list);
         } catch(Exception e) {
@@ -86,7 +86,7 @@ public class PositionController {
     private void deletePosition(ResponsePositionDto pos) {
         Alert c=new Alert(Alert.AlertType.CONFIRMATION,"Xóa chức vụ này?",ButtonType.OK,ButtonType.CANCEL);
         c.showAndWait().filter(b->b==ButtonType.OK).ifPresent(b->{
-            try{ ApiHttpClientCaller.call("position/"+pos.getId(),ApiHttpClientCaller.Method.DELETE,null,token);
+            try{ ApiHttpClientCaller.call("position/"+pos.getId(),ApiHttpClientCaller.Method.DELETE,null);
                 showInfoAlert("Đã xóa","Chức vụ ID:"+pos.getId()); loadPositions();
             }catch(Exception e){e.printStackTrace(); showErrorAlert("Lỗi","Không thể xóa chức vụ.");}
         });
@@ -115,7 +115,7 @@ public class PositionController {
             try{
                 PositionDto dto=PositionDto.builder().name(name)
                         .baseSalary(Double.parseDouble(tfSal.getText().trim())).build();
-                ApiHttpClientCaller.call("position/"+pos.getId(),ApiHttpClientCaller.Method.PUT,dto,token);
+                ApiHttpClientCaller.call("position/"+pos.getId(),ApiHttpClientCaller.Method.PUT,dto);
                 showInfoAlert("Cập nhật","Chức vụ đã được cập nhật"); loadPositions();
             }catch(Exception ex){ex.printStackTrace(); showErrorAlert("Lỗi","Không thể cập nhật.");}
         });
@@ -146,7 +146,7 @@ public class PositionController {
             try{
                 PositionDto dto=PositionDto.builder().name(name)
                         .baseSalary(Double.parseDouble(tfSal.getText().trim())).build();
-                ApiHttpClientCaller.call("position",ApiHttpClientCaller.Method.POST,dto,token);
+                ApiHttpClientCaller.call("position",ApiHttpClientCaller.Method.POST,dto);
                 showInfoAlert("Tạo thành công","Chức vụ mới đã được thêm"); loadPositions();
             }catch(Exception ex){ex.printStackTrace(); showErrorAlert("Lỗi","Không thể tạo.");}
         });
