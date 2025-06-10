@@ -13,6 +13,7 @@ module com.example.frontendquanlikhachsan {
     requires com.fasterxml.jackson.databind;
     requires jakarta.validation;
     requires spring.context;
+    requires java.validation;
 
     opens com.example.frontendquanlikhachsan to javafx.fxml;
     opens com.example.frontendquanlikhachsan.controllers to javafx.fxml;
@@ -27,6 +28,10 @@ module com.example.frontendquanlikhachsan {
     opens com.example.frontendquanlikhachsan.entity.rentalForm to com.fasterxml.jackson.databind;
     opens com.example.frontendquanlikhachsan.entity.rentalFormDetail to com.fasterxml.jackson.databind;
     opens com.example.frontendquanlikhachsan.entity.page to com.fasterxml.jackson.databind;
+    opens com.example.frontendquanlikhachsan.entity.invoice to com.fasterxml.jackson.databind;
+    opens com.example.frontendquanlikhachsan.entity.invoicedetail to com.fasterxml.jackson.databind;
+    opens com.example.frontendquanlikhachsan.entity.block to com.fasterxml.jackson.databind;
+    opens com.example.frontendquanlikhachsan.entity.floor to com.fasterxml.jackson.databind;
     exports com.example.frontendquanlikhachsan;
     opens com.example.frontendquanlikhachsan.controllers.receptionist to javafx.fxml;
 }

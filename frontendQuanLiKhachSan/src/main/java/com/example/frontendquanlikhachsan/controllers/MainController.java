@@ -98,6 +98,14 @@ public class MainController {
         openTab("qlpt", "/com/example/frontendquanlikhachsan/views/manager/RentalForm.fxml");
     }
 
+    public void openInvoiceTab() {
+        openTab("qlhđ", "/com/example/frontendquanlikhachsan/views/manager/Invoice.fxml");
+    }
+
+    public void openStructureTab() {
+        openTab("qlhđ", "/com/example/frontendquanlikhachsan/views/manager/Structure.fxml");
+    }
+
     @FXML
     public void toggleSidebar() {
         isPinned = !isPinned;

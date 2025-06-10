@@ -49,10 +49,6 @@
                             prefWidth="180.0" prefHeight="40.0"
                             styleClass="sidebar-titledpane">
                     <VBox spacing="5" style="-fx-padding: 10;">
-                        <Button onAction="#openBookingTab"
-                                text="Đặt phòng"
-                                prefWidth="160.0"
-                                styleClass="submenu-button"/>
                         <Button onAction="#openRoomRentingTab"
                                 text="Thuê phòng"
                                 prefWidth="160.0"
@@ -82,17 +78,37 @@
                                 prefWidth="160.0"
                                 styleClass="submenu-button"
                                 style="-fx-text-fill: black;"
-                                text="👨‍🦳Staff"/>
+                                text="Quản lí nhân viên"/>
                         <Button onAction="#openPositionTab"
                                 prefHeight="35.0"
                                 prefWidth="160.0"
+                                styleClass="submenu-button"
                                 style="-fx-text-fill: black;"
-                                text="Position"/>
-                        <Button onAction="#openGuestTab" text="Quản lí khách hàng"
-                                prefWidth="160.0" styleClass="submenu-button"/>
+                                text="Quản lí chức vụ"/>
+                        <Button onAction="#openGuestTab"
+                                prefHeight="35.0"
+                                prefWidth="160.0"
+                                styleClass="submenu-button"
+                                style="-fx-text-fill: black;"
+                                text="Quản lí khách hàng"/>
                         <Button onAction="#openRentalFormTab"
-                                prefHeight="35.0" prefWidth="160.0"
-                                style="-fx-text-fill: black;" text="RentalForm"/>
+                                prefHeight="35.0"
+                                prefWidth="160.0"
+                                styleClass="submenu-button"
+                                style="-fx-text-fill: black;"
+                                text="Quản lí phiếu thuê"/>
+                        <Button onAction="#openInvoiceTab"
+                                prefHeight="35.0"
+                                prefWidth="160.0"
+                                styleClass="submenu-button"
+                                style="-fx-text-fill: black;"
+                                text="Quản lí hoá đơn"/>
+                        <Button onAction="#openStructureTab"
+                                prefHeight="35.0"
+                                prefWidth="160.0"
+                                styleClass="submenu-button"
+                                style="-fx-text-fill: black;"
+                                text="Quản lí cấu trúc KS"/>
                     </VBox>
                 </TitledPane>
 
