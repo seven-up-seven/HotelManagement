@@ -12,14 +12,14 @@ import java.util.Map;
 public class ApiHttpClientCaller {
     private static final String BASE_URL = "http://localhost:8080/api/";
     private static final HttpClient client = HttpClient.newHttpClient();
-    private static final ObjectMapper mapper = new ObjectMapper()
+    public static final ObjectMapper mapper = new ObjectMapper()
             .registerModule(new JavaTimeModule())
             .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
             .configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
 
     public enum Method {
-        GET, POST, PUT, DELETE
+        GET, POST, PUT, DELETE, PATCH
     }
 
     public static String call(String path, Method method, Object body, String token) throws Exception {
@@ -40,6 +40,11 @@ public class ApiHttpClientCaller {
             case PUT -> {
                 String json = mapper.writeValueAsString(body);
                 requestBuilder.PUT(HttpRequest.BodyPublishers.ofString(json))
+                        .header("Content-Type", "application/json");
+            }
+            case PATCH -> {
+                String json = mapper.writeValueAsString(body);
+                requestBuilder.method("PATCH", HttpRequest.BodyPublishers.ofString(json))
                         .header("Content-Type", "application/json");
             }
         }

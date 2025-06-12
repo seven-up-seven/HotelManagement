@@ -106,6 +106,22 @@ public class MainController {
         openTab("qlhđ", "/com/example/frontendquanlikhachsan/views/manager/Structure.fxml");
     }
 
+    public void openBookingConfirmationFormTab() {
+        openTab("qlhđ", "/com/example/frontendquanlikhachsan/views/manager/BookingConfirmationForm.fxml");
+    }
+
+    public void openReportTab() {
+        openTab("qlhđ", "/com/example/frontendquanlikhachsan/views/accountant/RevenueReport.fxml");
+    }
+
+    public void openInvoiceAccountantTab() {
+        openTab("qlhđ", "/com/example/frontendquanlikhachsan/views/accountant/InvoiceAccountant.fxml");
+    }
+
+    public void openSalaryTab() {
+        openTab("qlhđ", "/com/example/frontendquanlikhachsan/views/accountant/StaffSalaryAccountant.fxml");
+    }
+
     @FXML
     public void toggleSidebar() {
         isPinned = !isPinned;

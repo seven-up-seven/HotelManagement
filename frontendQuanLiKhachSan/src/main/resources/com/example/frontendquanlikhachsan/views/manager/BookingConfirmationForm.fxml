@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<SplitPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.example.frontendquanlikhachsan.controllers.manager.BookingConfirmationFormController"
+           prefWidth="800" prefHeight="600">
+    <items>
+        <!-- LEFT: Thêm nút + TableView -->
+        <VBox spacing="8" prefWidth="400" styleClass="left-pane">
+            <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+
+            <Label text="🔍 Lọc booking" styleClass="header" />
+            <HBox spacing="6" alignment="CENTER_LEFT">
+                <TextField fx:id="filterId" promptText="ID" prefWidth="60"/>
+                <ComboBox fx:id="filterState" promptText="Trạng thái" prefWidth="120"/>
+                <DatePicker fx:id="filterFrom" promptText="Từ ngày" />
+                <DatePicker fx:id="filterTo"   promptText="Đến ngày"/>
+                <TextField fx:id="filterRoomId" promptText="Room ID" prefWidth="80"/>
+                <ComboBox fx:id="filterType" promptText="Loại phòng" prefWidth="120"/>
+                <Button fx:id="btnFilter" text="Áp dụng" />
+            </HBox>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <!-- Nút Thêm được đặt ở đây -->
+                <Button fx:id="btnAdd" text="➕ Thêm" />
+            </HBox>
+            <Label text="Danh sách Booking Confirmation" styleClass="header"/>
+            <TableView fx:id="tblBooking" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colId"        text="ID"            prefWidth="50"/>
+                    <TableColumn fx:id="colState"     text="Trạng thái"   prefWidth="100"/>
+                    <TableColumn fx:id="colCreated"   text="Ngày tạo"     prefWidth="150"/>
+                    <TableColumn fx:id="colGuestName" text="Tên khách"    prefWidth="120"/>
+                    <TableColumn fx:id="colGuestId"   text="Guest ID"      prefWidth="80"/>
+                    <TableColumn fx:id="colRoomName"  text="Tên phòng"    prefWidth="120"/>
+                    <TableColumn fx:id="colRoomId"    text="Room ID"       prefWidth="80"/>
+                    <TableColumn fx:id="colRoomType"  text="Loại phòng"    prefWidth="120"/>
+                </columns>
+            </TableView>
+        </VBox>
+
+        <VBox prefWidth="400" styleClass="right-pane">
+            <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+            <Label text="Thông tin chi tiết" styleClass="header"/>
+            <Separator/>
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
+                <content>
+                    <!-- Chỉ còn detailPane, sẽ dồn hết content và nút ở đây -->
+                    <VBox fx:id="detailPane" spacing="12"/>
+                </content>
+            </ScrollPane>
+        </VBox>
+    </items>
+</SplitPane>

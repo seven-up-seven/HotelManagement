@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<SplitPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.example.frontendquanlikhachsan.controllers.accountant.StaffSalaryAccountantController"
+           prefWidth="800" prefHeight="600">
+    <items>
+        <!-- LEFT: danh sách nhân viên -->
+        <VBox spacing="8.0" styleClass="left-pane" prefWidth="300.0">
+            <padding>
+                <Insets top="16" right="16" bottom="16" left="16"/>
+            </padding>
+            <HBox spacing="8.0" styleClass="filter-pane">
+                <padding>
+                    <Insets top="8" right="0" bottom="8" left="0"/>
+                </padding>
+
+                <!-- ID -->
+                <TextField fx:id="tfFilterId"
+                           promptText="ID nhân viên"/>
+
+                <!-- Họ tên -->
+                <TextField fx:id="tfFilterName"
+                           promptText="Họ &amp; Tên"/>
+
+                <!-- Chức vụ -->
+                <ComboBox fx:id="cbFilterPosition"
+                          promptText="Chức vụ"/>
+
+                <!-- Hệ số lương từ... đến... -->
+                <TextField fx:id="tfFilterMulMin"
+                           promptText="HS từ"/>
+                <TextField fx:id="tfFilterMulMax"
+                           promptText="HS đến"/>
+
+                <!-- Lương từ... đến... -->
+                <TextField fx:id="tfFilterSalMin"
+                           promptText="Lương từ"/>
+                <TextField fx:id="tfFilterSalMax"
+                           promptText="đến"/>
+
+            </HBox>
+
+            <Label text="Danh sách nhân viên" styleClass="header"/>
+            <TableView fx:id="tableStaff" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colId"        text="ID"        prefWidth="50"/>
+                    <TableColumn fx:id="colFullName"  text="Họ &amp; Tên"  prefWidth="150"/>
+                    <TableColumn fx:id="colPosition"  text="Chức vụ"   prefWidth="100"/>
+                    <TableColumn fx:id="colMultiplier"  text="Hệ số lương"  prefWidth="100"/>
+                    <TableColumn fx:id="colSalary"    text="Lương"     prefWidth="100"/>
+                </columns>
+            </TableView>
+        </VBox>
+
+        <!-- RIGHT: detail + sửa hệ số lương -->
+        <VBox styleClass="right-pane" prefWidth="500.0">
+            <padding>
+                <Insets top="16" right="16" bottom="16" left="16"/>
+            </padding>
+            <Label text="Chi tiết &amp; Sửa hệ số lương" styleClass="header"/>
+            <VBox fx:id="detailPane" spacing="12.0"/>
+        </VBox>
+    </items>
+</SplitPane >
