@@ -132,7 +132,7 @@ public class StaffController {
         grid.add(makeLabel.apply("Tài khoản:"), 0, 7);
         Label badge = new Label();
         badge.setStyle("-fx-padding:4 8; -fx-background-radius:4; -fx-text-fill:white;");
-        if (staff.getAccountId() == null) {
+        if (staff.getAccountId() == null || staff.getAccountId() == 0) {
             badge.setText("Chưa có tài khoản");
             badge.setStyle(badge.getStyle() + "-fx-background-color:#9e9e9e;");
         } else {

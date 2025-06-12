@@ -4,7 +4,6 @@
 package com.example.frontendquanlikhachsan.controllers.manager;
 
 import com.example.frontendquanlikhachsan.ApiHttpClientCaller;
-import com.example.frontendquanlikhachsan.entity.guest.ResponseGuestDto;
 import com.example.frontendquanlikhachsan.entity.rentalForm.RentalFormDto;
 import com.example.frontendquanlikhachsan.entity.rentalForm.ResponseRentalFormDto;
 import com.example.frontendquanlikhachsan.entity.rentalFormDetail.RentalFormDetailDto;
@@ -789,7 +788,6 @@ public class RentalFormController {
         detailPane.getChildren().addAll(grid, step2);
     }
 
-
     private void showInfoAlert(String h, String c) {
         Alert a = new Alert(Alert.AlertType.INFORMATION);
         a.setHeaderText(h);
@@ -841,6 +839,4 @@ public class RentalFormController {
             return true;
         });
     }
-
-
 }

@@ -1,16 +1,18 @@
 package com.example.frontendquanlikhachsan.entity.rentalForm;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.NumberFormat;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class SearchRentalFormDto {
-    @NumberFormat
     private Integer roomId;
     private String roomName;
-    @NumberFormat
     private Integer rentalFormId;
 
     @Override

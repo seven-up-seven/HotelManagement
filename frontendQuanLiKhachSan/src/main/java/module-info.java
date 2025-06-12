@@ -14,10 +14,14 @@ module com.example.frontendquanlikhachsan {
     requires java.management;
     requires jakarta.validation;
     requires spring.context;
+    requires java.validation;
+    requires java.desktop;
 
     opens com.example.frontendquanlikhachsan to javafx.fxml;
     opens com.example.frontendquanlikhachsan.controllers to javafx.fxml;
     opens com.example.frontendquanlikhachsan.controllers.manager to javafx.fxml;
+    opens com.example.frontendquanlikhachsan.controllers.receptionist to javafx.fxml;
+    opens com.example.frontendquanlikhachsan.controllers.accountant to javafx.fxml;
     opens com.example.frontendquanlikhachsan.entity.account to com.fasterxml.jackson.databind;
     opens com.example.frontendquanlikhachsan.entity.staff to com.fasterxml.jackson.databind;
     opens com.example.frontendquanlikhachsan.entity.guest to com.fasterxml.jackson.databind;
@@ -28,7 +32,13 @@ module com.example.frontendquanlikhachsan {
     opens com.example.frontendquanlikhachsan.entity.rentalForm to com.fasterxml.jackson.databind;
     opens com.example.frontendquanlikhachsan.entity.rentalFormDetail to com.fasterxml.jackson.databind;
     opens com.example.frontendquanlikhachsan.entity.page to com.fasterxml.jackson.databind;
-    opens com.example.frontendquanlikhachsan.auth to com.fasterxml.jackson.databind;
+    opens com.example.frontendquanlikhachsan.entity.invoice to com.fasterxml.jackson.databind;
+    opens com.example.frontendquanlikhachsan.entity.invoicedetail to com.fasterxml.jackson.databind;
+    opens com.example.frontendquanlikhachsan.entity.block to com.fasterxml.jackson.databind;
+    opens com.example.frontendquanlikhachsan.entity.floor to com.fasterxml.jackson.databind;
+    opens com.example.frontendquanlikhachsan.entity.bookingconfirmationform to com.fasterxml.jackson.databind;
+    opens com.example.frontendquanlikhachsan.entity.revenueReport to com.fasterxml.jackson.databind;
+    opens com.example.frontendquanlikhachsan.entity.revenueReportDetail to com.fasterxml.jackson.databind;
+    
     exports com.example.frontendquanlikhachsan;
-    opens com.example.frontendquanlikhachsan.controllers.receptionist to javafx.fxml;
 }

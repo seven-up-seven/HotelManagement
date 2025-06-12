@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TreeItem?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.layout.HBox?>
+<SplitPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.example.frontendquanlikhachsan.controllers.manager.StructureController"
+           stylesheets="@structure.css"
+           prefWidth="800.0" prefHeight="600.0">
+    <items>
+        <!-- LEFT: Cấu trúc Tòa–Tầng–Phòng -->
+        <VBox spacing="8.0" prefWidth="300.0" styleClass="left-pane">
+            <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+            <HBox spacing="8.0">
+                <ComboBox fx:id="categoryCombo" promptText="Chọn loại" />
+                <TextField fx:id="searchId" promptText="ID" />
+                <TextField fx:id="searchName" promptText="Tên" />
+                <ComboBox fx:id="searchState" promptText="Trạng thái" />
+            </HBox>
+            <Label text="Cấu trúc Tòa – Tầng – Phòng" styleClass="header"/>
+            <TreeView fx:id="structureTree" VBox.vgrow="ALWAYS" styleClass="structure-tree">
+                <root>
+                    <!-- Building A -->
+                    <TreeItem expanded="true">
+                        <value>Tòa A</value>
+                        <graphic>
+                            <Label text="🏢" styleClass="icon-building"/>
+                        </graphic>
+                        <children>
+                            <!-- Floor 1 -->
+                            <TreeItem expanded="true">
+                                <value>Tầng 1</value>
+                                <graphic>
+                                    <Label text="⬢" styleClass="icon-floor"/>
+                                </graphic>
+                                <children>
+                                    <!-- Room 101: đang thuê (xanh lá) -->
+                                    <TreeItem>
+                                        <value>Phòng 101</value>
+                                        <graphic>
+                                            <Circle radius="6" fill="#4caf50"/>
+                                        </graphic>
+                                    </TreeItem>
+                                    <!-- Room 102: available (trắng viền xám) -->
+                                    <TreeItem>
+                                        <value>Phòng 102</value>
+                                        <graphic>
+                                            <Circle radius="6" stroke="#888" fill="white" strokeWidth="1"/>
+                                        </graphic>
+                                    </TreeItem>
+                                    <!-- Room 103: being cleaned (vàng) -->
+                                    <TreeItem>
+                                        <value>Phòng 103</value>
+                                        <graphic>
+                                            <Circle radius="6" fill="#ffeb3b"/>
+                                        </graphic>
+                                    </TreeItem>
+                                </children>
+                            </TreeItem>
+                            <!-- Floor 2 -->
+                            <TreeItem expanded="false">
+                                <value>Tầng 2</value>
+                                <graphic>
+                                    <Label text="⬢" styleClass="icon-floor"/>
+                                </graphic>
+                                <children>
+                                    <!-- Room 201: under renovation (đỏ) -->
+                                    <TreeItem>
+                                        <value>Phòng 201</value>
+                                        <graphic>
+                                            <Circle radius="6" fill="#f44336"/>
+                                        </graphic>
+                                    </TreeItem>
+                                    <!-- Room 202: available -->
+                                    <TreeItem>
+                                        <value>Phòng 202</value>
+                                        <graphic>
+                                            <Circle radius="6" stroke="#888" fill="white" strokeWidth="1"/>
+                                        </graphic>
+                                    </TreeItem>
+                                </children>
+                            </TreeItem>
+                        </children>
+                    </TreeItem>
+                </root>
+            </TreeView>
+        </VBox>
+
+        <!-- RIGHT: Thông tin chi tiết -->
+        <VBox prefWidth="500.0" styleClass="right-pane">
+            <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+            <Label text="Thông tin chi tiết" styleClass="header"/>
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
+                <content>
+                    <VBox fx:id="detailPane" spacing="12.0"/>
+                </content>
+            </ScrollPane>
+        </VBox>
+    </items>
+</SplitPane>

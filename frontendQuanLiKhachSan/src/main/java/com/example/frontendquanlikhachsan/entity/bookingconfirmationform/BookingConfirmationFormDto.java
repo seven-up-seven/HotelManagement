@@ -14,4 +14,6 @@ public class BookingConfirmationFormDto {
     private Integer bookingGuestId;
 
     private BookingState bookingState;
+
+    private Integer roomId;
 }
