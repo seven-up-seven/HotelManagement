@@ -129,7 +129,7 @@ public class BookingConfirmationFormController {
     private void loadBookingForms() {
         new Thread(() -> {
             try {
-                String json = ApiHttpClientCaller.call("booking-confirmation-form", GET, null, token);
+                String json = ApiHttpClientCaller.call("booking-confirmation-form", GET, null);
                 allItems = mapper.readValue(json, new TypeReference<List<ResponseBookingConfirmationFormDto>>(){});
                 Platform.runLater(() -> {
                     // cập nhật TableView
@@ -241,7 +241,7 @@ public class BookingConfirmationFormController {
                 int roomId = Integer.parseInt(roomIdText);
                 // 1) Lấy thông tin phòng từ API
                 String roomJson = ApiHttpClientCaller.call(
-                        "room/" + roomId, GET, null, token
+                        "room/" + roomId, GET, null
                 );
                 ResponseRoomDto room = mapper.readValue(
                         roomJson, ResponseRoomDto.class
@@ -263,11 +263,11 @@ public class BookingConfirmationFormController {
                 );
                 if (edit) {
                     ApiHttpClientCaller.call(
-                            "booking-confirmation-form/" + id, PUT, dto, token
+                            "booking-confirmation-form/" + id, PUT, dto
                     );
                 } else {
                     ApiHttpClientCaller.call(
-                            "booking-confirmation-form", POST, dto, token
+                            "booking-confirmation-form", POST, dto
                     );
                 }
 
@@ -297,7 +297,7 @@ public class BookingConfirmationFormController {
         );
         if(a.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
             ApiHttpClientCaller.call(
-                    "booking-confirmation-form/"+id, DELETE, null, token
+                    "booking-confirmation-form/"+id, DELETE, null
             );
             loadBookingForms();
             detailPane.getChildren().clear();

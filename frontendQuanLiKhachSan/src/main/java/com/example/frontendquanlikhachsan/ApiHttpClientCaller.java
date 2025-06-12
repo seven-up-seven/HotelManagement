@@ -22,9 +22,13 @@ public class ApiHttpClientCaller {
         GET, POST, PUT, DELETE, PATCH
     }
 
+    public static String call(String path, Method method, Object body, String token) throws Exception {
+        return call(path, method, body);
+    }
+
     public static String call(String path, Method method, Object body) throws Exception {
         String fullUrl = BASE_URL + path;
-        String token=TokenHolder.getInstance().getAccessToken();
+        String token = TokenHolder.getInstance().getAccessToken();
 
         HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
                 .uri(URI.create(fullUrl));

@@ -96,7 +96,7 @@ public class InvoiceController {
 
     private void loadInvoices() {
         try {
-            String json = ApiHttpClientCaller.call("invoice", GET, null, token);
+            String json = ApiHttpClientCaller.call("invoice", GET, null);
             List<ResponseInvoiceDto> list = mapper.readValue(json, new TypeReference<List<ResponseInvoiceDto>>() {});
             invoiceList.setAll(list);
         } catch(Exception e) {
@@ -186,7 +186,7 @@ public class InvoiceController {
         ListView<ResponseInvoiceDetailDto> lvD = new ListView<>();
         for (Integer dId : dto.getInvoiceDetailIds()) {
             try {
-                String j = ApiHttpClientCaller.call("invoice-detail/" + dId, GET, null, token);
+                String j = ApiHttpClientCaller.call("invoice-detail/" + dId, GET, null);
                 ResponseInvoiceDetailDto d = mapper.readValue(j, ResponseInvoiceDetailDto.class);
                 lvD.getItems().add(d);
             } catch (Exception ignored) {}
@@ -217,7 +217,7 @@ public class InvoiceController {
                     "Xóa detail #" + sel.getId() + "?", ButtonType.OK, ButtonType.CANCEL);
             c.showAndWait().filter(b->b==ButtonType.OK).ifPresent(x->{
                 try {
-                    ApiHttpClientCaller.call("invoice-detail/" + sel.getId(), DELETE, null, token);
+                    ApiHttpClientCaller.call("invoice-detail/" + sel.getId(), DELETE, null);
                     showDetail(dto);
                 } catch(Exception ex) {
                     showErrorAlert("Lỗi", "Không xóa được chi tiết");
@@ -238,7 +238,7 @@ public class InvoiceController {
                     "Xóa hoá đơn này?", ButtonType.OK, ButtonType.CANCEL);
             c.showAndWait().filter(b->b==ButtonType.OK).ifPresent(x->{
                 try {
-                    ApiHttpClientCaller.call("invoice/" + dto.getId(), DELETE, null, token);
+                    ApiHttpClientCaller.call("invoice/" + dto.getId(), DELETE, null);
                     loadInvoices();
                     detailPane.getChildren().clear();
                 } catch(Exception ex) {
@@ -314,7 +314,7 @@ public class InvoiceController {
                     req.setIdentificationNumber(tfGIdentificationNumber.getText().trim());
                 if (!tfGPhoneNumber.getText().isBlank())
                     req.setPhoneNumber(tfGPhoneNumber.getText().trim());
-                String j = ApiHttpClientCaller.call("guest/search", POST, req, token);
+                String j = ApiHttpClientCaller.call("guest/search", POST, req);
                 List<ResponseGuestDto> r = mapper.readValue(j, new TypeReference<List<ResponseGuestDto>>(){});
                 // Chuyển đổi ResponseGuestDto sang SearchGuestDto
                 List<SearchGuestDto> rs = r.stream()
@@ -356,7 +356,7 @@ public class InvoiceController {
 
                 String path = dto==null ? "invoice" : "invoice/"+dto.getId();
                 String j = ApiHttpClientCaller.call(path,
-                        dto==null? POST:PUT, payload, token);
+                        dto==null? POST:PUT, payload);
 
                 ResponseInvoiceDto created = mapper.readValue(j, ResponseInvoiceDto.class);
                 showInfoAlert("Thành công",
@@ -440,7 +440,7 @@ public class InvoiceController {
                 if (!tfRForm.getText().isBlank())
                     req.setRoomId(Integer.parseInt(tfRForm.getText().trim()));
 
-                String j = ApiHttpClientCaller.call("rental-form/search-unpaid", POST, req, token);
+                String j = ApiHttpClientCaller.call("rental-form/search-unpaid", POST, req);
                 List<ResponseRentalFormDto> r = mapper.readValue(j, new TypeReference<List<ResponseRentalFormDto>>(){});
                 // Chuyển đổi ResponseRentalFormDto sang SearchRentalFormDto
                 List<SearchRentalFormDto> rs = r.stream()
@@ -455,8 +455,8 @@ public class InvoiceController {
                     cbRF.getSelectionModel().selectFirst();
                     // gọi 2 endpoint tính ngày + cost
                     int rfId = rs.get(0).getRentalFormId();
-                    String dJ = ApiHttpClientCaller.call("rental-form/"+rfId+"/total-rental-days", GET, null, token);
-                    String cJ = ApiHttpClientCaller.call("rental-form/"+rfId+"/total-cost", GET, null, token);
+                    String dJ = ApiHttpClientCaller.call("rental-form/"+rfId+"/total-rental-days", GET, null);
+                    String cJ = ApiHttpClientCaller.call("rental-form/"+rfId+"/total-cost", GET, null);
                     tfDays.setText(dJ);
                     tfCost.setText(cJ);
                 }
@@ -470,8 +470,8 @@ public class InvoiceController {
             if (sel==null) return;
             try {
                 int rfId = sel.getRentalFormId();
-                String dJ = ApiHttpClientCaller.call("rental-form/"+rfId+"/total-rental-days", GET, null, token);
-                String cJ = ApiHttpClientCaller.call("rental-form/"+rfId+"/total-cost", GET, null, token);
+                String dJ = ApiHttpClientCaller.call("rental-form/"+rfId+"/total-rental-days", GET, null);
+                String cJ = ApiHttpClientCaller.call("rental-form/"+rfId+"/total-cost", GET, null);
                 tfDays.setText(dJ);
                 tfCost.setText(cJ);
             } catch(Exception ignored){}
@@ -493,13 +493,13 @@ public class InvoiceController {
 
                 String path = detail==null? "invoice-detail" : "invoice-detail/"+detail.getId();
                 ApiHttpClientCaller.call(path,
-                        detail==null? POST:PUT, dto, token);
+                        detail==null? POST:PUT, dto);
 
                 showInfoAlert("Thành công",
                         detail==null? "Đã thêm detail":"Đã sửa detail");
                 loadInvoices();
                 // refresh parent data
-                String pj = ApiHttpClientCaller.call("invoice/"+parent.getId(), GET, null, token);
+                String pj = ApiHttpClientCaller.call("invoice/"+parent.getId(), GET, null);
                 ResponseInvoiceDto refreshed = mapper.readValue(pj, ResponseInvoiceDto.class);
                 showDetail(refreshed);
             } catch(Exception ex){
