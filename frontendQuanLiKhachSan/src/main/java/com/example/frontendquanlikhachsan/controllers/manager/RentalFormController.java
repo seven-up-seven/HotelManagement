@@ -97,7 +97,7 @@ public class RentalFormController {
             try {
                 String json = ApiHttpClientCaller.call(
                         "rental-extension-form/rental-form/" + dto.getId(),
-                        ApiHttpClientCaller.Method.GET, null, token
+                        ApiHttpClientCaller.Method.GET, null
                 );
                 List<ResponseRentalExtensionFormDto> exts =
                         mapper.readValue(json, new TypeReference<List<ResponseRentalExtensionFormDto>>(){});
@@ -132,7 +132,7 @@ public class RentalFormController {
 
     private void loadForms() {
         try {
-            String json = ApiHttpClientCaller.call("rental-form", ApiHttpClientCaller.Method.GET, null, token);
+            String json = ApiHttpClientCaller.call("rental-form", ApiHttpClientCaller.Method.GET, null);
             List<ResponseRentalFormDto> list = mapper.readValue(json, new TypeReference<List<ResponseRentalFormDto>>(){});
             formList.setAll(list);
         } catch (Exception e) {
@@ -172,7 +172,7 @@ public class RentalFormController {
         ListView<ResponseRentalFormDetailDto> lvD = new ListView<>();
         for (Integer detId : dto.getRentalFormDetailIds()) {
             try {
-                String json = ApiHttpClientCaller.call("rental-form-detail/" + detId, ApiHttpClientCaller.Method.GET, null, token);
+                String json = ApiHttpClientCaller.call("rental-form-detail/" + detId, ApiHttpClientCaller.Method.GET, null);
                 ResponseRentalFormDetailDto detail = mapper.readValue(json, ResponseRentalFormDetailDto.class);
                 lvD.getItems().add(detail);
             } catch (Exception ignored) {}
@@ -201,7 +201,7 @@ public class RentalFormController {
                     ApiHttpClientCaller.call(
                             "rental-form-detail/" + sel.getId(),
                             ApiHttpClientCaller.Method.DELETE,
-                            null, token
+                            null
                     );
                     showDetail(dto); // reload detail view
                 } catch (Exception ex) {
@@ -224,7 +224,7 @@ public class RentalFormController {
         ListView<ResponseRentalExtensionFormDto> lvE = new ListView<>();
         for (Integer extId : dto.getRentalExtensionFormIds()) {
             try {
-                String json = ApiHttpClientCaller.call("rental-extension-form/" + extId, ApiHttpClientCaller.Method.GET, null, token);
+                String json = ApiHttpClientCaller.call("rental-extension-form/" + extId, ApiHttpClientCaller.Method.GET, null);
                 ResponseRentalExtensionFormDto ext = mapper.readValue(json, ResponseRentalExtensionFormDto.class);
                 lvE.getItems().add(ext);
             } catch (Exception ignored) {}
@@ -249,7 +249,7 @@ public class RentalFormController {
                     ApiHttpClientCaller.call(
                             "rental-extension-form/" + sel.getId(),
                             ApiHttpClientCaller.Method.DELETE,
-                            null, token
+                            null
                     );
                     showDetail(dto);
                 } catch (Exception ex) {
@@ -282,7 +282,7 @@ public class RentalFormController {
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Xóa phiếu thuê này?", ButtonType.OK, ButtonType.CANCEL);
         confirm.showAndWait().filter(b -> b == ButtonType.OK).ifPresent(b -> {
             try {
-                ApiHttpClientCaller.call("rental-form/" + dto.getId(), ApiHttpClientCaller.Method.DELETE, null, token);
+                ApiHttpClientCaller.call("rental-form/" + dto.getId(), ApiHttpClientCaller.Method.DELETE, null);
                 loadForms();
             } catch (Exception e) {
                 showErrorAlert("Lỗi", "Không thể xóa.");
@@ -333,7 +333,7 @@ public class RentalFormController {
                 String roomJson = ApiHttpClientCaller.call(
                         "room/" + roomId,
                         ApiHttpClientCaller.Method.GET,
-                        null, token
+                        null
                 );
                 JsonNode roomNode = mapper.readTree(roomJson);
                 String state = roomNode.get("roomState").asText();
@@ -443,11 +443,11 @@ public class RentalFormController {
                 // trong btnSave.setOnAction:
                 if (editingDto == null) {
                     ApiHttpClientCaller.call("rental-form",
-                            ApiHttpClientCaller.Method.POST, payload, token);
+                            ApiHttpClientCaller.Method.POST, payload);
                     showInfoAlert("Tạo thành công", "Đã tạo Phiếu thuê mới");
                 } else {
                     ApiHttpClientCaller.call("rental-form/" + editingDto.getId(),
-                            ApiHttpClientCaller.Method.PUT, payload, token);
+                            ApiHttpClientCaller.Method.PUT, payload);
                     showInfoAlert("Cập nhật thành công", "Đã cập nhật Phiếu thuê #" + editingDto.getId());
                 }
                 loadForms();
@@ -535,8 +535,7 @@ public class RentalFormController {
                 String searchJson = ApiHttpClientCaller.call(
                         "guest/search",
                         ApiHttpClientCaller.Method.POST,
-                        req,
-                        token
+                        req
                 );
                 List<SearchGuestDto> respList = mapper.readValue(
                         searchJson, new TypeReference<List<SearchGuestDto>>() {});
@@ -545,8 +544,7 @@ public class RentalFormController {
                 String idsJson = ApiHttpClientCaller.call(
                         "rental-form/" + parent.getId() + "/guest-ids",
                         ApiHttpClientCaller.Method.GET,
-                        null,
-                        token
+                        null
                 );
                 List<Integer> takenIds = mapper.readValue(
                         idsJson, new TypeReference<List<Integer>>() {});
@@ -578,8 +576,7 @@ public class RentalFormController {
                 String idsJson = ApiHttpClientCaller.call(
                         "rental-form/" + parent.getId() + "/guest-ids",
                         ApiHttpClientCaller.Method.GET,
-                        null,
-                        token
+                        null
                 );
                 List<Integer> takenIds = mapper.readValue(
                         idsJson, new TypeReference<List<Integer>>() {});
@@ -601,8 +598,7 @@ public class RentalFormController {
                         detail == null
                                 ? ApiHttpClientCaller.Method.POST
                                 : ApiHttpClientCaller.Method.PUT,
-                        dto,
-                        token
+                        dto
                 );
                 showInfoAlert("Thành công",
                         detail == null ? "Đã thêm detail" : "Đã cập nhật detail");
@@ -626,7 +622,7 @@ public class RentalFormController {
     private ResponseRentalFormDto getRefreshedRentalForm(int formId) {
         try {
             String json = ApiHttpClientCaller.call("rental-form/" + formId,
-                    ApiHttpClientCaller.Method.GET, null, token);
+                    ApiHttpClientCaller.Method.GET, null);
             return mapper.readValue(json, ResponseRentalFormDto.class);
         } catch (Exception e) {
             e.printStackTrace();
@@ -675,7 +671,7 @@ public class RentalFormController {
                     ApiHttpClientCaller.call(
                             "rental-extension-form/" + ext.getId(),
                             ApiHttpClientCaller.Method.PUT,
-                            dto, token);
+                            dto);
                     showInfoAlert("Cập nhật thành công", "Gia hạn đã được cập nhật");
                     loadForms();
 
@@ -718,7 +714,7 @@ public class RentalFormController {
             try {
                 String json = ApiHttpClientCaller.call(
                         "rental-extension-form/day-remains/" + parent.getId(),
-                        ApiHttpClientCaller.Method.GET, null, token);
+                        ApiHttpClientCaller.Method.GET, null);
                 int remains = mapper.readValue(json, Integer.class);
                 if (remains <= 0) {
                     lblInfo.setText("Không thể gia hạn thêm");
@@ -761,7 +757,7 @@ public class RentalFormController {
                             ApiHttpClientCaller.call(
                                     "rental-extension-form",
                                     ApiHttpClientCaller.Method.POST,
-                                    dto, token);
+                                    dto);
                             showInfoAlert("Tạo thành công","Gia hạn đã được tạo");
                             loadForms();
 

@@ -5,7 +5,9 @@ import com.example.frontendquanlikhachsan.auth.AccessTokenExpirationChecker;
 import com.example.frontendquanlikhachsan.auth.LoginDto;
 import com.example.frontendquanlikhachsan.auth.ResponseLoginDto;
 import com.example.frontendquanlikhachsan.auth.TokenHolder;
+import com.example.frontendquanlikhachsan.entity.staff.ResponseStaffDto;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -19,6 +21,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+
+import java.util.Base64;
 
 public class LoginController {
 
@@ -60,6 +64,15 @@ public class LoginController {
             //store the token
             TokenHolder.getInstance().setAccessToken(response.accessToken());
             TokenHolder.getInstance().setRefreshToken(response.refreshToken());
+            //store current user id
+            int accountId = extractAccountIdFromToken(response.accessToken());
+            String json = ApiHttpClientCaller.call(
+                    "staff/account-id/" + accountId,
+                    ApiHttpClientCaller.Method.GET,
+                    null
+            );
+            ResponseStaffDto staff = mapper.readValue(json, ResponseStaffDto.class);
+            TokenHolder.getInstance().setCurrentUserId(staff.getId());
             //check when the access token will expire
             AccessTokenExpirationChecker checker = new AccessTokenExpirationChecker();
             checker.scheduleTokenExpiryChecker(response.accessToken());
@@ -81,11 +94,25 @@ public class LoginController {
             Parent root = loader.load();
             Stage stage = (Stage) loginButton.getScene().getWindow();
             Scene scene = new Scene(root);
+            stage.hide();
             stage.setScene(scene);
+            stage.setMaximized(true);
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
             showError("Không thể tải được màn hình chính");
         }
+    }
+
+    private int extractAccountIdFromToken(String jwt) throws Exception {
+        String[] parts = jwt.split("\\.");
+        if (parts.length != 3) {
+            throw new IllegalArgumentException("Invalid JWT format");
+        }
+
+        String payload = new String(Base64.getUrlDecoder().decode(parts[1]));
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode jsonNode = mapper.readTree(payload);
+        return Integer.parseInt(jsonNode.get("sub").asText());
     }
 }

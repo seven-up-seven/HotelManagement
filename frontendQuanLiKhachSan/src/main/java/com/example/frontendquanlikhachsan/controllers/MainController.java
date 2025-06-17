@@ -122,6 +122,11 @@ public class MainController {
         openTab("qlhđ", "/com/example/frontendquanlikhachsan/views/accountant/StaffSalaryAccountant.fxml");
     }
 
+    public void openAdminUserManagement()
+    {
+
+    }
+
     @FXML
     public void toggleSidebar() {
         isPinned = !isPinned;

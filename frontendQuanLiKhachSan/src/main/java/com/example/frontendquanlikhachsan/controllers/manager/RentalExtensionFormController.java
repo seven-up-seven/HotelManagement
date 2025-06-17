@@ -208,7 +208,7 @@ public class RentalExtensionFormController {
                 dto.setNumberOfRentalDays(days);
                 dto.setStaffId(staffId);
                 ApiHttpClientCaller.call("rental-extension-form/"+dto.getId(),
-                        ApiHttpClientCaller.Method.PUT, dto, token);
+                        ApiHttpClientCaller.Method.PUT, dto);
                 showInfoAlert("Cập nhật thành công","Gia hạn đã được cập nhật");
                 loadExtensions();
             } catch(Exception ex) {

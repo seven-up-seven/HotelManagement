@@ -4,6 +4,7 @@ public class TokenHolder {
     private static TokenHolder instance;
     private String accessToken;
     private String refreshToken;
+    private int currentUserId;
 
     private TokenHolder() {}
 
@@ -28,5 +29,13 @@ public class TokenHolder {
 
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
+    }
+
+    public int getCurrentUserId() {
+        return currentUserId;
+    }
+
+    public void setCurrentUserId(int currentUserId) {
+        this.currentUserId = currentUserId;
     }
 }

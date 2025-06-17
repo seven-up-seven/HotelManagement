@@ -9,51 +9,63 @@
            fx:controller="com.example.frontendquanlikhachsan.controllers.receptionist.RoomRentingController"
            prefWidth="1000.0" prefHeight="600.0">
 
-    <!-- LEFT: Rental Form -->
     <items>
-        <VBox spacing="12.0" prefWidth="400.0" style="-fx-background-color: #f4f6f8;">
-            <padding>
-                <Insets top="16.0" right="16.0" bottom="16.0" left="16.0" />
-            </padding>
+        <!-- LEFT: Rental Form with Scroll -->
+        <ScrollPane fitToWidth="true" prefWidth="400.0">
+            <content>
+                <VBox spacing="12.0" style="-fx-background-color: #f4f6f8;" prefWidth="400.0">
+                    <padding>
+                        <Insets top="16.0" right="16.0" bottom="16.0" left="16.0" />
+                    </padding>
 
-            <!-- Title -->
-            <Label text="Phiếu Thuê Phòng"
-                   style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+                    <!-- Title -->
+                    <Label text="Phiếu Thuê Phòng"
+                           style="-fx-font-size: 18px; -fx-font-weight: bold;" />
 
-            <!-- Room Picker -->
-            <VBox spacing="8.0">
-                <Label text="Chọn Phòng:" />
-                <ComboBox fx:id="roomPicker" promptText="Tìm và chọn phòng..." />
-            </VBox>
+                    <!-- Room Picker -->
+                    <VBox spacing="8.0">
+                        <Label text="Chọn Phòng:" />
+                        <ComboBox fx:id="roomPicker" promptText="Tìm và chọn phòng..." />
+                    </VBox>
 
-            <!-- Rental Details -->
-            <VBox spacing="8.0">
-                <Label text="Ngày tạo phiếu:" />
-                <DatePicker fx:id="creationDatePicker" />
-                <CheckBox fx:id="immediateReturnCheckbox" text="Khách hàng trả tiền ngay lúc tạo" />
-                <Label text="Số ngày thuê:" />
-                <TextField fx:id="rentalDaysField" promptText="Nhập số ngày thuê" />
-                <Label text="Ghi chú:" />
-                <TextArea fx:id="noteArea" promptText="Nhập ghi chú..." />
-            </VBox>
+                    <!-- Rental Details -->
+                    <VBox spacing="8.0">
+                        <Label text="Ngày tạo phiếu:" />
+                        <DatePicker fx:id="creationDatePicker" />
+                        <Label text="Số ngày thuê:" />
+                        <TextField fx:id="rentalDaysField" promptText="Nhập số ngày thuê" />
+                        <Label text="Ghi chú:" />
+                        <TextArea fx:id="noteArea" promptText="Nhập ghi chú..." />
+                    </VBox>
 
-            <!-- Customer List -->
-            <VBox spacing="8.0">
-                <Label text="Danh sách khách hàng thuê phòng:" />
-                <TableView fx:id="customerTable" VBox.vgrow="ALWAYS">
-                    <columns>
-                        <TableColumn fx:id="colCustomerId" text="ID" prefWidth="40.0" />
-                        <TableColumn fx:id="colCustomerName" text="Họ và Tên" prefWidth="150.0" />
-                        <TableColumn fx:id="colCustomerGender" text="Giới tính" prefWidth="80.0" />
-                        <TableColumn fx:id="colCustomerIdCard" text="CMND/CCCD" prefWidth="120.0" />
-                    </columns>
-                </TableView>
-                <!-- Add Customer Button -->
-                <Button fx:id="addCustomerButton" text="➕ Thêm Khách Hàng"
-                        style="-fx-font-weight: bold;" />
-            </VBox>
+                    <!-- Customer List -->
+                    <VBox spacing="8.0">
+                        <Label text="Danh sách khách hàng thuê phòng:" />
+                        <HBox alignment="CENTER_RIGHT" spacing="6.0">
+                            <Button fx:id="removeSelectedGuestsButton" text="❌ Xoá khách đã chọn"
+                                    style="-fx-font-weight: bold; -fx-text-fill: red;" />
+                        </HBox>
+                        <TableView fx:id="customerTable" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="colCustomerSelect" text="✔" prefWidth="30.0"/>
+                                <TableColumn fx:id="colCustomerId" text="ID" />
+                                <TableColumn fx:id="colCustomerName" text="Họ và Tên" />
+                                <TableColumn fx:id="colCustomerGender" text="Giới tính" />
+                                <TableColumn fx:id="colCustomerAge" text="Tuổi" />
+                                <TableColumn fx:id="colCustomerIdCard" text="CMND/CCCD" />
+                            </columns>
+                        </TableView>
+                        <Button fx:id="addCustomerButton" text="➕ Thêm Khách Hàng"
+                                style="-fx-font-weight: bold;" />
+                    </VBox>
 
-        </VBox>
+                    <!-- Create Rental Button -->
+                    <Button fx:id="createRentalButton"
+                            text="✔ Tạo Phiếu Thuê Phòng"
+                            style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-background-color: #4CAF50; -fx-text-fill: white;" />
+                </VBox>
+            </content>
+        </ScrollPane>
 
         <!-- RIGHT: Customer or Room Detail -->
         <VBox prefWidth="600.0" style="-fx-background-color: #ffffff;">
