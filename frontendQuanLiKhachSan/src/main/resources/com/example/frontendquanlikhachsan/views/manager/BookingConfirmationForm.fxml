@@ -19,7 +19,6 @@
                 <DatePicker fx:id="filterTo"   promptText="Đến ngày"/>
                 <TextField fx:id="filterRoomId" promptText="Room ID" prefWidth="80"/>
                 <ComboBox fx:id="filterType" promptText="Loại phòng" prefWidth="120"/>
-                <Button fx:id="btnFilter" text="Áp dụng" />
             </HBox>
 
             <HBox spacing="10" alignment="CENTER_LEFT">
