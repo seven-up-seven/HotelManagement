@@ -122,9 +122,8 @@ public class MainController {
         openTab("qlhđ", "/com/example/frontendquanlikhachsan/views/accountant/StaffSalaryAccountant.fxml");
     }
 
-    public void openAdminUserManagement()
-    {
-
+    public void openAccountManagement() {
+        openTab("qltk", "/com/example/frontendquanlikhachsan/views/admin/Account.fxml");
     }
 
     @FXML

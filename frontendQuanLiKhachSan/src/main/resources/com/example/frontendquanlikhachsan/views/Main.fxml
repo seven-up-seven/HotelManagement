@@ -37,7 +37,7 @@
                             prefWidth="180.0" prefHeight="40.0"
                             styleClass="sidebar-titledpane">
                     <VBox spacing="5" style="-fx-padding: 10;">
-                        <Button onAction="#openAdminUserManagement" text="Quản lý tài khoản"
+                        <Button onAction="#openAccountManagement" text="Quản lý tài khoản"
                                 prefWidth="160.0" styleClass="submenu-button"/>
                         <!--                        <Button onAction="#openAdminSettings" text="Thiết lập hệ thống"-->
                         <!--                                prefWidth="160.0" styleClass="submenu-button"/>-->

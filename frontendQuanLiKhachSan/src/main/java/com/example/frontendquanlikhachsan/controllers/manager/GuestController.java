@@ -223,18 +223,35 @@ public class GuestController {
                         .name(tfName.getText().trim())
                         .sex(cbSex.getValue())
                         .age(Short.parseShort(tfAge.getText().trim()))
-                        .identificationNumber(tfId.getText().trim())
-                        .phoneNumber(tfPhone.getText().trim())
-                        .email(tfEmail.getText().trim())
+                        .identificationNumber(emptyToNull(tfId.getText()))
+                        .phoneNumber(emptyToNull(tfPhone.getText()))
+                        .email(emptyToNull(tfEmail.getText()))
                         .build();
                 ApiHttpClientCaller.call("guest", ApiHttpClientCaller.Method.POST, dto);
                 showInfoAlert("Tạo thành công","Guest mới đã được thêm"); loadGuests();
-            } catch(Exception ex){ ex.printStackTrace(); showErrorAlert("Lỗi","Không thể tạo guest."); }
+            } catch(Exception ex) {
+                ex.printStackTrace();
+                showErrorAlert("Lỗi","Không thể tạo guest.");
+            }
         });
         btns.getChildren().addAll(save,cancel);
         detailPane.getChildren().addAll(title,grid,btns);
     }
 
-    private void showInfoAlert(String h, String c){ Alert a=new Alert(Alert.AlertType.INFORMATION); a.setHeaderText(h); a.setContentText(c); a.showAndWait(); }
-    private void showErrorAlert(String h, String c){ Alert a=new Alert(Alert.AlertType.ERROR); a.setHeaderText(h); a.setContentText(c); a.showAndWait(); }
+    private void showInfoAlert(String h, String c){
+        Alert a=new Alert(Alert.AlertType.INFORMATION);
+        a.setHeaderText(h);
+        a.setContentText(c);
+        a.showAndWait();
+    }
+    private void showErrorAlert(String h, String c){
+        Alert a=new Alert(Alert.AlertType.ERROR);
+        a.setHeaderText(h);
+        a.setContentText(c);
+        a.showAndWait(); }
+
+    private String emptyToNull(String input) {
+        if (input == null || input.trim().isEmpty()) return null;
+        return input.trim();
+    }
 }

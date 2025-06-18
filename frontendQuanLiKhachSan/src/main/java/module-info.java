@@ -22,6 +22,7 @@ module com.example.frontendquanlikhachsan {
     opens com.example.frontendquanlikhachsan.controllers.manager to javafx.fxml;
     opens com.example.frontendquanlikhachsan.controllers.receptionist to javafx.fxml;
     opens com.example.frontendquanlikhachsan.controllers.accountant to javafx.fxml;
+    opens com.example.frontendquanlikhachsan.controllers.admin to javafx.fxml;
     opens com.example.frontendquanlikhachsan.entity.account to com.fasterxml.jackson.databind;
     opens com.example.frontendquanlikhachsan.entity.staff to com.fasterxml.jackson.databind;
     opens com.example.frontendquanlikhachsan.entity.guest to com.fasterxml.jackson.databind;
@@ -39,6 +40,7 @@ module com.example.frontendquanlikhachsan {
     opens com.example.frontendquanlikhachsan.entity.bookingconfirmationform to com.fasterxml.jackson.databind;
     opens com.example.frontendquanlikhachsan.entity.revenueReport to com.fasterxml.jackson.databind;
     opens com.example.frontendquanlikhachsan.entity.revenueReportDetail to com.fasterxml.jackson.databind;
+    opens com.example.frontendquanlikhachsan.entity.userRole to com.fasterxml.jackson.databind;
     opens com.example.frontendquanlikhachsan.auth to com.fasterxml.jackson.databind;
 
     exports com.example.frontendquanlikhachsan;
