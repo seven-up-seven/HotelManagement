@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.apache.el.parser.Token;
 
 import java.net.URI;
 import java.net.http.*;
@@ -27,6 +28,14 @@ public class ApiHttpClientCaller {
     }
 
     public static String call(String path, Method method, Object body) throws Exception {
+        int currentId= TokenHolder.getInstance().getCurrentUserId();
+
+        if ((method == Method.POST || method == Method.PUT || method == Method.DELETE)
+                && !path.contains("authentication")) {
+            if (!path.endsWith("/")) path += "/";
+            path += currentId + "/" + "Staff";
+        }
+
         String fullUrl = BASE_URL + path;
         String token = TokenHolder.getInstance().getAccessToken();
 
