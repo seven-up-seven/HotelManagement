@@ -9,9 +9,12 @@ import com.example.frontendquanlikhachsan.entity.enums.Sex;
 import com.example.frontendquanlikhachsan.entity.position.Position;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -22,6 +25,8 @@ import javafx.scene.layout.VBox;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+
+import static com.example.frontendquanlikhachsan.ApiHttpClientCaller.Method.GET;
 
 public class StaffController {
 
@@ -39,11 +44,20 @@ public class StaffController {
     private TableColumn<ResponseStaffDto, Integer> colAge;
     @FXML
     private TableColumn<ResponseStaffDto, String> colUsername;
+    @FXML
+    private TableColumn<ResponseStaffDto, String> colAddress;
+
+    @FXML private TextField  tfFilterId;
+    @FXML private TextField  tfFilterName;
+    @FXML private TextField  tfFilterIdNum;
+    @FXML private ComboBox<String> cbFilterPosition;
 
     @FXML
     private VBox detailPane;
 
-    private ObservableList<ResponseStaffDto> staffList = FXCollections.observableArrayList();
+    private final ObservableList<ResponseStaffDto> masterData = FXCollections.observableArrayList();
+    private FilteredList<ResponseStaffDto> filteredData;
+
     private final ObjectMapper mapper = new ObjectMapper();
     private final String token = ""; // TODO: gán token thật ở đây
 
@@ -55,19 +69,53 @@ public class StaffController {
         colPosition.setCellValueFactory(cd -> new ReadOnlyObjectWrapper<>(cd.getValue().getPositionName()));
         colSex.setCellValueFactory(cd -> new ReadOnlyObjectWrapper<>(cd.getValue().getSex()));
         colAge.setCellValueFactory(cd -> new ReadOnlyObjectWrapper<>(cd.getValue().getAge()));
+        colAddress.setCellValueFactory(cd -> {
+            String addr = cd.getValue().getAddress();
+            return new ReadOnlyObjectWrapper<>( (addr == null || addr.isBlank()) ? "–" : addr );
+        });
         colUsername.setCellValueFactory(cd -> {
             String uname = cd.getValue().getAccountUsername();
             return new ReadOnlyObjectWrapper<>( (uname == null || uname.isBlank()) ? "–" : uname );
         });
 
         loadStaffs();
-        tableStaff.setItems(staffList);
 
-        tableStaff.getSelectionModel().selectedItemProperty().addListener((obs, oldS, newS) -> {
-            if (newS != null) {
-                showStaffDetail(newS);
-            }
-        });
+        filteredData = new FilteredList<>(masterData, p -> true);
+        SortedList<ResponseStaffDto> sorted = new SortedList<>(filteredData);
+        sorted.comparatorProperty().bind(tableStaff.comparatorProperty());
+        tableStaff.setItems(sorted);
+
+        tableStaff.getSelectionModel().selectedItemProperty()
+                .addListener((obs, oldSel, newSel) -> {
+                    if (newSel != null) {
+                        showStaffDetail(newSel);
+                    } else {
+                        detailPane.getChildren().clear();
+                    }
+                });
+
+        cbFilterPosition.getItems().add("Tất cả");
+        // gọi API lấy position rồi add tên vào combobox
+        new Thread(() -> {
+            try {
+                String json = ApiHttpClientCaller.call("position", GET, null, token);
+                List<ResponsePositionDto> pos = mapper.readValue(json,
+                        new TypeReference<List<ResponsePositionDto>>() {});
+                List<String> names = pos.stream()
+                        .map(ResponsePositionDto::getName)
+                        .sorted()
+                        .toList();
+                Platform.runLater(() -> cbFilterPosition.getItems().addAll(names));
+            } catch(Exception ignored){}
+        }).start();
+        cbFilterPosition.getSelectionModel().selectFirst();
+
+        // --- 4) Khi bất kỳ filter thay đổi => áp predicate mới ---
+        Runnable apply = this::applyFilters;
+        tfFilterId   .textProperty().addListener((o,ov,nv)->apply.run());
+        tfFilterName .textProperty().addListener((o,ov,nv)->apply.run());
+        tfFilterIdNum.textProperty().addListener((o,ov,nv)->apply.run());
+        cbFilterPosition.valueProperty().addListener((o,ov,nv)->apply.run());
     }
 
     @FXML
@@ -78,14 +126,45 @@ public class StaffController {
     // --- Load dữ liệu from API ---
     private void loadStaffs() {
         try {
-            String json = ApiHttpClientCaller.call("staff", ApiHttpClientCaller.Method.GET, null);
-            List<ResponseStaffDto> list = mapper.readValue(json, new TypeReference<>() {});
-            staffList.clear();
-            staffList.addAll(list);
-        } catch (Exception e) {
+            String json = ApiHttpClientCaller.call("staff", GET, null, token);
+            List<ResponseStaffDto> list = mapper.readValue(json,
+                    new TypeReference<List<ResponseStaffDto>>() {});
+            masterData.setAll(list);
+        } catch(Exception e) {
             e.printStackTrace();
-            showErrorAlert("Lỗi tải dữ liệu", "Không thể tải danh sách nhân viên từ server.");
+            showErrorAlert("Lỗi tải dữ liệu", "Không thể tải danh sách nhân viên.");
         }
+    }
+
+    private void applyFilters() {
+        String idText     = tfFilterId.getText().trim();
+        String nameText   = tfFilterName.getText().trim().toLowerCase();
+        String idNumText  = tfFilterIdNum.getText().trim();
+        String posText    = cbFilterPosition.getValue();
+
+        filteredData.setPredicate(staff -> {
+            // 1) ID filter
+            if (!idText.isEmpty()) {
+                try {
+                    if (staff.getId() != Integer.parseInt(idText)) return false;
+                } catch(NumberFormatException e) { return false; }
+            }
+            // 2) Họ tên filter
+            if (!nameText.isEmpty()
+                    && !staff.getFullName().toLowerCase().contains(nameText))
+                return false;
+            // 3) CCCD/CMND filter
+            String idnum = staff.getIdentificationNumber();
+            if (!idNumText.isEmpty()
+                    && (idnum == null || !idnum.contains(idNumText)))
+                return false;
+            // 4) Position filter
+            if (!"Tất cả".equals(posText)
+                    && !posText.equals(staff.getPositionName()))
+                return false;
+
+            return true;
+        });
     }
 
     private void showStaffDetail(ResponseStaffDto staff) {
@@ -415,7 +494,7 @@ public class StaffController {
     private List<PositionDropdownChoice> getAllPositions() {
         try {
             // Gọi API GET /positions để lấy về List<ResponsePositionDto>
-            String json = ApiHttpClientCaller.call("position", ApiHttpClientCaller.Method.GET, null);
+            String json = ApiHttpClientCaller.call("position", GET, null);
             List<ResponsePositionDto> posList = mapper.readValue(json, new TypeReference<List<ResponsePositionDto>>() {});
             // Chuyển mỗi ResponsePositionDto thành đối tượng Position (chỉ map id + name)
             return posList.stream()

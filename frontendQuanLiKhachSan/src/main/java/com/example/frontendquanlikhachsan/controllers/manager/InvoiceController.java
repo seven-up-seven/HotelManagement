@@ -1,6 +1,7 @@
 package com.example.frontendquanlikhachsan.controllers.manager;
 
 import com.example.frontendquanlikhachsan.ApiHttpClientCaller;
+import com.example.frontendquanlikhachsan.HelloApplication;
 import com.example.frontendquanlikhachsan.entity.guest.ResponseGuestDto;
 import com.example.frontendquanlikhachsan.entity.guest.SearchGuestDto;
 import com.example.frontendquanlikhachsan.entity.rentalForm.ResponseRentalFormDto;
@@ -12,17 +13,21 @@ import com.example.frontendquanlikhachsan.entity.invoicedetail.ResponseInvoiceDe
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.util.StringConverter;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -46,13 +51,15 @@ public class InvoiceController {
     @FXML private VBox detailPane;
 
     // --- filter controls ---
+    @FXML private TextField tfFilterStaffId;
+    @FXML private TextField tfFilterStaffUsername;
+
     @FXML private TextField  tfFilterInvId;
     @FXML private TextField  tfFilterGuestId;
     @FXML private TextField  tfFilterCostMin;
     @FXML private TextField  tfFilterCostMax;
     @FXML private DatePicker dpFilterFrom;
     @FXML private DatePicker dpFilterTo;
-    @FXML private Button btnFilter;
 
     private final ObservableList<ResponseInvoiceDto> invoiceList = FXCollections.observableArrayList();
     private FilteredList<ResponseInvoiceDto> filteredInvoices;
@@ -70,6 +77,8 @@ public class InvoiceController {
         tableInvoice.setItems(sorted);
 
         // 2) Lắng nghe filter controls
+        tfFilterStaffId.textProperty().addListener((o,oldV,newV) -> applyFilters());
+        tfFilterStaffUsername.textProperty().addListener((o,oldV,newV) -> applyFilters());
         tfFilterInvId.textProperty().addListener((o,oldV,newV) -> applyFilters());
         tfFilterGuestId.textProperty().addListener((o,oldV,newV) -> applyFilters());
         tfFilterCostMin.textProperty().addListener((o,oldV,newV) -> applyFilters());
@@ -105,9 +114,78 @@ public class InvoiceController {
         }
     }
 
+    public void selectInvoiceById(int invoiceId) {
+        // đảm bảo rằng bảng đã load (initialize() + loadInvoices() đã chạy khi FXMLLoader.load() xong)
+        tableInvoice.getItems().stream()
+                .filter(inv -> inv.getId() == invoiceId)
+                .findFirst()
+                .ifPresent(inv -> {
+                    tableInvoice.getSelectionModel().select(inv);
+                    showDetail(inv);
+                });
+    }
+
+    public static void openInvoiceDetailTab(TabPane tabPane, int invoiceId) {
+        try {
+            // 1) Load file FXML của Invoice view
+            FXMLLoader loader = new FXMLLoader(
+                    HelloApplication.class.getResource("/com/example/frontendquanlikhachsan/views/manager/Invoice.fxml")
+            );
+            Node content = loader.load();
+
+            // 2) Lấy instance của controller, gọi hàm load
+            InvoiceController controller = loader.getController();
+            controller.loadInvoiceDetail(invoiceId);
+
+            // 3) Tạo tab mới và add vào TabPane
+            Tab tab = new Tab("Hoá đơn #" + invoiceId, content);
+            tabPane.getTabs().add(tab);
+            tabPane.getSelectionModel().select(tab);
+
+            // Khi đóng tab, có thể clear nội dung nếu cần
+            tab.setOnClosed(e -> controller.onTabClosedCleanup());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Bạn có thể show dialog lỗi ở đây
+        }
+    }
+
+    public void loadInvoiceDetail(int invoiceId) {
+        // Giống như loadInvoices nhưng chỉ cho 1 invoice
+        new Thread(() -> {
+            try {
+                String json = ApiHttpClientCaller.call("invoice/" + invoiceId, GET, null);
+                ResponseInvoiceDto dto = mapper.readValue(json, ResponseInvoiceDto.class);
+                Platform.runLater(() -> {
+                    // Hiển thị chi tiết giống như khi người dùng click
+                    showDetail(dto);
+                    // Đồng thời chọn row tương ứng trong table (nếu bạn vẫn giữ table)
+                    tableInvoice.getSelectionModel().select(dto);
+                });
+            } catch (Exception ex) {
+                Platform.runLater(() -> showErrorAlert("Lỗi tải", ex.getMessage()));
+            }
+        }).start();
+    }
+
+    /**
+     * Tùy chọn: cleanup khi tab đóng.
+     */
+    private void onTabClosedCleanup() {
+        // Ví dụ clear vừa cho đỡ tốn bộ nhớ
+        detailPane.getChildren().clear();
+        tableInvoice.getItems().clear();
+    }
+
     private void applyFilters() {
         String idText     = Optional.ofNullable(tfFilterInvId.getText()).orElse("").trim();
         String guestText  = Optional.ofNullable(tfFilterGuestId.getText()).orElse("").trim();
+        String staffIdText = Optional.ofNullable(tfFilterStaffId.getText()).orElse("").trim();
+        String staffUsernameText = Optional.ofNullable(tfFilterStaffUsername.getText())
+                .orElse("")
+                .trim()
+                .toLowerCase();
         String minCostStr = Optional.ofNullable(tfFilterCostMin.getText()).orElse("").trim();
         String maxCostStr = Optional.ofNullable(tfFilterCostMax.getText()).orElse("").trim();
         LocalDate from    = dpFilterFrom.getValue();
@@ -123,6 +201,15 @@ public class InvoiceController {
             if (!guestText.isEmpty()) {
                 try{ if (inv.getPayingGuestId() != Integer.parseInt(guestText)) return false; }
                 catch(NumberFormatException ex){ return false; }
+            }
+            if (!staffIdText.isEmpty()) {
+                try{ if (inv.getStaffId() != Integer.parseInt(staffIdText)) return false; }
+                catch(NumberFormatException ex){ return false; }
+            }
+            // 4) Staff Username (filter on staffName if DTO không có username riêng)
+            if (!staffUsernameText.isEmpty()
+                    && !inv.getStaffName().toLowerCase().contains(staffUsernameText)) {
+                return false;
             }
             // filter by totalCost
             double cost = inv.getTotalReservationCost();

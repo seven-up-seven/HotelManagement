@@ -52,11 +52,6 @@
                             </FXCollections>
                         </items>
                     </ComboBox>
-
-                    <!-- NEW: Filter button -->
-                    <Button fx:id="btnFilter"
-                            text="🔍 Tìm"
-                            onAction="#onFilterAction"/>
                 </children>
             </HBox>
 

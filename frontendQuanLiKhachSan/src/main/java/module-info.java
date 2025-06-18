@@ -16,6 +16,8 @@ module com.example.frontendquanlikhachsan {
     requires spring.context;
     requires java.validation;
     requires org.apache.tomcat.embed.el;
+    requires java.desktop;
+    requires spring.beans;
 
     opens com.example.frontendquanlikhachsan to javafx.fxml;
     opens com.example.frontendquanlikhachsan.controllers to javafx.fxml;

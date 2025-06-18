@@ -52,7 +52,6 @@ public class RentalFormController {
     @FXML private ComboBox<String> cbPaid;
 
     @FXML private TextField tfFilterId;
-    @FXML private Button    btnFilter;
 
     private FilteredList<ResponseRentalFormDto> filteredForms;
 
@@ -113,8 +112,6 @@ public class RentalFormController {
         cbPaid.setItems(FXCollections.observableArrayList("All", "Paid", "Unpaid"));
         cbPaid.getSelectionModel().select("All");
 
-        // if you did wire a “🔍 Tìm” Button in your FXML:
-        btnFilter.setOnAction(e -> onFilterAction());
         loadForms();
         tableForm.getSelectionModel().selectedItemProperty().addListener((obs, old, sel) -> {
             if (sel != null) showDetail(sel);

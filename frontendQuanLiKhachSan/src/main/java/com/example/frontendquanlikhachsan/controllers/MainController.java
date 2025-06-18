@@ -1,5 +1,7 @@
 package com.example.frontendquanlikhachsan.controllers;
 
+import com.example.frontendquanlikhachsan.controllers.manager.GuestController;
+import com.example.frontendquanlikhachsan.controllers.manager.InvoiceController;
 import javafx.animation.Interpolator;
 import javafx.animation.PauseTransition;
 import javafx.animation.TranslateTransition;
@@ -12,14 +14,20 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
 import javafx.util.Duration;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
+@Component
 public class MainController {
 
     @FXML private TabPane tabPane;
+    public TabPane getTabPane() {
+        return tabPane;
+    }
     @FXML private AnchorPane sidebarContainer;
 
     private final Map<String, Integer> tabCounters = new HashMap<>();
@@ -47,79 +55,119 @@ public class MainController {
         }
     }
 
-    private void openTab(String title, String fxmlPath) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-            Parent content = loader.load();
+//    private void openTab(String title, String fxmlPath) {
+//        try {
+//            FXMLLoader loader = new FXMLLoader(this.getClass().getResource(fxmlPath));
+//            Parent content = loader.load();
+//
+//            int count = tabCounters.getOrDefault(title, 0) + 1;
+//            tabCounters.put(title, count);
+//
+//            String tabTitle = title + " #" + count;
+//            Tab tab = new Tab(tabTitle, content);
+//            tab.setClosable(true);
+//
+//            tabPane.getTabs().add(tab);
+//            tabPane.getSelectionModel().select(tab);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+private <C> void openTab(String baseTitle,
+                         String fxmlPath,
+                         Consumer<C> controllerInitializer) {
+    try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+        Parent content = loader.load();
 
-            int count = tabCounters.getOrDefault(title, 0) + 1;
-            tabCounters.put(title, count);
+        int cnt = tabCounters.getOrDefault(baseTitle, 0) + 1;
+        tabCounters.put(baseTitle, cnt);
+        String title = baseTitle + " #" + cnt;
 
-            String tabTitle = title + " #" + count;
-            Tab tab = new Tab(tabTitle, content);
-            tab.setClosable(true);
-
-            tabPane.getTabs().add(tab);
-            tabPane.getSelectionModel().select(tab);
-        } catch (IOException e) {
-            e.printStackTrace();
+        // Lấy controller, gọi initializer nếu có
+        @SuppressWarnings("unchecked")
+        C ctrl = (C)loader.getController();
+        if (controllerInitializer != null) {
+            controllerInitializer.accept(ctrl);
         }
+
+        Tab tab = new Tab(title, content);
+        tab.setClosable(true);
+        tabPane.getTabs().add(tab);
+        tabPane.getSelectionModel().select(tab);
+    } catch(IOException e) {
+        e.printStackTrace();
+        // TODO: show alert lỗi
     }
+}
 
     public void openHomeTab() {
-        openTab("Trang chủ", "/com/example/frontendquanlikhachsan/views/Home.fxml");
+        openTab("Trang chủ", "/com/example/frontendquanlikhachsan/views/Home.fxml", null);
     }
 
     public void openBookingTab() {
-        openTab("Đặt phòng", "/com/example/frontendquanlikhachsan/views/receptionist/Booking.fxml");
+        openTab("Đặt phòng", "/com/example/frontendquanlikhachsan/views/receptionist/Booking.fxml", null);
     }
 
     public void openStaffTab() {
-        openTab("qlnv", "/com/example/frontendquanlikhachsan/views/manager/Staff.fxml");
+        openTab("qlnv", "/com/example/frontendquanlikhachsan/views/manager/Staff.fxml", null);
     }
 
     public void openRoomRentingTab() {
-        openTab("Thuê phòng", "/com/example/frontendquanlikhachsan/views/receptionist/RoomRenting.fxml");
+        openTab("Thuê phòng", "/com/example/frontendquanlikhachsan/views/receptionist/RoomRenting.fxml", null);
     }
     
+//    public void openGuestTab() {
+//        openTab("qlkh", "/com/example/frontendquanlikhachsan/views/manager/Guest.fxml", null);
+//    }
+
     public void openGuestTab() {
-        openTab("qlkh", "/com/example/frontendquanlikhachsan/views/manager/Guest.fxml");
+        openTab("QL Khách", "/com/example/frontendquanlikhachsan/views/manager/Guest.fxml",
+                (GuestController gc) -> gc.setMainController(this)
+        );
     }
 
+
     public void openPositionTab() {
-        openTab("qlcv", "/com/example/frontendquanlikhachsan/views/manager/Position.fxml");
+        openTab("qlcv", "/com/example/frontendquanlikhachsan/views/manager/Position.fxml", null);
     }
 
     public void openRentalExtensionFormTab() {
-        openTab("qlcv", "/com/example/frontendquanlikhachsan/views/manager/RentalExtensionForm.fxml");
+        openTab("qlcv", "/com/example/frontendquanlikhachsan/views/manager/RentalExtensionForm.fxml", null);
     }
 
     public void openRentalFormTab() {
-        openTab("qlpt", "/com/example/frontendquanlikhachsan/views/manager/RentalForm.fxml");
+        openTab("qlpt", "/com/example/frontendquanlikhachsan/views/manager/RentalForm.fxml", null);
     }
 
     public void openInvoiceTab() {
-        openTab("qlhđ", "/com/example/frontendquanlikhachsan/views/manager/Invoice.fxml");
+        openTab("qlhđ", "/com/example/frontendquanlikhachsan/views/manager/Invoice.fxml", null);
+    }
+
+    public void openInvoiceTab(int invoiceId) {
+        openTab("qlhđ", "/com/example/frontendquanlikhachsan/views/manager/Invoice.fxml",
+                (InvoiceController ic) -> ic.selectInvoiceById(invoiceId)
+        );
     }
 
     public void openStructureTab() {
-        openTab("qlhđ", "/com/example/frontendquanlikhachsan/views/manager/Structure.fxml");
+        openTab("qlhđ", "/com/example/frontendquanlikhachsan/views/manager/Structure.fxml", null);
     }
 
     public void openBookingConfirmationFormTab() {
-        openTab("qlhđ", "/com/example/frontendquanlikhachsan/views/manager/BookingConfirmationForm.fxml");
+        openTab("qlhđ", "/com/example/frontendquanlikhachsan/views/manager/BookingConfirmationForm.fxml", null);
     }
 
     public void openReportTab() {
-        openTab("qlhđ", "/com/example/frontendquanlikhachsan/views/accountant/RevenueReport.fxml");
+        openTab("qlhđ", "/com/example/frontendquanlikhachsan/views/accountant/RevenueReport.fxml", null);
     }
 
     public void openInvoiceAccountantTab() {
-        openTab("qlhđ", "/com/example/frontendquanlikhachsan/views/accountant/InvoiceAccountant.fxml");
+        openTab("qlhđ", "/com/example/frontendquanlikhachsan/views/accountant/InvoiceAccountant.fxml", null);
     }
 
     public void openSalaryTab() {
-        openTab("qlhđ", "/com/example/frontendquanlikhachsan/views/accountant/StaffSalaryAccountant.fxml");
+        openTab("qlhđ", "/com/example/frontendquanlikhachsan/views/accountant/StaffSalaryAccountant.fxml", null);
     }
 
     public void openAdminUserManagement()
