@@ -1,6 +1,7 @@
 package com.example.frontendquanlikhachsan.controllers.manager;
 
 import com.example.frontendquanlikhachsan.ApiHttpClientCaller;
+import com.example.frontendquanlikhachsan.controllers.MainController;
 import com.example.frontendquanlikhachsan.entity.staff.ResponseStaffDto;
 import com.example.frontendquanlikhachsan.entity.guest.ResponseGuestDto;
 import com.example.frontendquanlikhachsan.entity.guest.GuestDto;
@@ -13,24 +14,44 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
-// …v.v.
 
+import static com.example.frontendquanlikhachsan.ApiHttpClientCaller.Method.GET;
+// …v.v.
 
 public class GuestController {
 
+    private MainController mainController;
+
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
+    }
+
+
+
+    @FXML private TextField tfFilterGuestId;
+    @FXML private TextField tfFilterName;
+    @FXML private TextField tfFilterIdNum;
+    @FXML private TextField tfFilterPhone;
+    @FXML private TextField tfFilterEmail;
+
     @FXML private TableView<ResponseGuestDto> tableGuest;
+
     @FXML private TableColumn<ResponseGuestDto, Integer> colId;
     @FXML private TableColumn<ResponseGuestDto, String> colName;
     @FXML private TableColumn<ResponseGuestDto, Sex> colSex;
@@ -38,13 +59,15 @@ public class GuestController {
     @FXML private TableColumn<ResponseGuestDto, String> colIdNum;
     @FXML private TableColumn<ResponseGuestDto, String> colPhone;
     @FXML private TableColumn<ResponseGuestDto, String> colEmail;
+
     @FXML private VBox detailPane;
 
     // In GuestController.java, modify the ObjectMapper initialization
     private final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule()).configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 
     private final String token = ""; // TODO: gán token
-    private ObservableList<ResponseGuestDto> guestList = FXCollections.observableArrayList();
+    private final ObservableList<ResponseGuestDto> guestList = FXCollections.observableArrayList();
+    private FilteredList<ResponseGuestDto> filteredGuests;
 
     @FXML public void initialize() {
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
@@ -57,10 +80,22 @@ public class GuestController {
         colEmail.setCellValueFactory(cd -> new ReadOnlyObjectWrapper<>(cd.getValue().getEmail()));
 
         loadGuests();
-        tableGuest.setItems(guestList);
-        tableGuest.getSelectionModel().selectedItemProperty().addListener((obs, o, n) -> {
-            if (n != null) showGuestDetail(n);
+        filteredGuests = new FilteredList<>(guestList, g -> true);
+        SortedList<ResponseGuestDto> sorted = new SortedList<>(filteredGuests);
+        sorted.comparatorProperty().bind(tableGuest.comparatorProperty());
+        tableGuest.setItems(sorted);
+
+        tableGuest.getSelectionModel().selectedItemProperty().addListener((obs,ov,nv)->{
+            detailPane.getChildren().clear();
+            if (nv!=null) showGuestDetail(nv);
         });
+
+        Runnable apply = this::applyFilters;
+        tfFilterGuestId.textProperty().addListener((o,ov,nv)->apply.run());
+        tfFilterName     .textProperty().addListener((o,ov,nv)->apply.run());
+        tfFilterIdNum    .textProperty().addListener((o,ov,nv)->apply.run());
+        tfFilterPhone    .textProperty().addListener((o,ov,nv)->apply.run());
+        tfFilterEmail    .textProperty().addListener((o,ov,nv)->apply.run());
     }
 
     private String formatDateTime(LocalDateTime dateTime) {
@@ -74,13 +109,49 @@ public class GuestController {
 
     private void loadGuests() {
         try {
-            String json = ApiHttpClientCaller.call("guest", ApiHttpClientCaller.Method.GET, null);
-            List<ResponseGuestDto> list = mapper.readValue(json, new TypeReference<>(){});
-            guestList.clear();
+            String json = ApiHttpClientCaller.call("guest", GET, null, token);
+            List<ResponseGuestDto> list = mapper.readValue(json, new TypeReference<>() {});
             guestList.setAll(list);
-        } catch (Exception e) {
-            e.printStackTrace(); showErrorAlert("Lỗi tải dữ liệu", "Không thể tải danh sách khách hàng.");
+        } catch(Exception e) {
+            e.printStackTrace();
+            showErrorAlert("Lỗi tải dữ liệu", "Không thể tải danh sách guest.");
         }
+    }
+
+    private void applyFilters() {
+        String idText   = tfFilterGuestId.getText().trim();
+        String nameText = tfFilterName.getText().trim().toLowerCase();
+        String idNum    = tfFilterIdNum.getText().trim();
+        String phone    = tfFilterPhone.getText().trim();
+        String email    = tfFilterEmail.getText().trim().toLowerCase();
+
+        filteredGuests.setPredicate(g -> {
+            // ID exact match
+            if (!idText.isEmpty()) {
+                try {
+                    if (g.getId() != Integer.parseInt(idText)) return false;
+                } catch(NumberFormatException ex) {
+                    return false;
+                }
+            }
+            // name contains
+            if (!nameText.isEmpty()
+                    && !g.getName().toLowerCase().contains(nameText)) return false;
+            // CCCD/CMND contains
+            if (!idNum.isEmpty()
+                    && (g.getIdentificationNumber()==null
+                    || !g.getIdentificationNumber().contains(idNum))) return false;
+            // phone contains
+            if (!phone.isEmpty()
+                    && (g.getPhoneNumber()==null
+                    || !g.getPhoneNumber().contains(phone))) return false;
+            // email contains
+            if (!email.isEmpty()
+                    && (g.getEmail()==null
+                    || !g.getEmail().toLowerCase().contains(email))) return false;
+
+            return true;
+        });
     }
 
     private void showGuestDetail(ResponseGuestDto g) {
@@ -124,6 +195,16 @@ public class GuestController {
             lvInv.setPrefHeight(lvInv.getItems().size() * lvInv.getFixedCellSize() + 2);
             TitledPane tpInv = new TitledPane("Hóa đơn", lvInv);
             accordion.getPanes().add(tpInv);
+            lvInv.setOnMouseClicked(e -> {
+                if (e.getClickCount() == 2) {
+                    String sel = lvInv.getSelectionModel().getSelectedItem();
+                    if (sel != null && sel.startsWith("Hóa đơn #")) {
+                        int invoiceId = Integer.parseInt(sel.substring("Hóa đơn #".length()));
+                        // mở tab Invoice và auto-select chi tiết
+                        mainController.openInvoiceTab(invoiceId);
+                    }
+                }
+            });
         }
         if (!g.getRentalFormIds().isEmpty()) {
             ListView<String> lvRent = new ListView<>();

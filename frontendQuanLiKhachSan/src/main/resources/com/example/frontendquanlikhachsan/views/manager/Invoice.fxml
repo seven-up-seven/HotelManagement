@@ -26,12 +26,15 @@
                 </padding>
                 <TextField fx:id="tfFilterInvId" promptText="Invoice ID"/>
                 <TextField fx:id="tfFilterGuestId" promptText="ID khách thanh toán"/>
+                <!-- thêm 2 trường staff -->
+                <TextField fx:id="tfFilterStaffId" promptText="ID nhân viên"/>
+                <TextField fx:id="tfFilterStaffUsername" promptText="Username nhân viên"/>
                 <DatePicker fx:id="dpFilterFrom" promptText="Từ ngày"/>
                 <DatePicker fx:id="dpFilterTo"   promptText="Đến ngày"/>
                 <TextField fx:id="tfFilterCostMin" promptText="Giá từ"/>
                 <TextField fx:id="tfFilterCostMax" promptText="đến"/>
-                <Button fx:id="btnFilter" text="🔍 Lọc" onAction="#onFilterAction"/>
             </HBox>
+
 
             <!-- Bảng Invoice -->
             <TableView fx:id="tableInvoice" VBox.vgrow="ALWAYS">

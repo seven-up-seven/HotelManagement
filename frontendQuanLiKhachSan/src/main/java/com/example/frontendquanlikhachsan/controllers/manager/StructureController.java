@@ -41,6 +41,8 @@ public class StructureController {
     @FXML private TreeView<String> structureTree;
     @FXML private VBox detailPane;
 
+    private final Map<Integer, List<Integer>> floorRoomFilter = new HashMap<>();
+
     private List<ResponseBlockDto> allBlocks = new ArrayList<>();
     private ContextMenu menuBackground, menuBuilding, menuFloor, menuRoom;
 
@@ -175,58 +177,87 @@ public class StructureController {
     }
 
     private void applyFilters() {
-        String cat = categoryCombo.getValue();
-        String idText = searchId.getText().trim();
+        String cat      = categoryCombo.getValue();
+        String idText   = searchId.getText().trim();
         String nameText = searchName.getText().trim().toLowerCase();
-        String stateText = searchState.getValue();
+        String stateText= searchState.getValue();
+
+        // reset bộ lọc phòng
+        floorRoomFilter.clear();
 
         List<ResponseBlockDto> filteredBlocks = new ArrayList<>();
-        for(ResponseBlockDto b:allBlocks) {
-            // Filter Blocks
-            if("Tòa".equals(cat)) {
-                if((idText.isEmpty() || String.valueOf(b.getId()).equals(idText)) &&
-                        (nameText.isEmpty() || b.getName().toLowerCase().contains(nameText))) {
+        for (ResponseBlockDto b : allBlocks) {
+            // ----- 1) Lọc TÒA -----
+            if ("Tòa".equals(cat)) {
+                if ((idText.isEmpty() || String.valueOf(b.getId()).equals(idText))
+                        && (nameText.isEmpty() || b.getName().toLowerCase().contains(nameText))) {
                     filteredBlocks.add(b);
                 }
-                continue;
+                continue;  // next block
             }
-            // Otherwise Filter Floors & Rooms
-            List<Integer> keepFloor = new ArrayList<>();
-            for(int fid: b.getFloorIds()) {
+
+
+        List<Integer> keepFloor = new ArrayList<>();
+            for (int fid : b.getFloorIds()) {
                 try {
                     ResponseFloorDto f = mapper.readValue(
-                            ApiHttpClientCaller.call("floor/"+fid,GET,null,token), ResponseFloorDto.class);
-                    boolean floorOK = "Tầng".equals(cat) &&
-                            (idText.isEmpty() || String.valueOf(f.getId()).equals(idText)) &&
-                            (nameText.isEmpty() || f.getName().toLowerCase().contains(nameText));
+                            ApiHttpClientCaller.call("floor/" + fid, GET, null, token),
+                            ResponseFloorDto.class
+                    );
+
+                    boolean floorOK = "Tầng".equals(cat)
+                            && (idText.isEmpty()   || String.valueOf(f.getId()).equals(idText))
+                            && (nameText.isEmpty() || f.getName().toLowerCase().contains(nameText));
+
                     List<Integer> keepRoom = new ArrayList<>();
-                    if("Phòng".equals(cat) || floorOK) {
-                        for(int rid: f.getRoomIds()) {
+                    if ("Phòng".equals(cat) || floorOK) {
+                        for (int rid : f.getRoomIds()) {
                             ResponseRoomDto r = mapper.readValue(
-                                    ApiHttpClientCaller.call("room/"+rid,GET,null,token), ResponseRoomDto.class);
-                            boolean roomOK = (idText.isEmpty() || String.valueOf(r.getId()).equals(idText)) &&
-                                    (nameText.isEmpty() || r.getName().toLowerCase().contains(nameText));
-                            if(stateText!=null && !"Tất cả".equals(stateText)) {
+                                    ApiHttpClientCaller.call("room/" + rid, GET, null, token),
+                                    ResponseRoomDto.class
+                            );
+                            boolean roomOK = (idText.isEmpty()   || String.valueOf(r.getId()).equals(idText))
+                                    && (nameText.isEmpty() || r.getName().toLowerCase().contains(nameText));
+                            if (stateText != null && !"Tất cả".equals(stateText)) {
                                 roomOK &= r.getRoomState().toString().equals(stateText);
                             }
-                            if(roomOK) keepRoom.add(rid);
+                            if (roomOK) keepRoom.add(rid);
                         }
                     }
-                    if(floorOK || !keepRoom.isEmpty()) keepFloor.add(fid);
-                }catch(Exception ex){}
+
+                    // nếu có ít nhất 1 phòng thoả mãn, ghi vào floorRoomFilter
+                    if (!keepRoom.isEmpty()) {
+                        floorRoomFilter.put(fid, keepRoom);
+                    }
+
+                    if (floorOK || !keepRoom.isEmpty()) {
+                        keepFloor.add(fid);
+                    }
+                } catch (Exception ex) { /* ignore */ }
             }
-            if(!keepFloor.isEmpty()) {
+
+            if (!keepFloor.isEmpty()) {
+                // tạo 1 block mới chỉ với những floor thoả mãn
                 ResponseBlockDto nb = new ResponseBlockDto();
-                nb.setId(b.getId()); nb.setName(b.getName());
+                nb.setId(b.getId());
+                nb.setName(b.getName());
                 nb.setFloorIds(keepFloor);
-                nb.setFloorNames(b.getFloorNames().stream()
-                        .filter(nm->keepFloor.contains(b.getFloorIds().get(b.getFloorNames().indexOf(nm))))
-                        .collect(Collectors.toList()));
+                nb.setFloorNames(
+                        b.getFloorNames().stream()
+                                .filter(nm -> keepFloor.contains(
+                                        b.getFloorNames().indexOf(nm) >= 0
+                                                ? b.getFloorIds().get(b.getFloorNames().indexOf(nm))
+                                                : -1
+                                ))
+                                .collect(Collectors.toList())
+                );
                 filteredBlocks.add(nb);
             }
         }
-        Platform.runLater(()->buildTree(filteredBlocks));
+
+        Platform.runLater(() -> buildTree(filteredBlocks));
     }
+
 
     private void loadStructureFromApi() {
         new Thread(() -> {
@@ -366,6 +397,7 @@ public class StructureController {
     }
 
     private void buildTree(List<ResponseBlockDto> blocks) {
+        String cat = categoryCombo.getValue();
         TreeItem<String> root = structureTree.getRoot();
         root.getChildren().clear();
         blockMap.clear(); floorMap.clear(); roomMap.clear();
@@ -375,22 +407,39 @@ public class StructureController {
             TreeItem<String> blockItem = new TreeItem<>(b.getName(), new Label("🏢"));
             blockMap.put(blockItem, b.getId());
 
+            // nếu lọc tầng hoặc phòng, auto mở toà
+            if ("Tầng".equals(cat) || "Phòng".equals(cat)) {
+                blockItem.setExpanded(true);
+            }
+
             for (int i = 0; i < b.getFloorIds().size(); i++) {
                 int fid = b.getFloorIds().get(i);
                 try {
-                    ResponseFloorDto f = mapper.readValue(ApiHttpClientCaller.call("floor/" + fid, GET, null, token), ResponseFloorDto.class);
+                    ResponseFloorDto f = mapper.readValue(
+                            ApiHttpClientCaller.call("floor/" + fid, GET, null, token),
+                            ResponseFloorDto.class
+                    );
+
                     TreeItem<String> floorItem = new TreeItem<>(f.getName(), new Label("🏬"));
                     floorMap.put(floorItem, fid);
                     reverseFloorMap.put(fid, floorItem);
 
-                    List<ResponseRoomDto> rooms = new ArrayList<>();
-                    for (int rid : f.getRoomIds()) {
-                        ResponseRoomDto r = mapper.readValue(ApiHttpClientCaller.call("room/" + rid, GET, null, token), ResponseRoomDto.class);
-                        rooms.add(r);
+                    // nếu lọc phòng, auto mở tầng
+                    if ("Phòng".equals(cat)) {
+                        floorItem.setExpanded(true);
                     }
-                    rooms.sort(Comparator.comparingInt(r -> roomStateOrder(r.getRoomState())));
 
-                    for (ResponseRoomDto r : rooms) {
+                    // chỉ duyệt những room đã lọc (nếu có), ngược lại lấy tất cả
+                    List<Integer> roomsToShow = floorRoomFilter.containsKey(fid)
+                            ? floorRoomFilter.get(fid)
+                            : f.getRoomIds();
+
+                    // load và show mỗi room
+                    for (int rid : roomsToShow) {
+                        ResponseRoomDto r = mapper.readValue(
+                                ApiHttpClientCaller.call("room/" + rid, GET, null, token),
+                                ResponseRoomDto.class
+                        );
                         Color c = switch (r.getRoomState()) {
                             case BEING_RENTED -> Color.LIMEGREEN;
                             case READY_TO_SERVE -> Color.web("#fafafa");
@@ -403,14 +452,18 @@ public class StructureController {
                             dot.setStroke(Color.DODGERBLUE);
                             dot.setStrokeWidth(2);
                         }
-                        TreeItem<String> roomItem = new TreeItem<>(r.getName() + " – " + r.getRoomState(), dot);
-                        roomMap.put(roomItem, r.getId());
-                        reverseRoomMap.put(r.getId(), roomItem);
+                        TreeItem<String> roomItem = new TreeItem<>(
+                                r.getName() + " – " + r.getRoomState(), dot
+                        );
+                        roomMap.put(roomItem, rid);
+                        reverseRoomMap.put(rid, roomItem);
                         floorItem.getChildren().add(roomItem);
                     }
+
                     blockItem.getChildren().add(floorItem);
                 } catch (Exception ignored) {}
             }
+
             root.getChildren().add(blockItem);
         }
     }

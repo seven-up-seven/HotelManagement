@@ -41,7 +41,6 @@ public class BookingConfirmationFormController {
     @FXML private DatePicker  filterFrom, filterTo;
     @FXML private TextField   filterRoomId;
     @FXML private ComboBox<String> filterType;
-    @FXML private Button      btnFilter;
 
     @FXML private TableView<ResponseBookingConfirmationFormDto> tblBooking;
     @FXML private TableColumn<ResponseBookingConfirmationFormDto,Integer> colId;
@@ -104,13 +103,11 @@ public class BookingConfirmationFormController {
         filterState.getSelectionModel().selectFirst();
 
         // Lấy danh sách roomType từ data vừa load
-        btnFilter.setDisable(true); // disable cho tới khi load xong
 
         // chờ load xong mới fill filterType
         loadBookingForms();
 
         // --- 3. Listener khi bấm Áp dụng hoặc enter trong TextField ---
-        btnFilter.setOnAction(e -> applyFilters());
         filterId.setOnAction(e -> applyFilters());
         filterRoomId.setOnAction(e -> applyFilters());
         filterState.valueProperty().addListener((o,ov,nv)->applyFilters());
@@ -143,7 +140,6 @@ public class BookingConfirmationFormController {
                     typeList.addAll(types);
                     filterType.setItems(FXCollections.observableArrayList(typeList));
                     filterType.getSelectionModel().selectFirst();
-                    btnFilter.setDisable(false);
                 });
             } catch (Exception e) {
                 Platform.runLater(() -> showError("Lỗi tải dữ liệu", e.getMessage()));
