@@ -171,7 +171,7 @@ private <C> void openTab(String baseTitle,
     }
 
     public void openAccountManagement() {
-        openTab("qltk", "/com/example/frontendquanlikhachsan/views/admin/Account.fxml");
+        openTab("qltk", "/com/example/frontendquanlikhachsan/views/admin/Account.fxml", null);
     }
 
     @FXML

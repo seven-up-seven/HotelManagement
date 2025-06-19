@@ -3,25 +3,33 @@ package com.example.frontendquanlikhachsan.controllers.admin;
 import com.example.frontendquanlikhachsan.ApiHttpClientCaller;
 import com.example.frontendquanlikhachsan.entity.account.AccountDto;
 import com.example.frontendquanlikhachsan.entity.account.ResponseAccountDto;
+import com.example.frontendquanlikhachsan.entity.guest.GuestDto;
 import com.example.frontendquanlikhachsan.entity.guest.ResponseGuestDto;
 import com.example.frontendquanlikhachsan.entity.staff.ResponseStaffDto;
+import com.example.frontendquanlikhachsan.entity.staff.StaffDto;
 import com.example.frontendquanlikhachsan.entity.userRole.ResponseUserRoleDto;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
+import javafx.scene.control.skin.VirtualFlow;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class AccountController {
@@ -30,13 +38,16 @@ public class AccountController {
     @FXML private TableColumn<ResponseAccountDto, String> colUsername;
     @FXML private TableColumn<ResponseAccountDto, String> colPassword;
     @FXML private TableColumn<ResponseAccountDto, String> colRole;
+    @FXML private VBox accountDetailContainer;
     @FXML private VBox detailPane;
+    @FXML private Button btnCreateAccount;
 
     private int currentPage = 0;
     private boolean isLastPage = false;
     private final int pageSize = 10;
 
-    private final ObjectMapper mapper = new ObjectMapper().configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+    private final ObjectMapper mapper = new ObjectMapper()
+            .registerModule(new JavaTimeModule());
     private final ObservableList<ResponseAccountDto> accountList = FXCollections.observableArrayList();
 
     @FXML public void initialize() {
@@ -60,6 +71,8 @@ public class AccountController {
                 loadNextPage();
             }
         });
+
+        btnCreateAccount.setOnAction(event -> showCreateAccountForm());
     }
 
     private boolean isScrollAtBottom() {
@@ -81,12 +94,12 @@ public class AccountController {
             currentPage++;
         } catch (Exception e) {
             e.printStackTrace();
-            showError("Lỗi tải trang", "Không thể tải thêm dữ liệu.");
+            showError("Lỗi tải tài khoản", "Không thể tải thêm dữ liệu.");
         }
     }
 
     private void showAccountDetail(ResponseAccountDto acc) {
-        detailPane.getChildren().clear();
+        accountDetailContainer.getChildren().clear();
 
         Label title = new Label("» Chi tiết Tài khoản ID: " + acc.getId());
         title.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
@@ -114,7 +127,7 @@ public class AccountController {
             grid.add(new Label("Tài khoản này của:"), 0, 4); grid.add(new Label("Nhân viên"), 1, 4);
             grid.add(new Label("ID nhân viên:"), 0, 5);
             grid.add(new Label(String.valueOf(staff.getId())), 1, 5);
-            grid.add(new Label("Tên nhân viên:"), 0, 5); grid.add(new Label(staff.getFullName()), 1, 5);
+            grid.add(new Label("Tên nhân viên:"), 0, 6); grid.add(new Label(staff.getFullName()), 1, 6);
         } catch (Exception e1) {
             try {
                 String guestJson = ApiHttpClientCaller.call("guest/account-id/" + acc.getId(), ApiHttpClientCaller.Method.GET, null);
@@ -122,7 +135,7 @@ public class AccountController {
                 grid.add(new Label("Tài khoản này của:"), 0, 4); grid.add(new Label("Khách hàng"), 1, 4);
                 grid.add(new Label("ID khách:"), 0, 5);
                 grid.add(new Label(String.valueOf(guest.getId())), 1, 5);
-                grid.add(new Label("Tên khách:"), 0, 5); grid.add(new Label(guest.getName()), 1, 5);
+                grid.add(new Label("Tên khách:"), 0, 6); grid.add(new Label(guest.getName()), 1, 6);
             } catch (Exception e2) {
                 grid.add(new Label("Người dùng liên kết:"), 0, 4); grid.add(new Label("Không tìm thấy"), 1, 4);
             }
@@ -134,11 +147,11 @@ public class AccountController {
         Button btnDel = new Button("🗑️ Xóa"); btnDel.setOnAction(e -> deleteAccount(acc));
         actions.getChildren().addAll(btnEdit, btnDel);
 
-        detailPane.getChildren().addAll(title, grid, actions);
+        accountDetailContainer.getChildren().addAll(title, grid, actions);
     }
 
     private void showEditForm(ResponseAccountDto acc) {
-        detailPane.getChildren().clear();
+        accountDetailContainer.getChildren().clear();
 
         Label title = new Label("» Chỉnh sửa tài khoản ID: " + acc.getId());
         title.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
@@ -213,15 +226,15 @@ public class AccountController {
                 }
 
                 AccountDto updateDto = AccountDto.builder()
-                        .userName(tfUsername.getText().trim())
-                        .passWord(tfPassword.getText().trim())
+                        .username(tfUsername.getText().trim())
+                        .password(tfPassword.getText().trim())
                         .userRoleId(selectedRole.getId())
                         .build();
 
                 ApiHttpClientCaller.call("account/" + acc.getId(), ApiHttpClientCaller.Method.PUT, updateDto);
 
                 showInfo("Cập nhật thành công", "Tài khoản đã được cập nhật.");
-                detailPane.getChildren().clear();
+                accountDetailContainer.getChildren().clear();
                 accountList.clear();
                 currentPage = 0;
                 isLastPage = false;
@@ -233,7 +246,7 @@ public class AccountController {
         });
 
         actions.getChildren().addAll(save, cancel);
-        detailPane.getChildren().addAll(title, grid, actions);
+        accountDetailContainer.getChildren().addAll(title, grid, actions);
     }
 
     private void deleteAccount(ResponseAccountDto acc) {
@@ -242,7 +255,10 @@ public class AccountController {
             try {
                 ApiHttpClientCaller.call("account/" + acc.getId(), ApiHttpClientCaller.Method.DELETE, null);
                 showInfo("Đã xóa", "Tài khoản đã bị xóa.");
-                accountList.clear(); currentPage = 0; isLastPage = false; loadNextPage();
+                accountList.clear();
+                accountDetailContainer.getChildren().clear();
+                currentPage = 0;
+                isLastPage = false; loadNextPage();
             } catch (Exception ex) {
                 ex.printStackTrace();
                 showError("Lỗi", "Không thể xóa tài khoản.");
@@ -262,5 +278,265 @@ public class AccountController {
         a.setHeaderText(header);
         a.setContentText(content);
         a.showAndWait();
+    }
+
+    private int userPage = 0;
+    private boolean userHasMore = true;
+    private boolean userLoading = false;
+    private String currentUserRole = null;
+    ObservableList<Object> baseList = FXCollections.observableArrayList();
+
+    private void showCreateAccountForm() {
+        accountDetailContainer.getChildren().clear();
+
+        // Username
+        Label usernameLabel = new Label("Username:");
+        TextField usernameField = new TextField();
+
+        // Password
+        Label passwordLabel = new Label("Password:");
+        PasswordField passwordField = new PasswordField();
+
+        // UserRole
+        Label userRoleLabel = new Label("Chọn vai trò tài khoản:");
+        ComboBox<ResponseUserRoleDto> userRoleCombo = new ComboBox<>();
+        userRoleCombo.setPromptText("Chọn vai trò...");
+        try {
+            String json = ApiHttpClientCaller.call("user-role", ApiHttpClientCaller.Method.GET, null);
+            List<ResponseUserRoleDto> roles = Arrays.asList(mapper.readValue(json, ResponseUserRoleDto[].class));
+            userRoleCombo.setItems(FXCollections.observableArrayList(roles));
+            userRoleCombo.setConverter(new StringConverter<>() {
+                @Override public String toString(ResponseUserRoleDto role) {
+                    return role == null ? "" : role.getName();
+                }
+                @Override public ResponseUserRoleDto fromString(String s) { return null; }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError("Lỗi", "Không thể tải danh sách vai trò.");
+        }
+
+        // Loại user: Staff / Guest
+        Label roleLabel = new Label("Loại người dùng:");
+        ComboBox<String> roleCombo = new ComboBox<>();
+        roleCombo.getItems().addAll("Staff", "Guest");
+
+        Label userLabel = new Label("Danh sách người dùng chưa có tài khoản:");
+
+        HBox searchBox = new HBox(8);
+        TextField searchIdField = new TextField(); searchIdField.setPromptText("Tìm theo ID");
+        TextField searchNameField = new TextField(); searchNameField.setPromptText("Tìm theo tên");
+        searchBox.getChildren().addAll(searchIdField, searchNameField);
+
+        TableView<Object> userTable = new TableView<>();
+
+        TableColumn<Object, Integer> colUserId = new TableColumn<>("ID");
+        TableColumn<Object, String> colUserName = new TableColumn<>("Tên");
+        TableColumn<Object, String> colCccd = new TableColumn<>("CCCD");
+
+        colUserId.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(
+                (data.getValue() instanceof ResponseStaffDto staff)
+                        ? staff.getId()
+                        : ((ResponseGuestDto) data.getValue()).getId()));
+
+        colUserName.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(
+                (data.getValue() instanceof ResponseStaffDto staff)
+                        ? staff.getFullName()
+                        : ((ResponseGuestDto) data.getValue()).getName()));
+
+        colCccd.setCellValueFactory(cellData -> {
+            if (cellData.getValue() instanceof ResponseStaffDto staff) {
+                return new SimpleStringProperty(staff.getIdentificationNumber());
+            } else if (cellData.getValue() instanceof ResponseGuestDto guest) {
+                return new SimpleStringProperty(guest.getIdentificationNumber());
+            } else {
+                return new SimpleStringProperty("");
+            }
+        });
+
+        userTable.getColumns().setAll(colUserId, colUserName, colCccd);
+        tableAccount.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        FilteredList<Object> filteredList = new FilteredList<>(baseList);
+        userTable.setItems(filteredList);
+
+        userTable.setOnScroll(e -> {
+            if (e.getDeltaY() < 0 && isScrollAtBottom(userTable) && !userLoading && userHasMore) {
+                userLoading = true;
+                userPage++;
+                if ("Staff".equals(currentUserRole)) {
+                    fetchPagedStaffWithoutAccount(userPage);
+                } else if ("Guest".equals(currentUserRole)) {
+                    fetchPagedGuestWithoutAccount(userPage);
+                }
+            }
+        });
+
+        searchIdField.textProperty().addListener((obs, oldVal, newVal) -> applyUserFilter(filteredList, searchIdField, searchNameField));
+        searchNameField.textProperty().addListener((obs, oldVal, newVal) -> applyUserFilter(filteredList, searchIdField, searchNameField));
+
+        roleCombo.valueProperty().addListener((obs, oldVal, newVal) -> {
+            baseList.clear();
+            userPage = 0;
+            userHasMore = true;
+            userLoading = false;
+            currentUserRole = newVal;
+
+            if ("Staff".equals(newVal)) {
+                fetchPagedStaffWithoutAccount(userPage);
+            } else if ("Guest".equals(newVal)) {
+                fetchPagedGuestWithoutAccount(userPage);
+            }
+        });
+
+        Label selectedUserLabel = new Label();
+        selectedUserLabel.setStyle("-fx-font-style: italic; -fx-text-fill: #444;");
+        userTable.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                String type;
+                if (newVal instanceof ResponseStaffDto) {
+                    type = "nhân viên";
+                    selectedUserLabel.setText("Bạn đã chọn " + type + " với ID là " + ((ResponseStaffDto) newVal).getId());
+                } else if (newVal instanceof ResponseGuestDto) {
+                    type = "khách hàng";
+                    selectedUserLabel.setText("Bạn đã chọn " + type + " với ID là " + ((ResponseGuestDto) newVal).getId());
+                } else {
+                    type = "người dùng";
+                    selectedUserLabel.setText("Bạn đã chọn " + type + " " + newVal.getClass());
+                }
+            } else {
+                selectedUserLabel.setText("");
+            }
+        });
+
+        Button btnSave = new Button("Lưu tài khoản");
+        btnSave.setOnAction(e -> {
+            String username = usernameField.getText().trim();
+            String password = passwordField.getText().trim();
+            String type = roleCombo.getValue();
+            Object selectedUser = userTable.getSelectionModel().getSelectedItem();
+            ResponseUserRoleDto selectedRole = userRoleCombo.getValue();
+
+            if (username.isEmpty() || password.isEmpty() || type == null || selectedUser == null || selectedRole == null) {
+                showError("Thiếu thông tin", "Vui lòng điền đầy đủ và chọn người dùng + vai trò.");
+                return;
+            }
+
+            int userId = (type.equals("Staff"))
+                    ? ((ResponseStaffDto) selectedUser).getId()
+                    : ((ResponseGuestDto) selectedUser).getId();
+
+
+
+            AccountDto newAccount = AccountDto.builder()
+                    .username(username)
+                    .password(password)
+                    .userRoleId(selectedRole.getId())
+                    .build();
+
+            try {
+                String endpoint = "account";
+                var json=ApiHttpClientCaller.call(endpoint, ApiHttpClientCaller.Method.POST, newAccount);
+                ResponseAccountDto createdAccount = mapper.readValue(json, ResponseAccountDto.class);
+                int accountId = createdAccount.getId();
+                int accountUserId = (type.equals("Staff"))
+                        ? ((ResponseStaffDto) selectedUser).getId()
+                        : ((ResponseGuestDto) selectedUser).getId();
+
+                String updatePath = (type.equals("Staff") ? "staff/" : "guest/") + accountUserId;
+
+                if (type.equals("Staff")) {
+                    StaffDto staffDto = StaffDto.builder()
+                            .fullName(((ResponseStaffDto) selectedUser).getFullName())
+                            .age(((ResponseStaffDto) selectedUser).getAge())
+                            .identificationNumber(((ResponseStaffDto) selectedUser).getIdentificationNumber())
+                            .address(((ResponseStaffDto) selectedUser).getAddress())
+                            .sex(((ResponseStaffDto) selectedUser).getSex())
+                            .salaryMultiplier(((ResponseStaffDto) selectedUser).getSalaryMultiplier())
+                            .positionId(((ResponseStaffDto) selectedUser).getPositionId())
+                            .accountId(accountId)
+                            .build();
+                    ApiHttpClientCaller.call(updatePath, ApiHttpClientCaller.Method.PUT, staffDto);
+                } else {
+                    GuestDto guestDto = GuestDto.builder()
+                            .age(((ResponseGuestDto) selectedUser).getAge())
+                            .name(((ResponseGuestDto) selectedUser).getName())
+                            .identificationNumber(((ResponseGuestDto) selectedUser).getIdentificationNumber())
+                            .sex(((ResponseGuestDto) selectedUser).getSex())
+                            .phoneNumber(((ResponseGuestDto) selectedUser).getPhoneNumber())
+                            .email(((ResponseGuestDto) selectedUser).getEmail())
+                            .accountId(accountId)
+                            .build();
+                    ApiHttpClientCaller.call(updatePath, ApiHttpClientCaller.Method.PUT, guestDto);
+                }
+                showInfo("Thành công", "Tài khoản đã được tạo.");
+                accountList.clear();
+                currentPage = 0;
+                isLastPage = false;
+                loadNextPage();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                showError("Lỗi", "Không thể tạo tài khoản: " + ex.getMessage());
+            }
+        });
+
+        accountDetailContainer.getChildren().addAll(
+                usernameLabel, usernameField,
+                passwordLabel, passwordField,
+                userRoleLabel, userRoleCombo,
+                roleLabel, roleCombo,
+                userLabel, searchBox,
+                userTable, selectedUserLabel,
+                btnSave
+        );
+
+        roleCombo.setValue("Staff");
+    }
+
+    private void applyUserFilter(FilteredList<Object> list, TextField idField, TextField nameField) {
+        String id = idField.getText().trim().toLowerCase();
+        String name = nameField.getText().trim().toLowerCase();
+
+        list.setPredicate(obj -> {
+            int objId = (obj instanceof ResponseStaffDto s) ? s.getId() : ((ResponseGuestDto) obj).getId();
+            String objName = (obj instanceof ResponseStaffDto s) ? s.getFullName() : ((ResponseGuestDto) obj).getName();
+            return (id.isEmpty() || String.valueOf(objId).contains(id)) &&
+                    (name.isEmpty() || objName.toLowerCase().contains(name));
+        });
+    }
+
+    private void fetchPagedStaffWithoutAccount(int page) {
+        try {
+            String json = ApiHttpClientCaller.call("staff/without-account?page=" + page + "&size=20", ApiHttpClientCaller.Method.GET, null);
+            JsonNode root = mapper.readTree(json);
+            List<ResponseStaffDto> result = Arrays.asList(mapper.readValue(root.get("content").toString(), ResponseStaffDto[].class));
+            baseList.addAll(result);
+            userHasMore = !root.get("last").asBoolean();
+        } catch (Exception e) {
+            e.printStackTrace();
+            userHasMore = false;
+        } finally {
+            userLoading = false;
+        }
+    }
+
+    private void fetchPagedGuestWithoutAccount(int page) {
+        try {
+            String json = ApiHttpClientCaller.call("guest/without-account?page=" + page + "&size=20", ApiHttpClientCaller.Method.GET, null);
+            JsonNode root = mapper.readTree(json);
+            List<ResponseGuestDto> result = Arrays.asList(mapper.readValue(root.get("content").toString(), ResponseGuestDto[].class));
+            baseList.addAll(result);
+            userHasMore = !root.get("last").asBoolean();
+        } catch (Exception e) {
+            e.printStackTrace();
+            userHasMore = false;
+        } finally {
+            userLoading = false;
+        }
+    }
+
+    private boolean isScrollAtBottom(TableView<?> table) {
+        VirtualFlow<?> virtualFlow = (VirtualFlow<?>) table.lookup(".virtual-flow");
+        return virtualFlow != null && virtualFlow.getLastVisibleCell().getIndex() >= table.getItems().size() - 1;
     }
 }
