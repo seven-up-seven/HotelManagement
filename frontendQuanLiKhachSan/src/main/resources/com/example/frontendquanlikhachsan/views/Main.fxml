@@ -43,6 +43,8 @@
                                 prefWidth="160.0" styleClass="submenu-button"/>
                         <Button onAction="#openHistoryManagement" text="Quản lý lịch sử"
                                 prefWidth="160.0" styleClass="submenu-button"/>
+                        <Button onAction="#openVariableManagement" text="Quản lý tham số"
+                                prefWidth="160.0" styleClass="submenu-button"/>
                     </VBox>
                 </TitledPane>
 

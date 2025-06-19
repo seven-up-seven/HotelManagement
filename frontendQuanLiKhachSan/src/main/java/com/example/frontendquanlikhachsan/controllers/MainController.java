@@ -205,6 +205,10 @@ private <C> void openTab(String baseTitle,
         openTab("Quản lí lịch sử", "/com/example/frontendquanlikhachsan/views/admin/History.fxml", null);
     }
 
+    public void openVariableManagement() {
+        openTab("Quản lí tham số", "/com/example/frontendquanlikhachsan/views/admin/RuleVariable.fxml", null);
+    }
+
     @FXML
     public void toggleSidebar() {
         isPinned = !isPinned;
