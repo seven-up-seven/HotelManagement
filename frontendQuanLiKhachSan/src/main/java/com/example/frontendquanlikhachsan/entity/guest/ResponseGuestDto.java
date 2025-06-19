@@ -27,4 +27,10 @@ public class ResponseGuestDto {
     private List<LocalDateTime> bookingConfirmationFormCreatedDates;
     private List<String> bookingConfirmationFormRoomIds;
     private List<String> bookingConfirmationFormRoomNames;
+
+    @Override
+    public String toString() {
+        return "Tên: " + name + ", " +
+               "Giới tính: " + sex.toString() + ", " + "Tuổi: " + age + ", " + "CCCD: " + identificationNumber;
+    }
 }

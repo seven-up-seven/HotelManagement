@@ -322,9 +322,9 @@ public class InvoiceController {
             @Override protected void updateItem(ResponseInvoiceDetailDto it, boolean empty) {
                 super.updateItem(it, empty);
                 if (empty||it==null) setText(null);
-                else setText("#"+it.getId()
-                        + " – RF#" + it.getRentalFormId()
-                        + " – " + it.getReservationCost());
+                else setText("Mã chi tiết #" + it.getId()
+                        + " Mã phiếu thuê #" + it.getRentalFormId()
+                        + " Giá thuê – " + it.getReservationCost() + " (" + it.getNumberOfRentalDays() + " ngày)");
             }
         });
         lvD.setOnMouseClicked(e -> {
