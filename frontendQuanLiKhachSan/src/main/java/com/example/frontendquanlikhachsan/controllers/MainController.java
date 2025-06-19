@@ -196,6 +196,10 @@ private <C> void openTab(String baseTitle,
     public void openRentalFormViewTab() {
         openTab("qltk", "/com/example/frontendquanlikhachsan/views/accountant/RentalFormView.fxml", null);
     }
+    public void openUserRoleManagement()
+    {
+        openTab("Quản lí vai trò", "/com/example/frontendquanlikhachsan/views/admin/UserRole.fxml", null);
+    }
 
     @FXML
     public void toggleSidebar() {
