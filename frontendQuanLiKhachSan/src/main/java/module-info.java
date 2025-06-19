@@ -19,6 +19,7 @@ module com.example.frontendquanlikhachsan {
     requires java.desktop;
     requires spring.beans;
     requires jakarta.persistence;
+    requires com.google.gson;
 
     opens com.example.frontendquanlikhachsan to javafx.fxml;
     opens com.example.frontendquanlikhachsan.controllers to javafx.fxml;

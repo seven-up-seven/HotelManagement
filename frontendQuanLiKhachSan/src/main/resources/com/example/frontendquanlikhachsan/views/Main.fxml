@@ -31,6 +31,9 @@
                 <Button onAction="#openHomeTab" text="🏠 Home"
                         prefWidth="180.0" prefHeight="40.0"
                         styleClass="sidebar-button" />
+                <Button onAction="#openChatbot" text="Trợ lí AI"
+                        prefWidth="180.0" prefHeight="40.0"
+                        styleClass="sidebar-button" />
 
                 <!-- Quan tri vien -->
                 <TitledPane text="👨‍💼 Quản trị viên" expanded="false"

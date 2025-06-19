@@ -209,6 +209,10 @@ private <C> void openTab(String baseTitle,
         openTab("Quản lí tham số", "/com/example/frontendquanlikhachsan/views/admin/RuleVariable.fxml", null);
     }
 
+    public void openChatbot() {
+        openTab("Trợ lí AI", "/com/example/frontendquanlikhachsan/views/Chatbot.fxml", null);
+    }
+
     @FXML
     public void toggleSidebar() {
         isPinned = !isPinned;
