@@ -27,10 +27,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class AccountController {
     @FXML private TableView<ResponseAccountDto> tableAccount;
@@ -42,6 +40,15 @@ public class AccountController {
     @FXML private VBox detailPane;
     @FXML private Button btnCreateAccount;
 
+    @FXML private TextField tfFilterId;
+    @FXML private TextField tfFilterUsername;
+    @FXML private ComboBox<ResponseUserRoleDto> cbFilterRole;
+
+    @FXML
+    private Button ResetButton;
+
+    private final List<ResponseAccountDto> allAccounts = new ArrayList<>();
+
     private int currentPage = 0;
     private boolean isLastPage = false;
     private final int pageSize = 10;
@@ -49,6 +56,8 @@ public class AccountController {
     private final ObjectMapper mapper = new ObjectMapper()
             .registerModule(new JavaTimeModule());
     private final ObservableList<ResponseAccountDto> accountList = FXCollections.observableArrayList();
+
+    private boolean isInitialized = false;
 
     @FXML public void initialize() {
         colId.setCellValueFactory(cd -> new ReadOnlyObjectWrapper<>(cd.getValue().getId()));
@@ -58,11 +67,40 @@ public class AccountController {
 
         tableAccount.getColumns().setAll(List.of(colId, colUsername, colPassword, colRole));
         tableAccount.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-
         tableAccount.setItems(accountList);
+
         tableAccount.getSelectionModel().selectedItemProperty().addListener((obs, oldV, newV) -> {
             if (newV != null) showAccountDetail(newV);
         });
+
+        tfFilterId.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (isInitialized) applyFilter();
+        });
+        tfFilterUsername.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (isInitialized) applyFilter();
+        });
+        cbFilterRole.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (isInitialized) applyFilter();
+        });
+
+        try {
+            String json = ApiHttpClientCaller.call("user-role", ApiHttpClientCaller.Method.GET, null);
+            List<ResponseUserRoleDto> roles = Arrays.asList(mapper.readValue(json, ResponseUserRoleDto[].class));
+            cbFilterRole.setItems(FXCollections.observableArrayList(roles));
+            cbFilterRole.setConverter(new StringConverter<>() {
+                @Override
+                public String toString(ResponseUserRoleDto role) {
+                    return role == null ? "" : role.getName();
+                }
+                @Override
+                public ResponseUserRoleDto fromString(String s) { return null; }
+            });
+            cbFilterRole.getItems().add(0, null); // "Tất cả"
+            cbFilterRole.getSelectionModel().selectFirst();
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError("Lỗi", "Không thể tải danh sách vai trò.");
+        }
 
         loadNextPage();
 
@@ -73,6 +111,87 @@ public class AccountController {
         });
 
         btnCreateAccount.setOnAction(event -> showCreateAccountForm());
+
+        // Đặt cuối cùng
+        isInitialized = true;
+
+        ResetButton.setOnAction(event -> {
+            tfFilterId.clear();
+            tfFilterUsername.clear();
+            cbFilterRole.getSelectionModel().selectFirst(); // Chọn lại giá trị "Tất cả" (null)
+
+            // Xóa dữ liệu hiện tại
+            accountList.clear();
+            allAccounts.clear();
+            currentPage = 0;
+            isLastPage = false;
+
+            // Tải lại trang đầu tiên
+            loadNextPage();
+        });
+    }
+
+    private void applyFilter() {
+        String idText = tfFilterId.getText().trim();
+        String username = tfFilterUsername.getText().toLowerCase().trim();
+        ResponseUserRoleDto selectedRole = cbFilterRole.getValue();
+
+        boolean isEmpty = idText.isEmpty() && username.isEmpty() && selectedRole == null;
+
+        if (isEmpty) {
+            accountList.clear();
+            allAccounts.clear();
+            currentPage = 0;
+            isLastPage = false;
+            loadNextPage();
+            return;
+        }
+
+        try {
+            List<ResponseAccountDto> resultId = null;
+            List<ResponseAccountDto> resultUsername = null;
+            List<ResponseAccountDto> resultRole = null;
+
+            if (!idText.isEmpty()) {
+                String json = ApiHttpClientCaller.call("account/id/" + idText, ApiHttpClientCaller.Method.GET, null);
+                ResponseAccountDto acc = mapper.readValue(json, ResponseAccountDto.class);
+                resultId = acc != null ? List.of(acc) : List.of();
+            }
+
+            if (!username.isEmpty()) {
+                String json = ApiHttpClientCaller.call("account/username/" + username, ApiHttpClientCaller.Method.GET, null);
+                resultUsername = mapper.readValue(json, new TypeReference<>() {});
+            }
+
+            if (selectedRole != null) {
+                String json = ApiHttpClientCaller.call("account/user-role-id/" + selectedRole.getId(), ApiHttpClientCaller.Method.GET, null);
+                resultRole = mapper.readValue(json, new TypeReference<>() {});
+            }
+
+            // Bắt đầu giao kết quả
+            List<ResponseAccountDto> filtered = null;
+
+            if (resultId != null) filtered = resultId;
+            if (resultUsername != null) filtered = filtered == null ? resultUsername : intersect(filtered, resultUsername);
+            if (resultRole != null) filtered = filtered == null ? resultRole : intersect(filtered, resultRole);
+
+            allAccounts.clear();
+            if (filtered != null) {
+                allAccounts.addAll(filtered);
+                accountList.setAll(filtered);
+            } else {
+                accountList.clear();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError("Lỗi lọc", "Không thể lọc tài khoản.");
+        }
+    }
+
+    private List<ResponseAccountDto> intersect(List<ResponseAccountDto> list1, List<ResponseAccountDto> list2) {
+        Set<Integer> ids = list2.stream().map(ResponseAccountDto::getId).collect(Collectors.toSet());
+        return list1.stream().filter(acc -> ids.contains(acc.getId())).collect(Collectors.toList());
     }
 
     private boolean isScrollAtBottom() {

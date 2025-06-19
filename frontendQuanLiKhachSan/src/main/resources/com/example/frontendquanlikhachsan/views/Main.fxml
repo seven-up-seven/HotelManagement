@@ -41,6 +41,8 @@
                                 prefWidth="160.0" styleClass="submenu-button"/>
                         <Button onAction="#openUserRoleManagement" text="Quản lý vai trò"
                                 prefWidth="160.0" styleClass="submenu-button"/>
+                        <Button onAction="#openHistoryManagement" text="Quản lý lịch sử"
+                                prefWidth="160.0" styleClass="submenu-button"/>
                     </VBox>
                 </TitledPane>
 

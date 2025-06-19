@@ -24,6 +24,14 @@
                     <Button fx:id="btnCreateAccount" text="➕ Tạo tài khoản mới" maxWidth="Infinity"
                             style="-fx-font-size: 14px; -fx-background-color: #1976d2; -fx-text-fill: white;" />
 
+                    <HBox spacing="8.0">
+                        <TextField fx:id="tfFilterId" promptText="ID"/>
+                        <TextField fx:id="tfFilterUsername" promptText="Username"/>
+                        <ComboBox fx:id="cbFilterRole" promptText="Vai trò"/>
+                    </HBox>
+
+                    <Button text="🔄 Reset" fx:id="ResetButton" style="-fx-font-weight: bold;"/>
+
                     <TableView fx:id="tableAccount" VBox.vgrow="ALWAYS">
                         <columns>
                             <TableColumn fx:id="colId" text="ID" prefWidth="40.0"/>

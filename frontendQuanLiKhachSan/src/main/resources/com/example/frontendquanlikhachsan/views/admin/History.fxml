@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.cell.*?>
+
+<SplitPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.example.frontendquanlikhachsan.controllers.admin.HistoryController"
+           prefWidth="1000.0" prefHeight="600.0">
+    <items>
+
+        <!-- LEFT -->
+        <ScrollPane fitToWidth="true" prefWidth="400.0">
+            <content>
+                <VBox spacing="8.0" prefWidth="400.0" style="-fx-background-color: #f4f6f8;">
+                    <padding>
+                        <Insets top="16.0" right="16.0" bottom="16.0" left="16.0"/>
+                    </padding>
+
+                    <Label text="Danh sách Lịch sử"
+                           style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+
+                    <HBox spacing="8.0">
+                        <padding>
+                            <Insets top="8" right="0" bottom="8" left="0"/>
+                        </padding>
+
+                        <TextField fx:id="tfFilterImpactor" promptText="Người tác động"/>
+                        <TextField fx:id="tfFilterImpactorId" promptText="ID người tác động"/>
+                        <TextField fx:id="tfFilterObject" promptText="Đối tượng bị ảnh hưởng"/>
+                        <TextField fx:id="tfFilterObjectId" promptText="ID đối tượng"/>
+
+                        <DatePicker fx:id="dpFilterFrom" promptText="Từ ngày"/>
+                        <DatePicker fx:id="dpFilterTo" promptText="Đến ngày"/>
+
+                    </HBox>
+
+                    <Button text="🔄 Reset" fx:id="ResetButton" style="-fx-font-weight: bold;"/>
+
+                    <TableView fx:id="tableHistory" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="colId" text="ID"/>
+                            <TableColumn fx:id="colImpactor" text="Người tác động" />
+                            <TableColumn fx:id="colAction" text="Hành động" />
+                            <TableColumn fx:id="colObject" text="Đối tượng" />
+                            <TableColumn fx:id="colTime" text="Thời gian" />
+                        </columns>
+                    </TableView>
+                </VBox>
+            </content>
+        </ScrollPane>
+
+        <!-- RIGHT -->
+        <VBox fx:id="detailPane" prefWidth="600.0" style="-fx-background-color: #ffffff;">
+            <padding>
+                <Insets top="16.0" right="16.0" bottom="16.0" left="16.0"/>
+            </padding>
+
+            <Label text="Chi tiết lịch sử"
+                   style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
+                <content>
+                    <VBox fx:id="historyDetailContainer" spacing="12.0">
+                        <!-- Chi tiết sẽ được thêm bằng code khi người dùng chọn -->
+                    </VBox>
+                </content>
+            </ScrollPane>
+        </VBox>
+
+    </items>
+</SplitPane>

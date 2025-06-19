@@ -18,6 +18,7 @@ module com.example.frontendquanlikhachsan {
     requires org.apache.tomcat.embed.el;
     requires java.desktop;
     requires spring.beans;
+    requires jakarta.persistence;
 
     opens com.example.frontendquanlikhachsan to javafx.fxml;
     opens com.example.frontendquanlikhachsan.controllers to javafx.fxml;
@@ -45,6 +46,7 @@ module com.example.frontendquanlikhachsan {
     opens com.example.frontendquanlikhachsan.entity.userRole to com.fasterxml.jackson.databind;
     opens com.example.frontendquanlikhachsan.entity.permission to com.fasterxml.jackson.databind;
     opens com.example.frontendquanlikhachsan.entity.userRolePermission to com.fasterxml.jackson.databind;
+    opens com.example.frontendquanlikhachsan.entity.history to com.fasterxml.jackson.databind;
     opens com.example.frontendquanlikhachsan.auth to com.fasterxml.jackson.databind;
     opens com.example.frontendquanlikhachsan.entity.roomType to com.fasterxml.jackson.databind;
 
