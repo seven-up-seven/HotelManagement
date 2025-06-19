@@ -52,6 +52,9 @@ public class BookingConfirmationFormController {
     @FXML private TableColumn<ResponseBookingConfirmationFormDto,String> colRoomName;
     @FXML private TableColumn<ResponseBookingConfirmationFormDto,Integer> colRoomId;
     @FXML private TableColumn<ResponseBookingConfirmationFormDto,String> colRoomType;
+    @FXML private TableColumn<ResponseBookingConfirmationFormDto, String> colBookingDate;
+    @FXML private TableColumn<ResponseBookingConfirmationFormDto, Integer> colRentalDays;
+
 
     @FXML private VBox detailPane;
     @FXML private Button btnAdd;
@@ -80,6 +83,12 @@ public class BookingConfirmationFormController {
         colRoomName.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getRoomName()));
         colRoomId  .setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue().getRoomId()));
         colRoomType.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getRoomTypeName()));
+        colBookingDate.setCellValueFactory(
+                c -> new SimpleStringProperty(c.getValue().getBookingDate() == null ? "" : c.getValue().getBookingDate().format(fmt))
+        );
+        colRentalDays.setCellValueFactory(
+                c -> new SimpleObjectProperty<>(c.getValue().getRentalDays())
+        );
 
         // --- 2) filtered + sorted list ---
         filteredList = new FilteredList<>(masterList, b->true);
@@ -212,11 +221,19 @@ public class BookingConfirmationFormController {
         TextField tfRoomId = new TextField();
         tfRoomId.setPromptText("Room ID");
 
+        DatePicker dpBookingDate = new DatePicker();
+        TextField tfRentalDays = new TextField();
+
+        dpBookingDate.setPromptText("Booking Date");
+        tfRentalDays.setPromptText("Số ngày thuê");
+
         if(edit) {
             var cur = tblBooking.getSelectionModel().getSelectedItem();
             tfGuestId.setText(String.valueOf(cur.getGuestId()));
             cbState.getSelectionModel().select(cur.getBookingState());
             tfRoomId.setText(String.valueOf(cur.getRoomId()));
+            dpBookingDate.setValue(cur.getBookingDate().toLocalDate());
+            tfRentalDays.setText(String.valueOf(cur.getRentalDays()));
         }
 
         GridPane form = new GridPane();
@@ -229,6 +246,10 @@ public class BookingConfirmationFormController {
         form.add(cbState, 1, 1);
         form.add(new Label("Room ID:"), 0, 2);
         form.add(tfRoomId, 1, 2);
+        form.add(new Label("Ngày thuê:"), 0, 3);
+        form.add(dpBookingDate, 1, 3);
+        form.add(new Label("Số ngày thuê:"), 0, 4);
+        form.add(tfRentalDays, 1, 4);
 
         Button btnSave = new Button(edit ? "Lưu" : "Tạo");
         Button btnCancel = new Button("Hủy");
@@ -256,8 +277,11 @@ public class BookingConfirmationFormController {
                 BookingConfirmationFormDto dto = new BookingConfirmationFormDto(
                         Integer.parseInt(tfGuestId.getText().trim()),
                         cbState.getValue(),
-                        roomId
+                        roomId,
+                        dpBookingDate.getValue().atStartOfDay(),
+                        Integer.parseInt(tfRentalDays.getText().trim())
                 );
+
                 if (edit) {
                     ApiHttpClientCaller.call(
                             "booking-confirmation-form/" + id, PUT, dto
@@ -313,7 +337,9 @@ public class BookingConfirmationFormController {
                 createBoldRow("Guest Name:", d.getGuestName()),
                 createBoldRow("Room ID:", String.valueOf(d.getRoomId())),
                 createBoldRow("Room Name:", d.getRoomName()),
-                createBoldRow("Loại phòng:", d.getRoomTypeName())
+                createBoldRow("Loại phòng:", d.getRoomTypeName()),
+                createBoldRow("Booking Date:", d.getBookingDate().format(fmt)),
+                createBoldRow("Số ngày thuê:", String.valueOf(d.getRentalDays()))
         );
 
         // --- tạo HBox chứa 2 nút Sửa + Xóa ---

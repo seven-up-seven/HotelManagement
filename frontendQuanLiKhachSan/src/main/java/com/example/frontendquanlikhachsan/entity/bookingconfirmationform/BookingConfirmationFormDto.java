@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -16,6 +18,6 @@ public class BookingConfirmationFormDto {
     private BookingState bookingState;
 
     private Integer roomId;
-    private String bookingDate;
+    private LocalDateTime bookingDate;
     private Integer rentalDays;
 }

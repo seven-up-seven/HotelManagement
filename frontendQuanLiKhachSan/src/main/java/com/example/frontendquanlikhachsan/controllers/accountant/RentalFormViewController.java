@@ -1,6 +1,7 @@
 package com.example.frontendquanlikhachsan.controllers.accountant;
 
 import com.example.frontendquanlikhachsan.ApiHttpClientCaller;
+import com.example.frontendquanlikhachsan.entity.guest.ResponseGuestDto;
 import com.example.frontendquanlikhachsan.entity.guest.SearchGuestDto;
 import com.example.frontendquanlikhachsan.entity.invoice.InvoiceDto;
 import com.example.frontendquanlikhachsan.entity.invoice.ResponseInvoiceDto;
@@ -108,7 +109,7 @@ public class RentalFormViewController {
         Button btnSearchGuest = new Button("🔍 Tìm");
         searchGuestBox.getChildren().addAll(tfGuestId, tfGuestName, tfGuestPhone, tfGuestCmnd, tfGuestEmail, tfGuestAccId, btnSearchGuest);
 
-        ComboBox<SearchGuestDto> cbGuestResults = new ComboBox<>();
+        ComboBox<ResponseGuestDto> cbGuestResults = new ComboBox<>();
         cbGuestResults.setPromptText("Chọn khách trả phòng");
 
         // TableView các phiếu thuê được chọn
@@ -151,21 +152,37 @@ public class RentalFormViewController {
         btnSearchGuest.setOnAction(e -> {
             try {
                 SearchGuestDto req = new SearchGuestDto();
-                if (!tfGuestId.getText().isBlank()) req.setId(Integer.parseInt(tfGuestId.getText()));
-                req.setName(tfGuestName.getText().trim());
-                req.setPhoneNumber(tfGuestPhone.getText().trim());
-                req.setIdentificationNumber(tfGuestCmnd.getText().trim());
-                req.setEmail(tfGuestEmail.getText().trim());
-                if (!tfGuestAccId.getText().isBlank()) req.setAccountId(Integer.parseInt(tfGuestAccId.getText()));
+                // Set ID (nếu có)
+                if (!tfGuestId.getText().isBlank()) {
+                    req.setId(Integer.parseInt(tfGuestId.getText().trim()));
+                } else {
+                    req.setId(null);
+                }
+                // Tên
+                req.setName(tfGuestName.getText().isBlank() ? null : tfGuestName.getText().trim());
+                // SĐT
+                req.setPhoneNumber(tfGuestPhone.getText().isBlank() ? null : tfGuestPhone.getText().trim());
+                // CMND
+                req.setIdentificationNumber(tfGuestCmnd.getText().isBlank() ? null : tfGuestCmnd.getText().trim());
+                // Email
+                req.setEmail(tfGuestEmail.getText().isBlank() ? null : tfGuestEmail.getText().trim());
+                // AccountId
+                if (!tfGuestAccId.getText().isBlank()) {
+                    req.setAccountId(Integer.parseInt(tfGuestAccId.getText().trim()));
+                } else {
+                    req.setAccountId(null);
+                }
 
                 String json = ApiHttpClientCaller.call("guest/search", ApiHttpClientCaller.Method.POST, req);
-                List<SearchGuestDto> guestList = mapper.readValue(json, new TypeReference<List<SearchGuestDto>>() {});
+                List<ResponseGuestDto> guestList = mapper.readValue(json, new TypeReference<List<ResponseGuestDto>>() {});
                 cbGuestResults.setItems(FXCollections.observableArrayList(guestList));
                 if (guestList.isEmpty()) showInfoAlert("Không tìm thấy", "Không có khách nào phù hợp!");
             } catch (Exception ex) {
                 showErrorAlert("Lỗi tìm kiếm khách", ex.getMessage());
+                ex.printStackTrace();
             }
         });
+
 
         // Nút lập hóa đơn
         Button btnConfirm = new Button("Lập hoá đơn ✅");
@@ -176,7 +193,7 @@ public class RentalFormViewController {
                 showErrorAlert("Thiếu dữ liệu", "Bạn chưa chọn phiếu thuê nào!");
                 return;
             }
-            SearchGuestDto guest = cbGuestResults.getValue();
+            ResponseGuestDto guest = cbGuestResults.getValue();
             if (guest == null) {
                 showErrorAlert("Thiếu thông tin", "Vui lòng chọn khách trả phòng trước khi lập hoá đơn!");
                 return;

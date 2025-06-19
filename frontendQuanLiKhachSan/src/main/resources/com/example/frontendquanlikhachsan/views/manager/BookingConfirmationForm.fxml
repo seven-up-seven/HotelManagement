@@ -40,6 +40,8 @@
                     <TableColumn fx:id="colRoomName"  text="Tên phòng"    prefWidth="120"/>
                     <TableColumn fx:id="colRoomId"    text="Room ID"       prefWidth="80"/>
                     <TableColumn fx:id="colRoomType"  text="Loại phòng"    prefWidth="120"/>
+                    <TableColumn fx:id="colBookingDate" text="Ngày thuê" prefWidth="150"/>
+                    <TableColumn fx:id="colRentalDays" text="Số ngày thuê" prefWidth="100"/>
                 </columns>
             </TableView>
         </VBox>
