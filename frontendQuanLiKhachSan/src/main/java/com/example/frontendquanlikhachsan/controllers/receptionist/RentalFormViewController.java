@@ -1,4 +1,4 @@
-    package com.example.frontendquanlikhachsan.controllers.accountant;
+    package com.example.frontendquanlikhachsan.controllers.receptionist;
 
     import com.example.frontendquanlikhachsan.ApiHttpClientCaller;
     import com.example.frontendquanlikhachsan.entity.guest.ResponseGuestDto;
@@ -27,6 +27,8 @@
     import java.util.List;
     import java.util.Optional;
     import java.util.function.Function;
+
+    import static com.example.frontendquanlikhachsan.ApiHttpClientCaller.Method.GET;
 
     public class RentalFormViewController {
 
@@ -74,22 +76,42 @@
             tableForm.getSelectionModel().selectedItemProperty().addListener(detailListener);
 
             isInvoiceMode = false;
+            tableForm.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 1) {
+                    ResponseRentalFormDto sel = tableForm.getSelectionModel().getSelectedItem();
+                    if (sel != null) {
+                        showDetail(sel);
+                    }
+                }
+            });
         }
 
         private void enableInvoiceRowAction(ObservableList<ResponseRentalFormDto> selectedForms) {
             // Ngắt đúng cái listener detail
             tableForm.getSelectionModel().selectedItemProperty().removeListener(detailListener);
 
+            // remove tableForm.setOnMouseClicked(...) cũ
+// thay bằng:
             tableForm.setRowFactory(tv -> {
                 TableRow<ResponseRentalFormDto> row = new TableRow<>();
                 row.setOnMouseClicked(event -> {
                     if (event.getClickCount() == 2 && !row.isEmpty()) {
                         ResponseRentalFormDto sel = row.getItem();
-                        if (!selectedForms.contains(sel)) selectedForms.add(sel);
+                        // 1) nếu đã trả tiền rồi thì báo và out luôn
+                        if (sel.getIsPaidAt() != null) {
+                            showInfoAlert("Đã thanh toán", "Phiếu thuê này đã được thanh toán rồi, không thể chọn.");
+                            return;
+                        }
+                        // 2) ngược lại thì add vào selectedForms
+                        if (!selectedForms.contains(sel)) {
+                            selectedForms.add(sel);
+                            System.out.println("Đã add phiếu thuê #" + sel.getId());
+                        }
                     }
                 });
                 return row;
             });
+
             tableForm.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
             isInvoiceMode = true;
         }
@@ -98,7 +120,8 @@
         @FXML
         public void initialize() {
             // 1) setup filtered + sorted list
-            filteredForms = new FilteredList<>(formList, f->true);
+            // chỉ hiển thị những phiếu chưa thanh toán
+            filteredForms = new FilteredList<>(formList, f -> f.getIsPaidAt() == null);
             SortedList<ResponseRentalFormDto> sorted = new SortedList<>(filteredForms);
             sorted.comparatorProperty().bind(tableForm.comparatorProperty());
             tableForm.setItems(sorted);
@@ -109,7 +132,23 @@
             colRoomName.setCellValueFactory(cd -> new ReadOnlyObjectWrapper<>(cd.getValue().getRoomName()));
             colStaffName.setCellValueFactory(cd -> new ReadOnlyObjectWrapper<>(cd.getValue().getStaffName()));
             colDate.setCellValueFactory(cd -> new ReadOnlyObjectWrapper<>(cd.getValue().getRentalDate().toString()));
-            colDays.setCellValueFactory(cd -> new ReadOnlyObjectWrapper<>(cd.getValue().getNumberOfRentalDays()));
+            colDays.setCellValueFactory(cd -> {
+                ResponseRentalFormDto dto = cd.getValue();
+                // gọi API GET /rental-form/{id}/total-rental-days
+                try {
+                    String json = ApiHttpClientCaller.call(
+                            "rental-form/" + dto.getId() + "/total-rental-days",
+                            GET,
+                            null
+                    );
+                    int total = Integer.parseInt(json.trim());
+                    return new ReadOnlyObjectWrapper<>((short) total);
+                } catch (Exception ex) {
+                    // nếu lỗi thì show lên console và fallback về số ngày gốc
+                    ex.printStackTrace();
+                    return new ReadOnlyObjectWrapper<>(dto.getNumberOfRentalDays());
+                }
+            });
             colNote.setCellValueFactory(cd -> new ReadOnlyObjectWrapper<>(Optional.ofNullable(cd.getValue().getNote()).orElse("–")));
             colPaidAt.setCellValueFactory(cd -> new ReadOnlyObjectWrapper<>(Optional.ofNullable(cd.getValue().getIsPaidAt()).map(Object::toString).orElse("–")));
 
@@ -166,8 +205,32 @@
             colSelDays.setCellValueFactory(cd -> new ReadOnlyObjectWrapper<>(cd.getValue().getNumberOfRentalDays()));
             tableSelected.getColumns().addAll(colSelId, colSelRoom, colSelDays);
 
+// --- Đầu tiên: khai báo selectedForms ---
             ObservableList<ResponseRentalFormDto> selectedForms = FXCollections.observableArrayList();
             tableSelected.setItems(selectedForms);
+
+// --- Sau đó mới tạo cột Xóa ---
+            TableColumn<ResponseRentalFormDto, Void> colRemove = new TableColumn<>("Xóa");
+            colRemove.setCellFactory(tv -> new TableCell<>() {
+                private final Button btn = new Button("❌");
+                {
+                    btn.setOnAction(e -> {
+                        ResponseRentalFormDto item = getTableView().getItems().get(getIndex());
+                        selectedForms.remove(item);
+                    });
+                    btn.setStyle("-fx-background-color:transparent;");
+                }
+                @Override
+                protected void updateItem(Void v, boolean empty) {
+                    super.updateItem(v, empty);
+                    setGraphic(empty ? null : btn);
+                }
+            });
+            tableSelected.getColumns().add(colRemove);
+
+
+//            ObservableList<ResponseRentalFormDto> selectedForms = FXCollections.observableArrayList();
+//            tableSelected.setItems(selectedForms);
 
             // 4) Bật mode lập hoá đơn: remove detail-listener, clear selection, add double-click handler
             tableForm.getSelectionModel().selectedItemProperty().removeListener(detailListener);
@@ -286,7 +349,7 @@
 
         private void loadForms() {
             try {
-                String json = ApiHttpClientCaller.call("rental-form", ApiHttpClientCaller.Method.GET, null);
+                String json = ApiHttpClientCaller.call("rental-form", GET, null);
                 List<ResponseRentalFormDto> list = mapper.readValue(json, new TypeReference<>(){});
                 formList.setAll(list);
             } catch(Exception ex) {
@@ -359,7 +422,7 @@
             ListView<ResponseRentalFormDetailDto> lvD = new ListView<>();
             for (Integer detId : dto.getRentalFormDetailIds()) {
                 try {
-                    String json = ApiHttpClientCaller.call("rental-form-detail/" + detId, ApiHttpClientCaller.Method.GET, null);
+                    String json = ApiHttpClientCaller.call("rental-form-detail/" + detId, GET, null);
                     ResponseRentalFormDetailDto detail = mapper.readValue(json, new TypeReference<>() {});
                     lvD.getItems().add(detail);
                 } catch (Exception ignored) {}
@@ -383,7 +446,7 @@
             ListView<ResponseRentalExtensionFormDto> lvE = new ListView<>();
             for (Integer extId : dto.getRentalExtensionFormIds()) {
                 try {
-                    String json = ApiHttpClientCaller.call("rental-extension-form/" + extId, ApiHttpClientCaller.Method.GET, null);
+                    String json = ApiHttpClientCaller.call("rental-extension-form/" + extId, GET, null);
                     ResponseRentalExtensionFormDto ext = mapper.readValue(json, new TypeReference<>() {});
                     lvE.getItems().add(ext);
                 } catch (Exception ignored) {}
@@ -500,7 +563,7 @@
                     // 3) GET /rental-form/{id}/guest-ids
                     String idsJson = ApiHttpClientCaller.call(
                             "rental-form/" + parent.getId() + "/guest-ids",
-                            ApiHttpClientCaller.Method.GET,
+                            GET,
                             null
                     );
                     List<Integer> takenIds = mapper.readValue(
@@ -532,7 +595,7 @@
                 try {
                     String idsJson = ApiHttpClientCaller.call(
                             "rental-form/" + parent.getId() + "/guest-ids",
-                            ApiHttpClientCaller.Method.GET,
+                            GET,
                             null
                     );
                     List<Integer> takenIds = mapper.readValue(
@@ -656,7 +719,7 @@
                 try {
                     String json = ApiHttpClientCaller.call(
                             "rental-extension-form/day-remains/" + parent.getId(),
-                            ApiHttpClientCaller.Method.GET, null);
+                            GET, null);
                     int remains = mapper.readValue(json, Integer.class);
                     if (remains <= 0) {
                         lblInfo.setText("Không thể gia hạn thêm");
@@ -729,7 +792,7 @@
         private ResponseRentalFormDto getRefreshedRentalForm(int formId) {
             try {
                 String json = ApiHttpClientCaller.call("rental-form/" + formId,
-                        ApiHttpClientCaller.Method.GET, null);
+                        GET, null);
                 return mapper.readValue(json, ResponseRentalFormDto.class);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -800,7 +863,7 @@
                                     + invoiceId + "/"
                                     + rf.getId() + "/"
                                     + staffId + "/app",
-                            ApiHttpClientCaller.Method.GET,
+                            GET,
                             null
                     );
                 }

@@ -53,18 +53,18 @@
                                 text="Thuê phòng"
                                 prefWidth="160.0"
                                 styleClass="submenu-button"/>
-                        <Button onAction="#openGuestTab"
+                        <Button onAction="#openEditTab"
                                 prefHeight="35.0"
                                 prefWidth="160.0"
                                 styleClass="submenu-button"
                                 style="-fx-text-fill: black;"
-                                text="Danh sách khách hàng"/>
+                                text="Bổ sung phiếu thuê"/>
                         <Button onAction="#openRentalFormViewTab"
                                 prefHeight="35.0"
                                 prefWidth="160.0"
                                 styleClass="submenu-button"
                                 style="-fx-text-fill: black;"
-                                text="Tra cứu phiếu thuê"/>
+                                text="Khởi tạo hoá đơn"/>
                     </VBox>
                 </TitledPane>
 

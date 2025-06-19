@@ -26,6 +26,16 @@
                                 text="➕ Tạo Phiếu Thuê Phòng"
                                 style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-background-color: #4CAF50; -fx-text-fill: white;" />
                     </HBox>
+                    <!-- Booking ID lookup -->
+                    <HBox spacing="6" alignment="CENTER_LEFT">
+                        <Label text="Booking ID:"/>
+                        <TextField fx:id="bookingIdField" promptText="Nhập Booking ID…" />
+                        <Button fx:id="btnLoadBooking"
+                                text="🔍 Lấy Booking"
+                                onAction="#onLoadBooking"
+                                style="-fx-font-weight: bold;" />
+                    </HBox>
+
                     <!-- Room Picker -->
                     <HBox spacing="6" alignment="CENTER_LEFT">
                         <Label text="Chọn Loại phòng:"/>

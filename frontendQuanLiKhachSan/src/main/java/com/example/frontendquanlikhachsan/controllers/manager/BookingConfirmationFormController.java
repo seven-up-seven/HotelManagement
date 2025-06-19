@@ -90,20 +90,25 @@ public class BookingConfirmationFormController {
                 c -> new SimpleObjectProperty<>(c.getValue().getRentalDays())
         );
 
-        colBookingDate.setCellFactory(col -> new TableCell<>() {
+        // --- Thay vì hiển thị “–” khi null, ta để blank ---
+        colBookingDate.setCellFactory(col -> new TableCell<ResponseBookingConfirmationFormDto,String>() {
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
-                setText(empty || item==null || item.isBlank() ? "–" : item);
+                // empty cell hoặc null thì để chuỗi rỗng
+                setText(empty || item == null || item.isBlank() ? "" : item);
             }
         });
-        colRentalDays.setCellFactory(col -> new TableCell<>() {
+
+// Tương tự với RentalDays
+        colRentalDays.setCellFactory(col -> new TableCell<ResponseBookingConfirmationFormDto,Integer>() {
             @Override
             protected void updateItem(Integer item, boolean empty) {
                 super.updateItem(item, empty);
-                setText(empty || item==null ? "–" : item.toString());
+                setText(empty || item == null ? "" : item.toString());
             }
         });
+
 
 
         // --- 2) filtered + sorted list ---

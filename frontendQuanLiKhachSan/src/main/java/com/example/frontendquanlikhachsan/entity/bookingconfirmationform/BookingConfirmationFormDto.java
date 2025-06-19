@@ -12,12 +12,12 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BookingConfirmationFormDto {
-    private Integer bookingGuestId;
+    public class BookingConfirmationFormDto {
+        private Integer bookingGuestId;
 
-    private BookingState bookingState;
+        private BookingState bookingState;
 
-    private Integer roomId;
-    private LocalDateTime bookingDate;
-    private Integer rentalDays;
+        private Integer roomId;
+        private LocalDateTime bookingDate;
+        private Integer rentalDays;
 }

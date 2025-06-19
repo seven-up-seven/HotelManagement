@@ -24,6 +24,10 @@ import java.util.function.Consumer;
 @Component
 public class MainController {
 
+    public void openEditTab() {
+        openTab("Bổ sung phiếu thuê", "/com/example/frontendquanlikhachsan/views/receptionist/RentalFormEdit.fxml", null);
+    }
+
     @FXML private TabPane tabPane;
     public TabPane getTabPane() {
         return tabPane;
@@ -186,7 +190,7 @@ private <C> void openTab(String baseTitle,
     }
 
     public void openSalaryTab() {
-        openTab("qlhđ", "/com/example/frontendquanlikhachsan/views/accountant/StaffSalaryAccountant.fxml", null);
+        openTab("Lương nhân viên", "/com/example/frontendquanlikhachsan/views/accountant/StaffSalaryAccountant.fxml", null);
     }
 
     public void openAccountManagement() {
@@ -194,7 +198,7 @@ private <C> void openTab(String baseTitle,
     }
 
     public void openRentalFormViewTab() {
-        openTab("qltk", "/com/example/frontendquanlikhachsan/views/accountant/RentalFormView.fxml", null);
+        openTab("qltk", "/com/example/frontendquanlikhachsan/views/receptionist/RentalFormView.fxml", null);
     }
     public void openUserRoleManagement()
     {

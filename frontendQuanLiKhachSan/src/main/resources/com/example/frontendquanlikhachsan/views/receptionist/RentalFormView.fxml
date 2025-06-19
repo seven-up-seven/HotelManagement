@@ -16,7 +16,7 @@
 <?import javafx.geometry.Insets?>
 <SplitPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
-           fx:controller="com.example.frontendquanlikhachsan.controllers.accountant.RentalFormViewController"
+           fx:controller="com.example.frontendquanlikhachsan.controllers.receptionist.RentalFormViewController"
            prefWidth="1000" prefHeight="600">
 
     <items>
@@ -26,7 +26,7 @@
                 <Insets top="16" right="16" bottom="16" left="16"/>
             </padding>
             <HBox spacing="100">
-                <Label text="Danh sách Phiếu thuê"
+                <Label text="Danh sách phiếu thuê chưa thanh toán"
 
                        style="-fx-font-size:18px; -fx-font-weight:bold;"/>
 
