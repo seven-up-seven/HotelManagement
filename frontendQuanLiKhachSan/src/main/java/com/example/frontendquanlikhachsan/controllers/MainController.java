@@ -174,6 +174,11 @@ private <C> void openTab(String baseTitle,
         openTab("qltk", "/com/example/frontendquanlikhachsan/views/admin/Account.fxml", null);
     }
 
+    public void openUserRoleManagement()
+    {
+        openTab("Quản lí vai trò", "/com/example/frontendquanlikhachsan/views/admin/UserRole.fxml", null);
+    }
+
     @FXML
     public void toggleSidebar() {
         isPinned = !isPinned;
