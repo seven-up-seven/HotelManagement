@@ -16,6 +16,7 @@ import javafx.scene.layout.VBox;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 public class UserRoleController {
     @FXML
@@ -105,7 +106,153 @@ public class UserRoleController {
         roleDetailContainer.getChildren().addAll(nameLabel, nameField, permissionLabel, permissionBox, btnBox);
 
         deleteBtn.setOnAction(actionEvent->{
+            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+            confirm.setTitle("Xác nhận xoá");
+            confirm.setHeaderText(null);
+            confirm.setContentText("Bạn có chắc chắn muốn xoá vai trò này không?");
 
+            confirm.showAndWait().ifPresent(result -> {
+                if (result == ButtonType.OK) {
+                    try {
+                        String url = "user-role/" + role.getId(); // role là ResponseUserRoleDto
+                        ApiHttpClientCaller.call(url, ApiHttpClientCaller.Method.DELETE, null);
+                        showInfo("Xoá vai trò thành công!");
+                        loadRoles(); // reload danh sách
+                        roleDetailContainer.getChildren().clear(); // clear chi tiết
+                    } catch (Exception ex) {
+                        showError("Lỗi khi xoá vai trò: " + ex.getMessage());
+                    }
+                }
+            });
+        });
+
+        updateBtn.setOnAction(actionEvent->showUpdateRoleForm(role));
+    }
+
+    private void showUpdateRoleForm(ResponseUserRoleDto role) {
+        labelRoleDetailTitle.setText("Cập nhật Vai trò: " + role.getName());
+        roleDetailContainer.getChildren().clear();
+
+        Label nameLabel = new Label("Tên vai trò:");
+        TextField nameField = new TextField(role.getName());
+
+        Label permissionLabel = new Label("Quyền:");
+        VBox permissionBox = new VBox(5);
+
+        // Tải toàn bộ quyền 1 lần
+        ResponsePermissionDto[] allPermissions;
+        try {
+            String json = ApiHttpClientCaller.call("permission", ApiHttpClientCaller.Method.GET, null);
+            allPermissions = ApiHttpClientCaller.mapper.readValue(json, ResponsePermissionDto[].class);
+        } catch (Exception ex) {
+            showError("Không thể tải danh sách quyền: " + ex.getMessage());
+            return;
+        }
+
+        // Hàm tạo 1 ComboBox + X button
+        Consumer<String> addComboBoxWithValue = (String selectedName) -> {
+            ComboBox<String> comboBox = new ComboBox<>();
+            comboBox.getItems().setAll(Arrays.stream(allPermissions).map(ResponsePermissionDto::getName).toList());
+            comboBox.setValue(selectedName);
+
+            comboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
+                if (newVal == null) return;
+                boolean isDuplicate = permissionBox.getChildren().stream()
+                        .filter(node -> node instanceof HBox hBox && hBox.getChildren().get(0) instanceof ComboBox<?> && hBox.getChildren().get(0) != comboBox)
+                        .map(node -> ((ComboBox<?>) ((HBox) node).getChildren().get(0)).getValue())
+                        .anyMatch(val -> newVal.equals(val));
+                if (isDuplicate) {
+                    showError("Không thể chọn trùng quyền đã có.");
+                    comboBox.setValue(null);
+                }
+            });
+
+            Button removeBtn = new Button("❌");
+            removeBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: red;");
+            removeBtn.setOnAction(e -> permissionBox.getChildren().remove(comboBox.getParent()));
+
+            HBox row = new HBox(8, comboBox, removeBtn);
+            permissionBox.getChildren().add(row);
+        };
+
+        // Thêm các quyền đã có sẵn
+        for (String permName : role.getPermissionNames()) {
+            addComboBoxWithValue.accept(permName);
+        }
+
+        // Nút thêm quyền
+        Button addPermissionBtn = new Button("➕ Thêm quyền");
+        addPermissionBtn.setOnAction(e -> addComboBoxWithValue.accept(null));
+
+        // Nút lưu cập nhật (logic viết sau)
+        Button saveBtn = new Button("💾 Lưu");
+        saveBtn.setStyle("-fx-background-color: #1976d2; -fx-text-fill: white;");
+
+        // Giao diện
+        roleDetailContainer.getChildren().addAll(nameLabel, nameField, permissionLabel, permissionBox, addPermissionBtn, saveBtn);
+
+        saveBtn.setOnAction(evt -> {
+            String roleName = nameField.getText().trim();
+
+            if (roleName.isEmpty()) {
+                showError("Tên vai trò không được để trống.");
+                return;
+            }
+
+            List<String> selectedPermissions = permissionBox.getChildren().stream()
+                    .filter(node -> node instanceof HBox hBox && hBox.getChildren().get(0) instanceof ComboBox<?>)
+                    .map(node -> ((ComboBox<?>) ((HBox) node).getChildren().get(0)).getValue())
+                    .filter(val -> val != null && !val.toString().isBlank())
+                    .map(Object::toString)
+                    .toList();
+
+            if (selectedPermissions.isEmpty()) {
+                showError("Phải chọn ít nhất một quyền.");
+                return;
+            }
+
+            if (roleName.isEmpty()) {
+                showError("Tên vai trò không được để trống.");
+                return;
+            }
+
+            List<String> permissions = permissionBox.getChildren().stream()
+                    .filter(node -> node instanceof HBox hBox && hBox.getChildren().get(0) instanceof ComboBox<?>)
+                    .map(node -> ((ComboBox<?>) ((HBox) node).getChildren().get(0)).getValue())
+                    .filter(val -> val != null && !val.toString().isBlank())
+                    .map(Object::toString)
+                    .toList();
+
+            if (permissions.isEmpty()) {
+                showError("Phải chọn ít nhất một quyền.");
+                return;
+            }
+
+            try {
+                List<UserRolePermissionDto> listPerm = selectedPermissions.stream()
+                        .map(name -> Arrays.stream(allPermissions)
+                                .filter(p -> p.getName().equals(name))
+                                .map(p -> UserRolePermissionDto.builder()
+                                        .permissionId(p.getId())
+                                        .build())
+                                .findFirst()
+                                .orElse(null))
+                        .filter(Objects::nonNull)
+                        .toList();
+
+                UserRoleDto roleDto = UserRoleDto.builder()
+                        .name(roleName)
+                        .listPermissions(listPerm)
+                        .build();
+
+                String url = "user-role/" + role.getId();
+                ApiHttpClientCaller.call(url, ApiHttpClientCaller.Method.PUT, roleDto);
+
+                showInfo("Cập nhật vai trò thành công!");
+                loadRoles();
+            } catch (Exception ex) {
+                showError("Lỗi khi cập nhật vai trò: " + ex.getMessage());
+            }
         });
     }
 
@@ -192,32 +339,31 @@ public class UserRoleController {
             }
 
             try {
-                // Tìm danh sách permissionId tương ứng
-                List<Integer> permissionIds = selectedPermissions.stream()
-                        .map(name -> Arrays.stream(allPermissions)
-                                .filter(p -> p.getName().equals(name))
-                                .map(ResponsePermissionDto::getId)
-                                .findFirst()
-                                .orElse(null))
-                        .filter(Objects::nonNull)
-                        .toList();
+                // B1. Gửi tạo user role mới
+                UserRoleDto roleDto = UserRoleDto.builder().name(roleName).build();
+                String json = ApiHttpClientCaller.call("user-role", ApiHttpClientCaller.Method.POST, roleDto);
 
-                // Tạo role + permission trong 1 lần
-                UserRoleDto roleDto = UserRoleDto.builder()
-                        .name(roleName)
-                        .build();
-
-                var json=ApiHttpClientCaller.call("user-role", ApiHttpClientCaller.Method.POST, roleDto);
                 ResponseUserRoleDto createdRole = mapper.readValue(json, ResponseUserRoleDto.class);
-                Integer newRoleId = createdRole.getId();
-                for (Integer permissionId : permissionIds) {
-                    UserRolePermissionDto dto = UserRolePermissionDto.builder()
-                            .userRoleId(newRoleId)
-                            .permissionId(permissionId)
-                            .build();
+                int newRoleId = createdRole.getId();
 
-                    ApiHttpClientCaller.call("user-role-permission", ApiHttpClientCaller.Method.POST, dto);
+                // B2. Gửi danh sách permission tương ứng
+                for (String permName : selectedPermissions) {
+                    Integer permId = Arrays.stream(allPermissions)
+                            .filter(p -> p.getName().equals(permName))
+                            .map(ResponsePermissionDto::getId)
+                            .findFirst()
+                            .orElse(null);
+
+                    if (permId != null) {
+                        UserRolePermissionDto dto = UserRolePermissionDto.builder()
+                                .userRoleId(newRoleId)
+                                .permissionId(permId)
+                                .build();
+
+                        ApiHttpClientCaller.call("user-role-permission", ApiHttpClientCaller.Method.POST, dto);
+                    }
                 }
+
                 showInfo("Tạo vai trò mới thành công!");
                 loadRoles();
             } catch (Exception ex) {
