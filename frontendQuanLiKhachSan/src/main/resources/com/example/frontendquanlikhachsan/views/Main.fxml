@@ -65,6 +65,12 @@
                                 styleClass="submenu-button"
                                 style="-fx-text-fill: black;"
                                 text="Khởi tạo hoá đơn"/>
+                        <Button onAction="#openInvoiceAccountantTab"
+                                prefHeight="35.0"
+                                prefWidth="160.0"
+                                styleClass="submenu-button"
+                                style="-fx-text-fill: black;"
+                                text="Tra cứu hoá đơn"/>
                     </VBox>
                 </TitledPane>
 
