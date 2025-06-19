@@ -56,6 +56,9 @@ import static com.example.frontendquanlikhachsan.ApiHttpClientCaller.Method.GET;
 
 public class RoomRentingController {
 
+    @FXML private TextField bookingIdField;
+    @FXML private Button    btnLoadBooking;
+
     private FilteredList<ResponseRoomDto> filteredRooms;
 
     @FXML
@@ -207,6 +210,67 @@ public class RoomRentingController {
         showListView();
     }
 
+    @FXML
+    private void onLoadBooking() {
+        String raw = bookingIdField.getText().trim();
+        if (raw.isEmpty()) {
+            showErrorAlert("Thiếu dữ liệu", "Vui lòng nhập Booking ID.");
+            return;
+        }
+        int bookingId;
+        try {
+            bookingId = Integer.parseInt(raw);
+        } catch (NumberFormatException ex) {
+            showErrorAlert("Sai định dạng", "Booking ID phải là số nguyên.");
+            return;
+        }
+
+        new Thread(() -> {
+            try {
+                // 1) GET booking-confirmation-form/{id}
+                String json = ApiHttpClientCaller.call(
+                        "booking-confirmation-form/" + bookingId,
+                        GET, null);
+                ResponseBookingConfirmationFormDto booking =
+                        mapper.readValue(json, ResponseBookingConfirmationFormDto.class);
+
+                Platform.runLater(() -> {
+                    // 2) Điền ngày và số ngày thuê
+                    creationDatePicker.setValue(booking.getBookingDate().toLocalDate());
+                    rentalDaysField.setText(String.valueOf(booking.getRentalDays()));
+
+                    // 3) Lấy thông tin phòng
+                    new Thread(() -> {
+                        try {
+                            String roomJson = ApiHttpClientCaller.call(
+                                    "room/" + booking.getRoomId(),
+                                    GET, null);
+                            ResponseRoomDto room =
+                                    mapper.readValue(roomJson, ResponseRoomDto.class);
+
+                            Platform.runLater(() -> {
+                                // thêm vào list nếu chưa có
+                                if (!roomList.contains(room)) {
+                                    roomList.add(0, room);
+                                }
+                                roomPicker.getSelectionModel().select(room);
+                            });
+                        } catch (Exception roomEx) {
+                            roomEx.printStackTrace();
+                            Platform.runLater(() ->
+                                    showErrorAlert("Lỗi tải phòng", roomEx.getMessage()));
+                        }
+                    }).start();
+                });
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                Platform.runLater(() ->
+                        showErrorAlert("Lỗi tải booking", "Không tìm thấy Booking #" + bookingId));
+            }
+        }).start();
+    }
+
+    
     @FXML private void onCreateGuest() {
         showCreateForm();
     }

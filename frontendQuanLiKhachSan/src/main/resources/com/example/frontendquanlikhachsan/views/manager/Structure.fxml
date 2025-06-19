@@ -24,7 +24,7 @@
                 <ComboBox fx:id="categoryCombo" promptText="Chọn loại" />
                 <TextField fx:id="searchId" promptText="ID" />
                 <TextField fx:id="searchName" promptText="Tên" />
-                <ComboBox fx:id="searchState" promptText="Trạng thái" />
+                <ComboBox fx:id="searchState" promptText="Trạng thái" visible="false"/>
             </HBox>
             <Label text="Cấu trúc Tòa – Tầng – Phòng" styleClass="header"/>
             <TreeView fx:id="structureTree" VBox.vgrow="ALWAYS" styleClass="structure-tree">

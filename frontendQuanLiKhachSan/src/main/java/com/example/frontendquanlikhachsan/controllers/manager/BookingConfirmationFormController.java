@@ -90,6 +90,27 @@ public class BookingConfirmationFormController {
                 c -> new SimpleObjectProperty<>(c.getValue().getRentalDays())
         );
 
+        // --- Thay vì hiển thị “–” khi null, ta để blank ---
+        colBookingDate.setCellFactory(col -> new TableCell<ResponseBookingConfirmationFormDto,String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                // empty cell hoặc null thì để chuỗi rỗng
+                setText(empty || item == null || item.isBlank() ? "" : item);
+            }
+        });
+
+// Tương tự với RentalDays
+        colRentalDays.setCellFactory(col -> new TableCell<ResponseBookingConfirmationFormDto,Integer>() {
+            @Override
+            protected void updateItem(Integer item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? "" : item.toString());
+            }
+        });
+
+
+
         // --- 2) filtered + sorted list ---
         filteredList = new FilteredList<>(masterList, b->true);
         SortedList<ResponseBookingConfirmationFormDto> sorted = new SortedList<>(filteredList);
@@ -139,6 +160,10 @@ public class BookingConfirmationFormController {
                 Platform.runLater(() -> {
                     // update master list
                     masterList.setAll(all);
+
+                    tblBooking.getSelectionModel().clearSelection();
+                    tblBooking.refresh();
+
 
                     // refill roomType filter
                     Set<String> types = all.stream()
@@ -337,10 +362,18 @@ public class BookingConfirmationFormController {
                 createBoldRow("Guest Name:", d.getGuestName()),
                 createBoldRow("Room ID:", String.valueOf(d.getRoomId())),
                 createBoldRow("Room Name:", d.getRoomName()),
-                createBoldRow("Loại phòng:", d.getRoomTypeName()),
-                createBoldRow("Booking Date:", d.getBookingDate().format(fmt)),
-                createBoldRow("Số ngày thuê:", String.valueOf(d.getRentalDays()))
+                createBoldRow("Loại phòng:", d.getRoomTypeName())
+//                createBoldRow("Booking Date:", d.getBookingDate().format(fmt)),
+//                createBoldRow("Số ngày thuê:", String.valueOf(d.getRentalDays()))
         );
+
+        String bd = d.getBookingDate() == null
+                ? "–"
+                : d.getBookingDate().format(fmt);
+        detailPane.getChildren().add(createBoldRow("Booking Date:", bd));
+
+        int rd = d.getRentalDays();
+        detailPane.getChildren().add(createBoldRow("Số ngày thuê:", String.valueOf(rd)));
 
         // --- tạo HBox chứa 2 nút Sửa + Xóa ---
         Button btnEdit  = new Button("✏️ Sửa");
