@@ -55,8 +55,6 @@
                                 <TableColumn fx:id="colCustomerIdCard" text="CMND/CCCD" />
                             </columns>
                         </TableView>
-                        <Button fx:id="addCustomerButton" text="➕ Thêm Khách Hàng"
-                                style="-fx-font-weight: bold;" />
                     </VBox>
 
                     <!-- Create Rental Button -->
@@ -67,20 +65,31 @@
             </content>
         </ScrollPane>
 
-        <!-- RIGHT: Customer or Room Detail -->
-        <VBox prefWidth="600.0" style="-fx-background-color: #ffffff;">
-            <padding>
-                <Insets top="16.0" right="16.0" bottom="16.0" left="16.0" />
-            </padding>
+        <VBox spacing="8" style="-fx-background-color:#ffffff;">
+            <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
 
-            <Label text="Thông Tin Chi Tiết"
-                   style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+            <HBox spacing="6">
+                <TextField fx:id="tfFilterName"  promptText="Tên"/>
+                <TextField fx:id="tfFilterId"    promptText="ID"/>
+                <TextField fx:id="tfFilterCCCD"  promptText="CCCD"/>
+                <TextField fx:id="tfFilterAge"   promptText="Tuổi"/>
+                <TextField fx:id="tfFilterPhone" promptText="SĐT"/>
+            </HBox>
 
-            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
-                <content>
-                    <VBox fx:id="detailPane" spacing="12.0" />
-                </content>
-            </ScrollPane>
+            <TableView fx:id="tableAllGuests" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colAllId"   text="ID" prefWidth="40"/>
+                    <TableColumn fx:id="colAllName" text="Họ &amp; Tên" prefWidth="150"/>
+                    <TableColumn fx:id="colAllSex"  text="GT" prefWidth="60"/>
+                    <TableColumn fx:id="colAllAge"  text="Tuổi" prefWidth="50"/>
+                    <TableColumn fx:id="colAllCCCD" text="CCCD" prefWidth="120"/>
+                    <TableColumn fx:id="colAllPhone" text="SĐT" prefWidth="100"/>
+                </columns>
+            </TableView>
+            <Button fx:id="btnCreateGuest"
+                    text="➕ Tạo mới khách"
+                    style="-fx-font-weight:bold;"/>
         </VBox>
+
     </items>
 </SplitPane>

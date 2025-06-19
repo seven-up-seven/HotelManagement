@@ -1,7 +1,6 @@
 package com.example.frontendquanlikhachsan.controllers;
 
-import com.example.frontendquanlikhachsan.controllers.manager.GuestController;
-import com.example.frontendquanlikhachsan.controllers.manager.InvoiceController;
+import com.example.frontendquanlikhachsan.controllers.manager.*;
 import javafx.animation.Interpolator;
 import javafx.animation.PauseTransition;
 import javafx.animation.TranslateTransition;
@@ -18,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -110,7 +110,8 @@ private <C> void openTab(String baseTitle,
     }
 
     public void openStaffTab() {
-        openTab("qlnv", "/com/example/frontendquanlikhachsan/views/manager/Staff.fxml", null);
+        openTab("Danh sách nhân viên", "/com/example/frontendquanlikhachsan/views/manager/Staff.fxml",
+                (StaffController s) -> s.setMainController(this));
     }
 
     public void openRoomRentingTab() {
@@ -122,48 +123,66 @@ private <C> void openTab(String baseTitle,
 //    }
 
     public void openGuestTab() {
-        openTab("QL Khách", "/com/example/frontendquanlikhachsan/views/manager/Guest.fxml",
+        openTab("Danh sách khách hàng", "/com/example/frontendquanlikhachsan/views/manager/Guest.fxml",
                 (GuestController gc) -> gc.setMainController(this)
         );
     }
 
 
     public void openPositionTab() {
-        openTab("qlcv", "/com/example/frontendquanlikhachsan/views/manager/Position.fxml", null);
+        openTab("Danh sách chức vụ", "/com/example/frontendquanlikhachsan/views/manager/Position.fxml", null);
     }
 
     public void openRentalExtensionFormTab() {
-        openTab("qlcv", "/com/example/frontendquanlikhachsan/views/manager/RentalExtensionForm.fxml", null);
+        openTab("Danh sách phiếu gia hạn", "/com/example/frontendquanlikhachsan/views/manager/RentalExtensionForm.fxml", null);
+    }
+
+    public void openRentalExtensionFormTab(List<Integer> ids) {
+        openTab("Danh sách phiếu gia hạn", "/com/example/frontendquanlikhachsan/views/manager/RentalExtensionForm.fxml",
+                (RentalExtensionFormController re) -> re.selectExtensionsByIds(ids)
+        );
     }
 
     public void openRentalFormTab() {
-        openTab("qlpt", "/com/example/frontendquanlikhachsan/views/manager/RentalForm.fxml", null);
+        openTab("Danh sách phiếu thuê", "/com/example/frontendquanlikhachsan/views/manager/RentalForm.fxml", null);
+    }
+
+    public void openRentalFormTab(List<Integer> ids) {
+        openTab("Danh sách phiếu thuê", "/com/example/frontendquanlikhachsan/views/manager/RentalForm.fxml",
+                (RentalFormController rc) -> rc.selectRentalFormsByIds(ids)
+        );
     }
 
     public void openInvoiceTab() {
-        openTab("qlhđ", "/com/example/frontendquanlikhachsan/views/manager/Invoice.fxml", null);
+        openTab("Danh sách hoá đơn", "/com/example/frontendquanlikhachsan/views/manager/Invoice.fxml", null);
     }
 
-    public void openInvoiceTab(int invoiceId) {
-        openTab("qlhđ", "/com/example/frontendquanlikhachsan/views/manager/Invoice.fxml",
-                (InvoiceController ic) -> ic.selectInvoiceById(invoiceId)
+    public void openInvoiceTab(List<Integer> ids) {
+        openTab("Danh sách hoá đơn", "/com/example/frontendquanlikhachsan/views/manager/Invoice.fxml",
+                (InvoiceController ic) -> ic.selectInvoicesByIds(ids)
         );
     }
 
     public void openStructureTab() {
-        openTab("qlhđ", "/com/example/frontendquanlikhachsan/views/manager/Structure.fxml", null);
+        openTab("Cấu trúc khách sạn", "/com/example/frontendquanlikhachsan/views/manager/Structure.fxml", null);
     }
 
     public void openBookingConfirmationFormTab() {
-        openTab("qlhđ", "/com/example/frontendquanlikhachsan/views/manager/BookingConfirmationForm.fxml", null);
+        openTab("Danh sách phiếu đặt phòng", "/com/example/frontendquanlikhachsan/views/manager/BookingConfirmationForm.fxml", null);
+    }
+
+    public void openBookingConfirmationFormTab(List<Integer> ids) {
+        openTab("Danh sách phiếu đặt phòng", "/com/example/frontendquanlikhachsan/views/manager/BookingConfirmationForm.fxml",
+                (BookingConfirmationFormController bc) -> bc.selectBookingConfirmationFormsByIds(ids)
+        );
     }
 
     public void openReportTab() {
-        openTab("qlhđ", "/com/example/frontendquanlikhachsan/views/accountant/RevenueReport.fxml", null);
+        openTab("Báo cáo tháng", "/com/example/frontendquanlikhachsan/views/accountant/RevenueReport.fxml", null);
     }
 
     public void openInvoiceAccountantTab() {
-        openTab("qlhđ", "/com/example/frontendquanlikhachsan/views/accountant/InvoiceAccountant.fxml", null);
+        openTab("Tra cứu hoá đơn", "/com/example/frontendquanlikhachsan/views/accountant/InvoiceAccountant.fxml", null);
     }
 
     public void openSalaryTab() {
@@ -171,7 +190,7 @@ private <C> void openTab(String baseTitle,
     }
 
     public void openAccountManagement() {
-        openTab("qltk", "/com/example/frontendquanlikhachsan/views/admin/Account.fxml");
+        openTab("qltk", "/com/example/frontendquanlikhachsan/views/admin/Account.fxml", null);
     }
 
     @FXML

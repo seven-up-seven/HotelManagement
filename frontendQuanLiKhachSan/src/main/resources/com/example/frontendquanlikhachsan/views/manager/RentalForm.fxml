@@ -21,6 +21,8 @@
                     onAction="#onCreateOrEditForm"
                     style="-fx-font-weight: bold;"/>
 
+            <Button fx:id="btnReset" text="🔄 Reset" onAction="#onResetFilter"/>
+
             <!-- FILTER BAR -->
             <HBox spacing="8.0">
                 <padding>

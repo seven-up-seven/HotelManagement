@@ -8,6 +8,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -15,6 +17,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -29,35 +32,114 @@ public class RentalExtensionFormController {
     @FXML private TableColumn<ResponseRentalExtensionFormDto, String> colStaffName;
     @FXML private VBox detailPane;
 
+    @FXML private TextField tfFilterExtId;
+    @FXML private TextField tfFilterFormId;
+    @FXML private TextField tfFilterRoomName;
+
     private final ObservableList<ResponseRentalExtensionFormDto> extList = FXCollections.observableArrayList();
+    private FilteredList<ResponseRentalExtensionFormDto> filtered;
     private final ObjectMapper mapper = new ObjectMapper();
-    private final String token = ""; // TODO: gán token
+    private List<Integer> multiFilterIds = null;
     private ResponseRentalExtensionFormDto editingDto = null;
 
     @FXML public void initialize() {
-        colId.setCellValueFactory(cd->new ReadOnlyObjectWrapper<>(cd.getValue().getId()));
-        colRentalFormId.setCellValueFactory(cd->new ReadOnlyObjectWrapper<>(cd.getValue().getRentalFormId()));
-        colRoomName.setCellValueFactory(cd->new ReadOnlyObjectWrapper<>(cd.getValue().getRentalFormRoomName()));
-        colDays.setCellValueFactory(cd->new ReadOnlyObjectWrapper<>(cd.getValue().getNumberOfRentalDays()));
-        colStaffName.setCellValueFactory(cd->new ReadOnlyObjectWrapper<>(cd.getValue().getStaffName()));
 
+        // 1) Column bindings
+        colId.setCellValueFactory(cd -> new ReadOnlyObjectWrapper<>(cd.getValue().getId()));
+        colRentalFormId.setCellValueFactory(cd -> new ReadOnlyObjectWrapper<>(cd.getValue().getRentalFormId()));
+        colRoomName.setCellValueFactory(cd -> new ReadOnlyObjectWrapper<>(cd.getValue().getRentalFormRoomName()));
+        colDays.setCellValueFactory(cd -> new ReadOnlyObjectWrapper<>(cd.getValue().getNumberOfRentalDays()));
+        colStaffName.setCellValueFactory(cd -> new ReadOnlyObjectWrapper<>(cd.getValue().getStaffName()));
+
+        // 2) Wrap into FilteredList + SortedList
+        filtered = new FilteredList<>(extList, e -> true);
+        SortedList<ResponseRentalExtensionFormDto> sorted = new SortedList<>(filtered);
+        sorted.comparatorProperty().bind(tableExtension.comparatorProperty());
+        tableExtension.setItems(sorted);
+
+        // 3) Listeners on filter inputs
+        tfFilterExtId.textProperty().addListener((o,oldV,newV)->applyFilters());
+        tfFilterFormId.textProperty().addListener((o,oldV,newV)->applyFilters());
+        tfFilterRoomName.textProperty().addListener((o,oldV,newV)->applyFilters());
+
+        // 4) Load data & row selection
         loadExtensions();
-        tableExtension.setItems(extList);
         tableExtension.getSelectionModel().selectedItemProperty()
-                .addListener((obs,o,n)->{ if(n!=null) showDetail(n); });
+                .addListener((obs,o,n)-> { if(n!=null) showDetail(n); });
+    }
+
+    @FXML private void onResetFilter() {
+        multiFilterIds = null;
+        tfFilterExtId.clear();
+        tfFilterFormId.clear();
+        tfFilterRoomName.clear();
+        applyFilters();
+        // chuyển selectionMode về đơn lẻ nếu cần
+        tableExtension.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
     }
 
     @FXML private void onCreateOrEditExtension() {
         showCreateForm();
     }
 
+    private void applyFilters() {
+        if (multiFilterIds != null) {
+            filtered.setPredicate(dto -> multiFilterIds.contains(dto.getId()));
+            return;
+        }
+
+        String extIdText    = tfFilterExtId.getText().trim();
+        String formIdText   = tfFilterFormId.getText().trim();
+        String roomNameText = tfFilterRoomName.getText().trim().toLowerCase();
+
+        filtered.setPredicate(dto -> {
+            // filter by extension ID
+            if (!extIdText.isEmpty()) {
+                try {
+                    if (dto.getId() != Integer.parseInt(extIdText)) return false;
+                } catch(NumberFormatException e){ return false; }
+            }
+            // filter by rentalFormId
+            if (!formIdText.isEmpty()) {
+                try {
+                    if (dto.getRentalFormId() != Integer.parseInt(formIdText)) return false;
+                } catch(NumberFormatException e){ return false; }
+            }
+            // filter by room name contains
+            if (!roomNameText.isEmpty()
+                    && !dto.getRentalFormRoomName().toLowerCase().contains(roomNameText)) {
+                return false;
+            }
+            return true;
+        });
+    }
+
     private void loadExtensions() {
         try {
-            String json = ApiHttpClientCaller.call("rental-extension-form", ApiHttpClientCaller.Method.GET, null);
-            List<ResponseRentalExtensionFormDto> list = mapper.readValue(json, new TypeReference<>(){});
+            String json = ApiHttpClientCaller.call(
+                    "rental-extension-form",
+                    ApiHttpClientCaller.Method.GET,
+                    null
+            );
+            List<ResponseRentalExtensionFormDto> list =
+                    mapper.readValue(json, new TypeReference<>() {});
             extList.setAll(list);
         } catch(Exception e) {
-            e.printStackTrace(); showErrorAlert("Lỗi tải", "Không thể tải gia hạn.");
+            e.printStackTrace();
+            showErrorAlert("Lỗi tải", "Không thể tải danh sách gia hạn.");
+        }
+    }
+
+    public void selectExtensionsByIds(List<Integer> ids) {
+        multiFilterIds = new ArrayList<>(ids);
+        tableExtension.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        applyFilters();
+        // chọn và show detail bản ghi đầu
+        if (!ids.isEmpty()) {
+            tableExtension.getItems().stream()
+                    .filter(d -> d.getId() == ids.get(0))
+                    .findFirst()
+                    .ifPresent(this::showDetail);
         }
     }
 

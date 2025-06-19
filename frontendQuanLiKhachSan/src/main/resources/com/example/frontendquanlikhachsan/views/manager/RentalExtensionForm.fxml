@@ -17,6 +17,14 @@
             <Button text="➕ Tạo phiếu gia hạn"
                     onAction="#onCreateOrEditExtension"
                     style="-fx-font-weight:bold;"/>
+            <Button    text="🔄 Reset"             onAction="#onResetFilter"/>
+
+            <HBox spacing="8">
+                <TextField fx:id="tfFilterExtId"      promptText="ID Gia hạn"/>
+                <TextField fx:id="tfFilterFormId"     promptText="ID Phiếu thuê"/>
+                <TextField fx:id="tfFilterRoomName"   promptText="Tên phòng"/>
+            </HBox>
+
             <TableView fx:id="tableExtension" VBox.vgrow="ALWAYS">
                 <columns>
                     <TableColumn fx:id="colId" text="ID" prefWidth="40.0"/>

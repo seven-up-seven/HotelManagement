@@ -24,6 +24,10 @@
             <HBox spacing="10" alignment="CENTER_LEFT">
                 <!-- Nút Thêm được đặt ở đây -->
                 <Button fx:id="btnAdd" text="➕ Thêm" />
+                <Button fx:id="btnReset"
+                        text="🔄 Reset"
+                        onAction="#onResetFilter"
+                        style="-fx-font-weight:bold;"/>
             </HBox>
             <Label text="Danh sách Booking Confirmation" styleClass="header"/>
             <TableView fx:id="tblBooking" VBox.vgrow="ALWAYS">

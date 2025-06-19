@@ -18,7 +18,7 @@
             <Button text="➕ Tạo hóa đơn"
                     onAction="#onCreateOrEditForm"
                     style="-fx-font-weight:bold;"/>
-
+            <Button text="🔄 Reset" onAction="#onResetFilter" style="-fx-font-weight:bold;"/>
             <!-- Filter row -->
             <HBox spacing="8.0">
                 <padding>
@@ -33,6 +33,8 @@
                 <DatePicker fx:id="dpFilterTo"   promptText="Đến ngày"/>
                 <TextField fx:id="tfFilterCostMin" promptText="Giá từ"/>
                 <TextField fx:id="tfFilterCostMax" promptText="đến"/>
+
+
             </HBox>
 
 

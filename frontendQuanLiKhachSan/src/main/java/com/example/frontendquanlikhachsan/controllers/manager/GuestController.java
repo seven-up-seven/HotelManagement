@@ -42,8 +42,6 @@ public class GuestController {
         this.mainController = mainController;
     }
 
-
-
     @FXML private TextField tfFilterGuestId;
     @FXML private TextField tfFilterName;
     @FXML private TextField tfFilterIdNum;
@@ -183,51 +181,38 @@ public class GuestController {
         grid.add(lb.apply("Email:"), 0, 5);
         grid.add(new Label(Optional.ofNullable(g.getEmail()).orElse("–")), 1, 5);
 
-        // Accordion cho các danh sách liên quan với sizing
-        Accordion accordion = new Accordion();
+        HBox btnBox = new HBox(10);
+        btnBox.setPadding(new Insets(12, 0, 0, 0));
 
+        // 1) Xem hóa đơn liên quan
         if (!g.getInvoiceIds().isEmpty()) {
-            ListView<String> lvInv = new ListView<>();
-            lvInv.setFixedCellSize(24);
-            for (Integer id : g.getInvoiceIds()) {
-                lvInv.getItems().add("Hóa đơn #" + id);
-            }
-            lvInv.setPrefHeight(lvInv.getItems().size() * lvInv.getFixedCellSize() + 2);
-            TitledPane tpInv = new TitledPane("Hóa đơn", lvInv);
-            accordion.getPanes().add(tpInv);
-            lvInv.setOnMouseClicked(e -> {
-                if (e.getClickCount() == 2) {
-                    String sel = lvInv.getSelectionModel().getSelectedItem();
-                    if (sel != null && sel.startsWith("Hóa đơn #")) {
-                        int invoiceId = Integer.parseInt(sel.substring("Hóa đơn #".length()));
-                        // mở tab Invoice và auto-select chi tiết
-                        mainController.openInvoiceTab(invoiceId);
-                    }
-                }
+            Button btnInv = new Button("📄 Hoá đơn liên quan");
+            btnInv.setOnAction(e -> {
+                // dùng mainController mới implement openInvoiceTabs
+                mainController.openInvoiceTab(g.getInvoiceIds());
             });
-        }
-        if (!g.getRentalFormIds().isEmpty()) {
-            ListView<String> lvRent = new ListView<>();
-            lvRent.setFixedCellSize(24);
-            for (Integer id : g.getRentalFormIds()) {
-                lvRent.getItems().add("Phiếu thuê #" + id);
-            }
-            lvRent.setPrefHeight(lvRent.getItems().size() * lvRent.getFixedCellSize() + 2);
-            TitledPane tpRent = new TitledPane("Phiếu thuê", lvRent);
-            accordion.getPanes().add(tpRent);
-        }
-        if (!g.getBookingConfirmationFormIds().isEmpty()) {
-            ListView<String> lvBook = new ListView<>();
-            lvBook.setFixedCellSize(24);
-            for (Integer id : g.getBookingConfirmationFormIds()) {
-                lvBook.getItems().add("Xác nhận #" + id);
-            }
-            lvBook.setPrefHeight(lvBook.getItems().size() * lvBook.getFixedCellSize() + 2);
-            TitledPane tpBook = new TitledPane("Xác nhận đặt phòng", lvBook);
-            accordion.getPanes().add(tpBook);
+            btnBox.getChildren().add(btnInv);
         }
 
-        detailPane.getChildren().addAll(title, grid, accordion);
+        // 2) Xem phiếu thuê liên quan
+        if (!g.getRentalFormIds().isEmpty()) {
+            Button btnRent = new Button("🏠 Phiếu thuê liên quan");
+            btnRent.setOnAction(e -> {
+                mainController.openRentalFormTab(g.getRentalFormIds());
+            });
+            btnBox.getChildren().add(btnRent);
+        }
+
+        // 3) Xem xác nhận đặt phòng liên quan
+        if (!g.getBookingConfirmationFormIds().isEmpty()) {
+            Button btnBookConf = new Button("✅ Xác nhận liên quan");
+            btnBookConf.setOnAction(e -> {
+                mainController.openBookingConfirmationFormTab(g.getBookingConfirmationFormIds());
+            });
+            btnBox.getChildren().add(btnBookConf);
+        }
+
+        detailPane.getChildren().addAll(title, grid, btnBox);
 
         HBox actions = new HBox(10);
         actions.setPadding(new Insets(10, 0, 0, 0));

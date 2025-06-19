@@ -1,6 +1,7 @@
 package com.example.frontendquanlikhachsan.controllers.manager;
 
 import com.example.frontendquanlikhachsan.ApiHttpClientCaller;
+import com.example.frontendquanlikhachsan.controllers.MainController;
 import com.example.frontendquanlikhachsan.entity.position.PositionDropdownChoice;
 import com.example.frontendquanlikhachsan.entity.position.ResponsePositionDto;
 import com.example.frontendquanlikhachsan.entity.staff.ResponseStaffDto;
@@ -60,6 +61,12 @@ public class StaffController {
 
     private final ObjectMapper mapper = new ObjectMapper();
     private final String token = ""; // TODO: gán token thật ở đây
+
+    private MainController mainController;
+
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
+    }
 
     @FXML
     public void initialize() {
@@ -220,47 +227,32 @@ public class StaffController {
         }
         grid.add(badge, 1, 7);
 
-        // Accordion cho các list liên quan
-        Accordion accordion = new Accordion();
+        HBox relatedBox = new HBox(10);
+        relatedBox.setPadding(new Insets(12, 0, 0, 0));
 
-        // Hóa đơn
+        // 1) Hoá đơn liên quan
         if (!staff.getInvoiceIds().isEmpty()) {
-            ListView<String> lvInv = new ListView<>();
-            lvInv.setFixedCellSize(24);
-            for (Integer id : staff.getInvoiceIds()) {
-                lvInv.getItems().add("Hóa đơn #" + id);
-            }
-            lvInv.setPrefHeight(lvInv.getItems().size() * lvInv.getFixedCellSize() + 2);
-            TitledPane tpInv = new TitledPane("Hóa đơn", lvInv);
-            accordion.getPanes().add(tpInv);
+            Button btnInv = new Button("📄 Hoá đơn liên quan");
+            btnInv.setOnAction(e -> mainController.openInvoiceTab(staff.getInvoiceIds()));
+            relatedBox.getChildren().add(btnInv);
         }
 
-        // Phiếu gia hạn thuê
+        // 2) Phiếu gia hạn liên quan
         if (!staff.getRentalExtensionFormIds().isEmpty()) {
-            ListView<String> lvExt = new ListView<>();
-            lvExt.setFixedCellSize(24);
-            for (Integer id : staff.getRentalExtensionFormIds()) {
-                lvExt.getItems().add("Gia hạn thuê #" + id);
-            }
-            lvExt.setPrefHeight(lvExt.getItems().size() * lvExt.getFixedCellSize() + 2);
-            TitledPane tpExt = new TitledPane("Phiếu gia hạn", lvExt);
-            accordion.getPanes().add(tpExt);
+            Button btnExt = new Button("🔄 Gia hạn thuê liên quan");
+            btnExt.setOnAction(e -> mainController.openRentalExtensionFormTab(staff.getRentalExtensionFormIds()));
+            relatedBox.getChildren().add(btnExt);
         }
 
-        // Phiếu thuê gốc
+        // 3) Phiếu thuê liên quan
         if (!staff.getRentalFormIds().isEmpty()) {
-            ListView<String> lvRent = new ListView<>();
-            lvRent.setFixedCellSize(24);
-            for (Integer id : staff.getRentalFormIds()) {
-                lvRent.getItems().add("Phiếu thuê #" + id);
-            }
-            lvRent.setPrefHeight(lvRent.getItems().size() * lvRent.getFixedCellSize() + 2);
-            TitledPane tpRent = new TitledPane("Phiếu thuê", lvRent);
-            accordion.getPanes().add(tpRent);
+            Button btnRent = new Button("🏠 Phiếu thuê liên quan");
+            btnRent.setOnAction(e -> mainController.openRentalFormTab(staff.getRentalFormIds()));
+            relatedBox.getChildren().add(btnRent);
         }
 
         // Thêm title, grid, accordion vào detailPane
-        detailPane.getChildren().addAll(title, grid, accordion);
+        detailPane.getChildren().addAll(title, grid, relatedBox);
 
         // Nút Sửa / Xóa
         HBox actionBox = new HBox(12);

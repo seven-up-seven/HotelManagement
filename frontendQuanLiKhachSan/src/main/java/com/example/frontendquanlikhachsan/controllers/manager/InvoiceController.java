@@ -30,6 +30,7 @@ import javafx.util.StringConverter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -60,6 +61,8 @@ public class InvoiceController {
     @FXML private TextField  tfFilterCostMax;
     @FXML private DatePicker dpFilterFrom;
     @FXML private DatePicker dpFilterTo;
+
+    private List<Integer> multiFilterIds = null;
 
     private final ObservableList<ResponseInvoiceDto> invoiceList = FXCollections.observableArrayList();
     private FilteredList<ResponseInvoiceDto> filteredInvoices;
@@ -125,6 +128,36 @@ public class InvoiceController {
                 });
     }
 
+    public void selectInvoicesByIds(List<Integer> invoiceIds) {
+        // bật chế độ liên quan
+        multiFilterIds = new ArrayList<>(invoiceIds);
+        // ensure multi-select
+        tableInvoice.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        // áp filter ngay
+        applyFilters();
+        // chọn và show detail của thằng đầu tiên:
+        if (!invoiceIds.isEmpty()) {
+            filteredInvoices.stream().findFirst().ifPresent(this::showDetail);
+        }
+    }
+
+    @FXML
+    private void onResetFilter() {
+        // clear mode “xem liên quan”
+        multiFilterIds = null;
+        // reset UI controls
+        tfFilterInvId.clear();
+        tfFilterGuestId.clear();
+        tfFilterStaffId.clear();
+        tfFilterStaffUsername.clear();
+        tfFilterCostMin.clear();
+        tfFilterCostMax.clear();
+        dpFilterFrom.setValue(null);
+        dpFilterTo.setValue(null);
+        // áp lại filters bình thường
+        applyFilters();
+    }
+
     public static void openInvoiceDetailTab(TabPane tabPane, int invoiceId) {
         try {
             // 1) Load file FXML của Invoice view
@@ -179,6 +212,13 @@ public class InvoiceController {
     }
 
     private void applyFilters() {
+        if (multiFilterIds != null) {
+            filteredInvoices.setPredicate(inv ->
+                    multiFilterIds.contains(inv.getId())
+            );
+            return;
+        }
+
         String idText     = Optional.ofNullable(tfFilterInvId.getText()).orElse("").trim();
         String guestText  = Optional.ofNullable(tfFilterGuestId.getText()).orElse("").trim();
         String staffIdText = Optional.ofNullable(tfFilterStaffId.getText()).orElse("").trim();

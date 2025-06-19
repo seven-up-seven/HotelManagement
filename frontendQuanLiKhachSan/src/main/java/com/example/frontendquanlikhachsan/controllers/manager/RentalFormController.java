@@ -55,6 +55,10 @@ public class RentalFormController {
 
     private FilteredList<ResponseRentalFormDto> filteredForms;
 
+    private List<Integer> multiFilterFormIds = null;
+
+    @FXML private Button btnReset;    // nhớ bind cái nút Reset này trong FXML
+
     private final ObservableList<ResponseRentalFormDto> formList = FXCollections.observableArrayList();
     private final ObjectMapper mapper = new ObjectMapper()
             .registerModule(new JavaTimeModule())
@@ -68,6 +72,8 @@ public class RentalFormController {
     public void initialize() {
         // 1. Khởi tạo FilteredList
         filteredForms = new FilteredList<>(formList, f -> true);
+
+        btnReset.setOnAction(e -> onResetFilter());
 
         // 2. Set vào TableView
         SortedList<ResponseRentalFormDto> sorted = new SortedList<>(filteredForms);
@@ -135,6 +141,38 @@ public class RentalFormController {
         } catch (Exception e) {
             e.printStackTrace();
             showErrorAlert("Lỗi tải", "Không thể tải phiếu thuê.");
+        }
+    }
+
+    @FXML
+    private void onResetFilter() {
+        // clear chế độ “xem liên quan”
+        multiFilterFormIds = null;
+        // reset UI controls nếu cần
+        tfFilterId.clear();
+        tfFilterRoom.clear();
+        tfFilterStaff.clear();
+        dpFrom.setValue(null);
+        dpTo.setValue(null);
+        cbPaid.getSelectionModel().select("All");
+        // áp lại filters
+        applyFilters();
+    }
+
+    public void selectRentalFormsByIds(List<Integer> rentalFormIds) {
+        // bật chế độ “xem liên quan”
+        multiFilterFormIds = new ArrayList<>(rentalFormIds);
+        // multi-select nếu muốn
+        tableForm.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        // áp filter ngay
+        applyFilters();
+        // select & show detail của item đầu
+        if (!rentalFormIds.isEmpty()) {
+            int first = rentalFormIds.get(0);
+            tableForm.getItems().stream()
+                    .filter(rf -> rf.getId() == first)
+                    .findFirst()
+                    .ifPresent(this::showDetail);
         }
     }
 
@@ -796,6 +834,11 @@ public class RentalFormController {
     }
 
     private void applyFilters() {
+        if (multiFilterFormIds != null) {
+            filteredForms.setPredicate(f -> multiFilterFormIds.contains(f.getId()));
+            return;
+        }
+
         String idText    = Optional.ofNullable(tfFilterId.getText()).orElse("").trim();
         String roomText  = Optional.ofNullable(tfFilterRoom.getText()).orElse("").trim().toLowerCase();
         String staffText = Optional.ofNullable(tfFilterStaff.getText()).orElse("").trim().toLowerCase();

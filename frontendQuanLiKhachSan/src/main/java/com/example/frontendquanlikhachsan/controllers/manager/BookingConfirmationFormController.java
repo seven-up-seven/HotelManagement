@@ -14,6 +14,7 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
@@ -55,84 +56,83 @@ public class BookingConfirmationFormController {
     @FXML private VBox detailPane;
     @FXML private Button btnAdd;
 
+    @FXML private Button btnReset;   // nút Reset mới
+
     private final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule())
             .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 
     private final String token = "";
     private final DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
     private List<ResponseBookingConfirmationFormDto> allItems;
+    private FilteredList<ResponseBookingConfirmationFormDto> filteredList;
+
+    private final ObservableList<ResponseBookingConfirmationFormDto> masterList = FXCollections.observableArrayList();
+    private List<Integer> multiFilterIds = null;
 
     @FXML
     public void initialize() {
-        // ID
-        colId.setCellValueFactory(c ->
-                new SimpleObjectProperty<>(c.getValue().getId())
-        );
-        // Trạng thái
-        colState.setCellValueFactory(c ->
-                new SimpleObjectProperty<>(c.getValue().getBookingState())
-        );
-        // Ngày tạo vẫn ổn
-        colCreated.setCellValueFactory(c ->
-                new SimpleStringProperty(c.getValue().getCreatedAt().format(fmt))
-        );
-        // Tên khách vẫn ổn
-        colGuestName.setCellValueFactory(c ->
-                new SimpleStringProperty(c.getValue().getGuestName())
-        );
-        // Guest ID
-        colGuestId.setCellValueFactory(c ->
-                new SimpleObjectProperty<>(c.getValue().getGuestId())
-        );
-        // Tên phòng vẫn ổn
-        colRoomName.setCellValueFactory(c ->
-                new SimpleStringProperty(c.getValue().getRoomName())
-        );
-        // Room ID
-        colRoomId.setCellValueFactory(c ->
-                new SimpleObjectProperty<>(c.getValue().getRoomId())
-        );
-        // Loại phòng vẫn ổn
-        colRoomType.setCellValueFactory(c ->
-                new SimpleStringProperty(c.getValue().getRoomTypeName())
-        );
+        // --- 1) set up columns ---
+        colId      .setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue().getId()));
+        colState   .setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue().getBookingState()));
+        colCreated .setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getCreatedAt().format(fmt)));
+        colGuestName.setCellValueFactory(c-> new SimpleStringProperty(c.getValue().getGuestName()));
+        colGuestId .setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue().getGuestId()));
+        colRoomName.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getRoomName()));
+        colRoomId  .setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue().getRoomId()));
+        colRoomType.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getRoomTypeName()));
 
-        // --- 2. Lấy danh sách và điền vào combo filter ---
+        // --- 2) filtered + sorted list ---
+        filteredList = new FilteredList<>(masterList, b->true);
+        SortedList<ResponseBookingConfirmationFormDto> sorted = new SortedList<>(filteredList);
+        sorted.comparatorProperty().bind(tblBooking.comparatorProperty());
+        tblBooking.setItems(sorted);
+
+        // --- 3) fill state & type filters ---
         filterState.setItems(FXCollections.observableArrayList(BookingState.values()));
-        filterState.getItems().add(0, null); // null = All
+        filterState.getItems().add(0, null);  // null = All
         filterState.getSelectionModel().selectFirst();
 
-        // Lấy danh sách roomType từ data vừa load
-
-        // chờ load xong mới fill filterType
-        loadBookingForms();
-
-        // --- 3. Listener khi bấm Áp dụng hoặc enter trong TextField ---
+        // --- 4) wire up listeners ---
         filterId.setOnAction(e -> applyFilters());
         filterRoomId.setOnAction(e -> applyFilters());
         filterState.valueProperty().addListener((o,ov,nv)->applyFilters());
         filterFrom.valueProperty().addListener((o,ov,nv)->applyFilters());
         filterTo.valueProperty().addListener((o,ov,nv)->applyFilters());
+        btnReset.setOnAction(e -> onResetFilter());
+        btnAdd  .setOnAction(e -> showBookingForm(null));
+        tblBooking.getSelectionModel().selectedItemProperty()
+                .addListener((o,old,sel)-> { detailPane.getChildren().clear(); if (sel!=null) showDetail(sel); });
 
-        // Nút thêm, listener, load data…
-        btnAdd.setOnAction(e -> showBookingForm(null));
-        tblBooking.getSelectionModel().selectedItemProperty().addListener((o,old,sel)-> {
-            detailPane.getChildren().clear();
-            if(sel!=null) showDetail(sel);
-        });
+        // --- 5) load data lần đầu ---
         loadBookingForms();
+    }
+
+
+    @FXML
+    private void onResetFilter() {
+        multiFilterIds = null;           // tắt chế độ “xem liên quan”
+        filterId.clear();
+        filterRoomId.clear();
+        filterState.getSelectionModel().selectFirst();
+        filterFrom.setValue(null);
+        filterTo.setValue(null);
+        filterType.getSelectionModel().selectFirst();
+        applyFilters();
     }
 
     private void loadBookingForms() {
         new Thread(() -> {
             try {
                 String json = ApiHttpClientCaller.call("booking-confirmation-form", GET, null);
-                allItems = mapper.readValue(json, new TypeReference<List<ResponseBookingConfirmationFormDto>>(){});
+                List<ResponseBookingConfirmationFormDto> all = mapper.readValue(
+                        json, new TypeReference<List<ResponseBookingConfirmationFormDto>>() {});
+
                 Platform.runLater(() -> {
-                    // cập nhật TableView
-                    tblBooking.setItems(FXCollections.observableArrayList(allItems));
-                    // fill roomType list + “All”
-                    Set<String> types = allItems.stream()
+                    // update master list
+                    masterList.setAll(all);
+
+                    // refill roomType filter
+                    Set<String> types = all.stream()
                             .map(ResponseBookingConfirmationFormDto::getRoomTypeName)
                             .collect(Collectors.toSet());
                     List<String> typeList = new ArrayList<>();
@@ -148,47 +148,48 @@ public class BookingConfirmationFormController {
     }
 
     private void applyFilters() {
-        String idText      = Optional.ofNullable(filterId.getText()).orElse("").trim();
-        BookingState stSel  = filterState.getValue();
-        LocalDate fromDate  = filterFrom.getValue();
-        LocalDate toDate    = filterTo.getValue();
-        String roomIdText  = Optional.ofNullable(filterRoomId.getText()).orElse("").trim();
-        String typeSel     = filterType.getValue();
+        if (multiFilterIds != null) {
+            // chỉ show những id trong multiFilterIds
+            filteredList.setPredicate(b -> multiFilterIds.contains(b.getId()));
+            return;
+        }
 
-        FilteredList<ResponseBookingConfirmationFormDto> fl =
-                new FilteredList<>(FXCollections.observableArrayList(allItems), b -> true);
+        String idText    = Optional.ofNullable(filterId.getText()).orElse("").trim();
+        BookingState st  = filterState.getValue();
+        LocalDate from   = filterFrom.getValue();
+        LocalDate to     = filterTo.getValue();
+        String roomText  = Optional.ofNullable(filterRoomId.getText()).orElse("").trim();
+        String typeSel   = filterType.getValue();
 
-        fl.setPredicate(b -> {
-            // ID
+        filteredList.setPredicate(b -> {
             if (!idText.isEmpty()) {
-                try {
-                    if (b.getId() != Integer.parseInt(idText)) return false;
-                } catch (NumberFormatException e) { return false; }
+                try { if (b.getId() != Integer.parseInt(idText)) return false; }
+                catch(Exception ex) { return false; }
             }
-            // Trạng thái
-            if (stSel != null && b.getBookingState() != stSel) return false;
-            // Ngày tạo
+            if (st != null && b.getBookingState() != st) return false;
             LocalDate ld = b.getCreatedAt().toLocalDate();
-            if (fromDate != null && ld.isBefore(fromDate)) return false;
-            if (toDate   != null && ld.isAfter(toDate))   return false;
-            // Room ID
-            if (!roomIdText.isEmpty()) {
-                try {
-                    if (b.getRoomId() != Integer.parseInt(roomIdText)) return false;
-                } catch (NumberFormatException e) { return false; }
+            if (from != null && ld.isBefore(from)) return false;
+            if (to   != null && ld.isAfter(to))   return false;
+            if (!roomText.isEmpty()) {
+                try { if (b.getRoomId() != Integer.parseInt(roomText)) return false; }
+                catch(Exception ex) { return false; }
             }
-            // Loại phòng
             if (!"All".equals(typeSel) && !b.getRoomTypeName().equals(typeSel)) return false;
-
             return true;
         });
-
-        // Wrap thành SortedList để duy trì sort
-        SortedList<ResponseBookingConfirmationFormDto> sl = new SortedList<>(fl);
-        sl.comparatorProperty().bind(tblBooking.comparatorProperty());
-        tblBooking.setItems(sl);
     }
 
+    public void selectBookingConfirmationFormsByIds(List<Integer> ids) {
+        multiFilterIds = new ArrayList<>(ids);
+        tblBooking.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        applyFilters();
+        // show detail của phần tử đầu
+        if (!ids.isEmpty()) {
+            filteredList.stream()
+                    .filter(b -> b.getId()==ids.get(0))
+                    .findFirst().ifPresent(this::showDetail);
+        }
+    }
 
     private Integer getSelectedBookingId() {
         var sel = tblBooking.getSelectionModel().getSelectedItem();
