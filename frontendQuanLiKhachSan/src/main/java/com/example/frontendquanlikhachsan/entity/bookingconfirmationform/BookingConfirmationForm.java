@@ -23,4 +23,6 @@ public class BookingConfirmationForm {
     private Room room;
 
     private LocalDateTime createdAt;
+    private LocalDateTime bookingDate;
+    private int rentalDays;
 }

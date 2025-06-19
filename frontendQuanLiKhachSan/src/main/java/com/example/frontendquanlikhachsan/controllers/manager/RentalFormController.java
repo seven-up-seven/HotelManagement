@@ -80,10 +80,14 @@ public class RentalFormController {
         sorted.comparatorProperty().bind(tableForm.comparatorProperty());
         tableForm.setItems(sorted);
 
-        // 3. Lắng nghe thay đổi các control lọc
-        tfFilterId.textProperty().addListener((obs, old, __) -> applyFilters());
-        tfFilterRoom.textProperty().addListener((o,oldV,newV) -> applyFilters());
-        tfFilterStaff.textProperty().addListener((o,oldV,newV) -> applyFilters());
+        tfFilterId.textProperty().addListener((obs, old, neu) -> applyFilters());
+        tfFilterRoom.textProperty().addListener((obs, old, neu) -> applyFilters());
+        tfFilterStaff.textProperty().addListener((obs, old, neu) -> applyFilters());
+
+        tfFilterRoom.setOnKeyReleased(e -> applyFilters());
+        tfFilterStaff.setOnKeyReleased(e -> applyFilters());
+        tfFilterId.setOnKeyReleased(e -> applyFilters());
+
         dpFrom.valueProperty().addListener((o,oldV,newV) -> applyFilters());
         dpTo.valueProperty().addListener((o,oldV,newV) -> applyFilters());
         cbPaid.valueProperty().addListener((o,oldV,newV) -> applyFilters());
@@ -119,9 +123,8 @@ public class RentalFormController {
         cbPaid.getSelectionModel().select("All");
 
         loadForms();
-        tableForm.getSelectionModel().selectedItemProperty().addListener((obs, old, sel) -> {
-            if (sel != null) showDetail(sel);
-        });
+        tableForm.getSelectionModel().selectedItemProperty()
+                .addListener((o,old,n)->{ if(n!=null) showDetail(n); });
     }
     @FXML
     private void onFilterAction() {
@@ -834,11 +837,6 @@ public class RentalFormController {
     }
 
     private void applyFilters() {
-        if (multiFilterFormIds != null) {
-            filteredForms.setPredicate(f -> multiFilterFormIds.contains(f.getId()));
-            return;
-        }
-
         String idText    = Optional.ofNullable(tfFilterId.getText()).orElse("").trim();
         String roomText  = Optional.ofNullable(tfFilterRoom.getText()).orElse("").trim().toLowerCase();
         String staffText = Optional.ofNullable(tfFilterStaff.getText()).orElse("").trim().toLowerCase();
@@ -846,33 +844,47 @@ public class RentalFormController {
         LocalDate to     = dpTo.getValue();
         String paidSel   = cbPaid.getValue();
 
+        // nếu user đã gõ hoặc chọn gì đó, tắt luôn chế độ multi-filter
+        boolean hasAny = !idText.isEmpty() || !roomText.isEmpty() ||
+                !staffText.isEmpty() || from!=null || to!=null ||
+                (paidSel!=null && !"All".equals(paidSel));
+        if (multiFilterFormIds != null && hasAny) {
+            multiFilterFormIds = null;
+            tableForm.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        }
+
+        // giữ nguyên nhánh multiFilter nếu chưa clear
+        if (multiFilterFormIds != null) {
+            filteredForms.setPredicate(f -> multiFilterFormIds.contains(f.getId()));
+            return;
+        }
+
+        // nhánh lọc bình thường
         filteredForms.setPredicate(f -> {
-            // 0) ID filter
+            // 0) ID
             if (!idText.isEmpty()) {
                 try {
                     if (f.getId() != Integer.parseInt(idText)) return false;
-                } catch (NumberFormatException ex) {
-                    return false;
-                }
+                } catch (NumberFormatException ex) { return false; }
             }
-            // 1) Lọc phòng
+            // 1) phòng
             if (!roomText.isEmpty()
                     && !f.getRoomName().toLowerCase().contains(roomText)) return false;
-
-            // 2) Lọc nhân viên
+            // 2) nhân viên
             if (!staffText.isEmpty()
                     && !f.getStaffName().toLowerCase().contains(staffText)) return false;
-
-            // 3) Lọc ngày thuê
-            LocalDate mid = f.getRentalDate().toLocalDate();
-            if (from != null && mid.isBefore(from)) return false;
-            if (to   != null && mid.isAfter(to))   return false;
-
-            // 4) Lọc Paid / Unpaid
-            if ("Paid".equals(paidSel)   && f.getIsPaidAt() == null) return false;
-            if ("Unpaid".equals(paidSel) && f.getIsPaidAt() != null) return false;
-
+            // 3) ngày thuê
+            LocalDate rent = f.getRentalDate().toLocalDate();
+            if (from!=null && rent.isBefore(from)) return false;
+            if (to  !=null && rent.isAfter(to))   return false;
+            // 4) paid/unpaid
+            if ("Paid".equals(paidSel)   && f.getIsPaidAt()==null) return false;
+            if ("Unpaid".equals(paidSel) && f.getIsPaidAt()!=null) return false;
             return true;
         });
+
+        // thêm dòng này để TableView vẽ lại
+        tableForm.refresh();
     }
+
 }

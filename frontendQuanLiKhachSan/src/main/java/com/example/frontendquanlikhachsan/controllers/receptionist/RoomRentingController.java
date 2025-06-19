@@ -12,6 +12,8 @@ import com.example.frontendquanlikhachsan.entity.rentalForm.RentalFormDto;
 import com.example.frontendquanlikhachsan.entity.rentalForm.ResponseRentalFormDto;
 import com.example.frontendquanlikhachsan.entity.rentalFormDetail.RentalFormDetailDto;
 import com.example.frontendquanlikhachsan.entity.room.ResponseRoomDto;
+import com.example.frontendquanlikhachsan.entity.roomType.ResponseRoomTypeDto;
+import com.example.frontendquanlikhachsan.entity.roomType.RoomTypeDto;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -41,6 +43,9 @@ import javafx.stage.StageStyle;
 import javafx.util.StringConverter;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,6 +55,8 @@ import java.util.Map;
 import static com.example.frontendquanlikhachsan.ApiHttpClientCaller.Method.GET;
 
 public class RoomRentingController {
+
+    private FilteredList<ResponseRoomDto> filteredRooms;
 
     @FXML
     private TableColumn<ResponseGuestDto, Integer> colCustomerId;
@@ -93,9 +100,6 @@ public class RoomRentingController {
     private TextField rentalDaysField;
 
     @FXML
-    private ComboBox<ResponseRoomDto> roomPicker;
-
-    @FXML
     private Button createRentalButton;
 
     @FXML private Button btnCreateGuest; // nút thêm khách
@@ -110,16 +114,28 @@ public class RoomRentingController {
     @FXML private TableColumn<ResponseGuestDto,String>  colAllCCCD;
     @FXML private TableColumn<ResponseGuestDto,String>  colAllPhone;
 
+    @FXML private VBox detailPane;
+    @FXML private HBox filterBox;
+
+//    @FXML
+//    private ComboBox<String> roomTypePicker;
+
     private ObservableList<ResponseGuestDto> guestList = FXCollections.observableArrayList();
     private ObservableList<ResponseGuestDto> allGuests=FXCollections.observableArrayList();
     private ObservableList<ResponseRoomDto> roomList = FXCollections.observableArrayList();
+
+    @FXML private ComboBox<ResponseRoomTypeDto>     roomTypePicker;
+    @FXML private Button                    btnCheckAvailable;
+    @FXML private ComboBox<ResponseRoomDto> roomPicker;
+
+
 
     private final int PAGE_SIZE = 10;
     private boolean isLoading = false;
     private boolean hasMoreData = true;
     private final Map<RoomState, Integer> statePageMap = new HashMap<>();
 
-    private final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule()).configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);;
+    private final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
     @FXML
     private void removeSelectedGuests() {
@@ -149,8 +165,26 @@ public class RoomRentingController {
 
     @FXML
     public void initialize() {
+
+
         initRoomPicker();
         loadFirstRoomPage();
+        initRoomTypePicker();
+
+
+        Platform.runLater(() -> {
+            if (!roomList.isEmpty()) {
+                ScrollBar scrollBar = (ScrollBar) roomPicker.lookup(".scroll-bar:vertical");
+                if (scrollBar != null) {
+                    scrollBar.valueProperty().addListener((obs, oldV, newV) -> {
+                        if (newV.doubleValue() >= 1.0) {
+                            loadNextRoomPage();
+                        }
+                    });
+                }
+            }
+        });
+        roomPicker.setEditable(false);
 
         // 2) Khách đã chọn
         bindCustomerTable();
@@ -163,13 +197,118 @@ public class RoomRentingController {
         setupDoubleClick();
 
         // 4) Tạo mới khách bật dialog
-        btnCreateGuest.setOnAction(e->openCreateGuestDialog());
+        btnCreateGuest.setOnAction(e -> showCreateForm());
 
         // 5) Tạo phiếu thuê
         createRentalButton.setOnAction(e->createNewRentalForm());
         customerTable.setEditable(true);
         colCustomerSelect.setEditable(true);
+
+        showListView();
     }
+
+    @FXML private void onCreateGuest() {
+        showCreateForm();
+    }
+
+    private void showListView() {
+        detailPane.getChildren().setAll(
+                filterBox,
+                tableAllGuests,
+                btnCreateGuest
+        );
+    }
+
+    @FXML
+    private void onCheckAvailableRooms() {
+        ResponseRoomTypeDto sel = roomTypePicker.getValue();
+        if (sel == null) {
+            showErrorAlert("Thiếu dữ liệu", "Vui lòng chọn loại phòng.");
+            return;
+        }
+
+        new Thread(() -> {
+            try {
+                String json = ApiHttpClientCaller.call("room/room-type/" + sel.getId(), GET, null);
+                List<ResponseRoomDto> rooms = mapper.readValue(
+                        json, new TypeReference<List<ResponseRoomDto>>() {}
+                );
+
+                Platform.runLater(() -> {
+                    if (rooms.isEmpty()) {
+                        showErrorAlert("Hết phòng", "Không có phòng trống cho loại này.");
+                        roomList.clear();               // xoá hết
+                        createRentalButton.setDisable(true);
+                    } else {
+
+                        createRentalButton.setDisable(false);
+                        roomList.setAll(rooms);         // CẬP NHẬT dữ liệu
+                        roomPicker.getSelectionModel().selectFirst();
+                    }
+                });
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                Platform.runLater(() ->
+                        showErrorAlert("Lỗi tải phòng", ex.getMessage())
+                );
+            }
+        }).start();
+    }
+
+
+
+    private void initRoomTypePicker() {
+        new Thread(() -> {
+            try {
+                String json = ApiHttpClientCaller.call("room-type", GET, null);
+                List<ResponseRoomTypeDto> types = mapper.readValue(json,
+                        new TypeReference<List<ResponseRoomTypeDto>>(){});
+                Platform.runLater(() -> {
+                    roomTypePicker.getItems().setAll(types);
+                    roomTypePicker.setConverter(new StringConverter<>() {
+                        @Override public String toString(ResponseRoomTypeDto t) {
+                            return t == null? "" : t.getName();
+                        }
+                        @Override public ResponseRoomTypeDto fromString(String s) { return null; }
+                    });
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+                Platform.runLater(() -> showErrorAlert("Lỗi tải loại phòng", e.getMessage()));
+            }
+        }).start();
+    }
+
+    private void loadAvailableRooms() {
+        ResponseRoomTypeDto sel = roomTypePicker.getValue();
+        if (sel == null) {
+            showErrorAlert("Thiếu dữ liệu", "Vui lòng chọn loại phòng.");
+            return;
+        }
+        new Thread(() -> {
+            try {
+                String json = ApiHttpClientCaller.call(
+                        "room-type/" + sel.getId(), GET, null);
+                List<ResponseRoomDto> rooms = mapper.readValue(json,
+                        new TypeReference<List<ResponseRoomDto>>(){});
+                Platform.runLater(() -> {
+                    if (rooms.isEmpty()) {
+                        showErrorAlert("Hết phòng", "Không có phòng trống cho loại này.");
+                        roomPicker.getItems().clear();
+                        roomPicker.setDisable(true);
+                    } else {
+                        roomPicker.getItems().setAll(rooms);
+                        roomPicker.getSelectionModel().selectFirst();
+                        roomPicker.setDisable(false);
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+                Platform.runLater(() -> showErrorAlert("Lỗi tải phòng", e.getMessage()));
+            }
+        }).start();
+    }
+
 
     private void openCreateGuestDialog() {
         try {
@@ -185,6 +324,128 @@ public class RoomRentingController {
             ex.printStackTrace();
             showErrorAlert("Lỗi", "Không mở được form tạo khách.");
         }
+    }
+
+//    private void initRoomTypePicker() {
+//        new Thread(() -> {
+//            try {
+//                String json = ApiHttpClientCaller.call("room-type", GET, null);
+//                List<RoomTypeDto> types = mapper.readValue(json, new TypeReference<>() {});
+//                Platform.runLater(() -> {
+//                    roomTypePicker.getItems().setAll(types);
+//                    roomTypePicker.setConverter(new StringConverter<>() {
+//                        @Override public String toString(RoomTypeDto rt) {
+//                            return rt == null? "" : rt.getName();
+//                        }
+//                        @Override public RoomTypeDto fromString(String s) { return null; }
+//                    });
+//                });
+//            } catch (Exception ex) {
+//                ex.printStackTrace();
+//                Platform.runLater(() ->
+//                        showErrorAlert("Lỗi tải loại phòng", ex.getMessage())
+//                );
+//            }
+//        }).start();
+//    }
+
+    /** Gọi API GET /room-type/{id} để lấy danh sách phòng trống của loại đã chọn */
+//    private void loadAvailableRooms() {
+//        RoomTypeDto selType = roomTypePicker.getValue();
+//        if (selType == null) {
+//            showErrorAlert("Thiếu dữ liệu", "Vui lòng chọn loại phòng.");
+//            return;
+//        }
+//        new Thread(() -> {
+//            try {
+//                String json = ApiHttpClientCaller.call(
+//                        "room-type/" + selType.getId(),
+//                        GET, null
+//                );
+//                List<ResponseRoomDto> rooms = mapper.readValue(
+//                        json, new TypeReference<>() {}
+//                );
+//                Platform.runLater(() -> {
+//                    if (rooms.isEmpty()) {
+//                        showErrorAlert("Hết phòng", "Không có phòng trống cho loại này.");
+//                        roomPicker.getItems().clear();
+//                        roomPicker.setDisable(true);
+//                    } else {
+//                        roomPicker.getItems().setAll(rooms);
+//                        roomPicker.getSelectionModel().selectFirst();
+//                        roomPicker.setDisable(false);
+//                    }
+//                });
+//            } catch (Exception ex) {
+//                ex.printStackTrace();
+//                Platform.runLater(() ->
+//                        showErrorAlert("Lỗi tải phòng", ex.getMessage())
+//                );
+//            }
+//        }).start();
+//    }
+
+    private void showCreateForm() {
+        detailPane.getChildren().clear();
+
+        Label title = new Label("» Tạo khách mới");
+        title.setStyle("-fx-font-size:16px; -fx-font-weight:bold;");
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(8));
+
+        TextField tfName = new TextField();
+        TextField tfAge = new TextField();
+        TextField tfPhone = new TextField();
+        TextField tfIdNum = new TextField();
+        TextField tfEmail = new TextField();
+        ComboBox<Sex> cbSex = new ComboBox<>(FXCollections.observableArrayList(Sex.values()));
+
+        grid.add(new Label("Họ & Tên:"),           0, 0);
+        grid.add(tfName,                           1, 0);
+        grid.add(new Label("Tuổi:"),              0, 1);
+        grid.add(tfAge,                            1, 1);
+        grid.add(new Label("Giới tính:"),         0, 2);
+        grid.add(cbSex,                            1, 2);
+        grid.add(new Label("SĐT:"),                0, 3);
+        grid.add(tfPhone,                          1, 3);
+        grid.add(new Label("CMND/CCCD:"),         0, 4);
+        grid.add(tfIdNum,                          1, 4);
+        grid.add(new Label("Email:"),              0, 5);
+        grid.add(tfEmail,                          1, 5);
+
+        HBox btns = new HBox(10);
+        btns.setPadding(new Insets(12,0,0,0));
+        Button save = new Button("💾 Lưu"), cancel = new Button("❌ Hủy");
+
+        cancel.setOnAction(e -> showListView());
+        save.setOnAction(e -> {
+            try {
+                // build dto
+                GuestDto dto = new GuestDto();
+                dto.setName(tfName.getText().trim());
+                dto.setAge(Short.parseShort(tfAge.getText().trim()));
+                dto.setSex(cbSex.getValue());
+                dto.setPhoneNumber(tfPhone.getText().trim());
+                dto.setIdentificationNumber(tfIdNum.getText().trim());
+                dto.setEmail(tfEmail.getText().trim());
+
+                // gọi API
+                ApiHttpClientCaller.call("guest", ApiHttpClientCaller.Method.POST, dto);
+
+                // reload data và back về list
+                loadAllGuests();
+                showListView();
+            } catch(Exception ex) {
+                ex.printStackTrace();
+                showErrorAlert("Lỗi", "Không thể tạo khách: " + ex.getMessage());
+            }
+        });
+        btns.getChildren().addAll(save, cancel);
+
+        detailPane.getChildren().addAll(title, grid, btns);
     }
 
     private void loadAllGuests(){
@@ -270,73 +531,233 @@ public class RoomRentingController {
     }
 
     private void createNewRentalForm() {
-        if (noteArea.getText().isEmpty()
-                || rentalDaysField.getText().isEmpty()
-                || roomPicker.getSelectionModel().getSelectedItem() == null
-                || creationDatePicker.getValue() == null) {
-            showErrorAlert("Thông báo", "Vui lòng nhập đầy đủ các trường.");
+        ResponseRoomDto selected = roomPicker.getValue();
+        if (selected == null) {
+            showErrorAlert("Thiếu dữ liệu", "Vui lòng check và chọn phòng.");
             return;
         }
+        if (creationDatePicker.getValue() == null) {
+            showErrorAlert("Thiếu dữ liệu", "Vui lòng chọn ngày tạo phiếu.");
+            return;
+        }
+        String daysTxt = rentalDaysField.getText().trim();
+        if (daysTxt.isEmpty()) {
+            showErrorAlert("Thiếu dữ liệu", "Vui lòng nhập số ngày thuê.");
+            return;
+        }
+        String note = noteArea.getText().trim();
         if (guestList.isEmpty()) {
-            showErrorAlert("Thông báo", "Không có khách hàng thuê phòng nào được chọn.");
+            showErrorAlert("Thiếu dữ liệu", "Vui lòng chọn khách thuê.");
             return;
         }
         short rentalDays;
         try {
-            rentalDays = Short.parseShort(rentalDaysField.getText().trim());
-            if (rentalDays <= 0) {
-                showErrorAlert("Lỗi", "Số ngày thuê phải là số nguyên dương.");
-                return;
-            }
-        } catch (NumberFormatException e) {
-            showErrorAlert("Lỗi", "Số ngày thuê không hợp lệ.");
+            rentalDays = Short.parseShort(daysTxt);
+            if (rentalDays <= 0) throw new NumberFormatException();
+        } catch (NumberFormatException ex) {
+            showErrorAlert("Lỗi định dạng", "Số ngày thuê không hợp lệ.");
             return;
         }
-        Integer roomId = roomPicker.getSelectionModel().getSelectedItem().getId();
-        LocalDateTime rentalDate = creationDatePicker.getValue().atStartOfDay();
-        String note = noteArea.getText().trim();
+
+                LocalDate picked = creationDatePicker.getValue();
+              LocalDateTime rentalDate;
+             if (picked.isEqual(LocalDate.now())) {
+                       // nếu chọn hôm nay → đặt thời điểm là bây giờ + 1 giây
+                              rentalDate = LocalDateTime.now().plusSeconds(1);
+                   } else {
+                      // nếu chọn ngày tương lai → đặt lúc 00:00
+                              rentalDate = picked.atStartOfDay();
+                 }
+
+        RentalFormDto dto = RentalFormDto.builder()
+                .roomId(selected.getId())
+                .staffId(TokenHolder.getInstance().getCurrentUserId())
+                .rentalDate(rentalDate)
+                .numberOfRentalDays(rentalDays)
+                .note(note)
+                .isPaidAt(null)
+                .build();
+
         new Thread(() -> {
             try {
-                RentalFormDto rentalFormDto = RentalFormDto.builder()
-                        .roomId(roomId)
-                        .staffId(TokenHolder.getInstance().getCurrentUserId())
-                        .rentalDate(rentalDate)
-                        .numberOfRentalDays(rentalDays)
-                        .note(note)
-                        .isPaidAt(null)
-                        .build();
-                String responseJson = ApiHttpClientCaller.call(
-                        "rental-form",
-                        ApiHttpClientCaller.Method.POST,
-                        rentalFormDto
-                );
-                ResponseRentalFormDto createdRentalForm = mapper.readValue(responseJson, ResponseRentalFormDto.class);
-                List<Integer> detailList = new ArrayList<>();
-                for (ResponseGuestDto guest : guestList) {
-                    detailList.add(guest.getId());
-                }
-                ApiHttpClientCaller.call(
-                        "rental-form-detail/rental-form/"+createdRentalForm.getId(),
-                        ApiHttpClientCaller.Method.POST,
-                        detailList
-                );
+                // in payload để debug
+                System.out.println(">>> POST /rental-form payload: " + mapper.writeValueAsString(dto));
+                String resp = ApiHttpClientCaller.call("rental-form", ApiHttpClientCaller.Method.POST, dto);
+                System.out.println("<<< response: " + resp);
+                ResponseRentalFormDto created = mapper.readValue(resp, ResponseRentalFormDto.class);
                 Platform.runLater(() -> {
-                    showInfoAlert("Thành công", "Đã tạo phiếu thuê phòng thành công!");
-                    guestList.clear();
-                    loadGuest();
-                    rentalDaysField.clear();
-                    noteArea.clear();
-                    roomPicker.getSelectionModel().clearSelection();
-                    creationDatePicker.setValue(null);
-//                    clearDetailPane();
-                    customerTable.refresh();
+                    showInfoAlert("Thành công", "Tạo phiếu thuê #" + created.getId() + " thành công!");
+                    // TODO: reset UI nếu cần
                 });
-            } catch (Exception e) {
-                e.printStackTrace();
-                Platform.runLater(() -> showErrorAlert("Lỗi", "Không thể tạo phiếu thuê phòng: " + e.getMessage()));
+                new Thread(() -> {
+                    try {
+                        for (ResponseGuestDto guest : guestList) {
+                            RentalFormDetailDto detail = RentalFormDetailDto.builder()
+                                    .rentalFormId(created.getId())
+                                    .guestId(guest.getId())
+                                    .build();
+                            // gọi API POST /rental-form-detail
+                            ApiHttpClientCaller.call("rental-form-detail", ApiHttpClientCaller.Method.POST, detail);
+                        }
+                        // 4) Cập nhật UI: xoá phòng vừa thuê, xoá guestList
+                        Platform.runLater(() -> {
+                            roomList.remove(selected);
+                            guestList.clear();
+                            creationDatePicker.setValue(null);
+
+                            // 2. Số ngày thuê
+                            rentalDaysField.clear();
+
+                            // 3. Ghi chú
+                            noteArea.clear();
+
+                            // 4. Loại phòng + phòng chọn
+                            roomTypePicker.getSelectionModel().clearSelection();
+                            roomPicker.getItems().clear();
+
+                            // 5. Danh sách khách
+                            guestList.clear();
+
+                            // 6. Reload lại right pane (nếu bạn muốn làm mới filter)
+                            loadAllGuests();
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Platform.runLater(() ->
+                                showErrorAlert("Lỗi tạo chi tiết phiếu thuê", e.getMessage())
+                        );
+                    }
+                }).start();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                Platform.runLater(() ->
+                        showErrorAlert("Lỗi tạo phiếu thuê", ex.getMessage())
+                );
             }
         }).start();
     }
+
+//    private void createNewRentalForm() {
+//        ResponseRoomTypeDto selectedType = roomTypePicker.getValue();
+//        if (selectedType == null) {
+//            showErrorAlert("Thiếu dữ liệu", "Vui lòng chọn loại phòng.");
+//            return;
+//        }
+//
+//        // 2) Gọi API lấy phòng trống đầu tiên của loại đó
+//        List<ResponseRoomDto> available;
+//        try {
+//            // Giả sử endpoint hỗ trợ filter theo loại và trạng thái
+//            String path = "room/state/READY_TO_SERVE?roomType="
+//                    + URLEncoder.encode(selectedType, StandardCharsets.UTF_8)
+//                    + "&page=0&size=1";
+//            String json = ApiHttpClientCaller.call(path, GET, null);
+//            PageResponse<ResponseRoomDto> page = mapper.readValue(json,
+//                    new TypeReference<PageResponse<ResponseRoomDto>>() {});
+//            available = page.getContent();
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//            showErrorAlert("Lỗi tải phòng", ex.getMessage());
+//            return;
+//        }
+//
+//        if (available.isEmpty()) {
+//            // không có phòng trống
+//            System.err.println("❌ Không còn phòng trống cho loại " + selectedType);
+//            showErrorAlert("Hết phòng", "Không tìm thấy phòng trống cho loại “" + selectedType + "”.");
+//            return;
+//        }
+//
+//        // 3) Có phòng → dùng phòng đầu tiên
+//        ResponseRoomDto room = available.get(0);
+//        Integer roomId = room.getId();
+//
+//        ResponseRoomDto selectedRoom = roomPicker.getSelectionModel().getSelectedItem();
+//        if (selectedRoom == null) {
+//            showErrorAlert("Thiếu dữ liệu", "Vui lòng chọn phòng.");
+//            return;
+//        }
+//
+//        // 2. Phải chọn ngày
+//        if (creationDatePicker.getValue() == null) {
+//            showErrorAlert("Thiếu dữ liệu", "Vui lòng chọn ngày tạo phiếu.");
+//            return;
+//        }
+//
+//        // 3. Nhập số ngày
+//        String daysTxt = rentalDaysField.getText().trim();
+//        if (daysTxt.isEmpty()) {
+//            showErrorAlert("Thiếu dữ liệu", "Vui lòng nhập số ngày thuê.");
+//            return;
+//        }
+//
+//        // 4. (Nếu bắt buộc) ghi chú
+//        String note = noteArea.getText().trim();
+//        if (note.isEmpty()) {
+//            showErrorAlert("Thiếu dữ liệu", "Vui lòng nhập ghi chú.");
+//            return;
+//        }
+//
+//        // 5. Phải có ít nhất 1 khách
+//        if (guestList.isEmpty()) {
+//            showErrorAlert("Thiếu dữ liệu", "Vui lòng chọn khách thuê.");
+//            return;
+//        }
+//
+//        // 6. Parse số ngày
+//        short rentalDays;
+//        try {
+//            rentalDays = Short.parseShort(daysTxt);
+//            if (rentalDays <= 0) {
+//                showErrorAlert("Lỗi định dạng", "Số ngày thuê phải là số nguyên dương.");
+//                return;
+//            }
+//        } catch (NumberFormatException e) {
+//            showErrorAlert("Lỗi định dạng", "Số ngày thuê không hợp lệ.");
+//            return;
+//        }
+//
+//        // 7. Lấy roomId an toàn
+//
+//        LocalDateTime rentalDate = creationDatePicker.getValue().atStartOfDay();
+//
+//        new Thread(() -> {
+//            try {
+//                // 1) Build DTO
+//                RentalFormDto rentalFormDto = RentalFormDto.builder()
+//                        .roomId(selectedRoom.getId())
+//                        .staffId(TokenHolder.getInstance().getCurrentUserId())
+//                        .rentalDate(rentalDate)
+//                        .numberOfRentalDays(rentalDays)
+//                        .note(note)
+//                        .isPaidAt(null)
+//                        .build();
+//
+//                // 2) In payload ra console trước khi gửi
+//                String payload = mapper.writeValueAsString(rentalFormDto);
+//                System.out.println(">>> POST /rental-form payload: " + payload);
+//
+//                // 3) Gọi API
+//                String responseJson = ApiHttpClientCaller.call("rental-form", ApiHttpClientCaller.Method.POST, rentalFormDto);
+//
+//                // 4) In luôn response để đối chiếu
+//                System.out.println("<<< POST /rental-form response: " + responseJson);
+//
+//                // 5) Xử lý tiếp như bình thường…
+//                ResponseRentalFormDto created = mapper.readValue(responseJson, ResponseRentalFormDto.class);
+//                Platform.runLater(() -> {
+//                    showInfoAlert("Thành công", "Tạo phiếu thuê #" + created.getId() + " thành công!");
+//                    // … reset UI …
+//                });
+//            } catch (Exception ex) {
+//                // 6) In toàn bộ stacktrace để debug
+//                ex.printStackTrace();
+//                Platform.runLater(() ->
+//                        showErrorAlert("Lỗi tạo phiếu thuê", ex.getMessage())
+//                );
+//            }
+//        }).start();
+//    }
 
 //    private void initRoomPicker() {
 //        roomPicker.setEditable(true);
@@ -405,32 +826,28 @@ public class RoomRentingController {
 //    }
 
         private void initRoomPicker() {
-        roomPicker.setEditable(true);
-        FilteredList<ResponseRoomDto> filteredRooms = new FilteredList<>(roomList, p -> true);
-        roomPicker.setItems(filteredRooms);
-        roomPicker.getEditor().textProperty().addListener((obs, oldText, newText) -> {
-            final String filter = newText == null ? "" : newText.toLowerCase();
-            filteredRooms.setPredicate(room -> {
-                if (filter.isEmpty()) return true;
-                return room.getName().toLowerCase().contains(filter);
+            roomPicker.setEditable(true);
+
+            // dùng filteredRooms để bind với roomList
+            filteredRooms = new FilteredList<>(roomList, r -> true);
+            roomPicker.setItems(filteredRooms);
+
+            roomPicker.getEditor().textProperty().addListener((obs, oldText, newText) -> {
+                String raw = newText == null ? "" : newText.toLowerCase();
+                int idx = raw.indexOf(" (");
+                String nameFilter = (idx > 0 ? raw.substring(0, idx) : raw).trim();
+
+                filteredRooms.setPredicate(room ->
+                        room.getName().toLowerCase().contains(nameFilter)
+                );
             });
-        });
-        roomPicker.setConverter(new StringConverter<>() {
-            @Override
-            public String toString(ResponseRoomDto room) {
-                if (room == null) {
-                    return "";
+
+            roomPicker.setConverter(new StringConverter<>() {
+                @Override public String toString(ResponseRoomDto room) {
+                    return room == null ? "" : room.getName() + " (" + room.getRoomTypeName() + ")";
                 }
-                return room.getName() + " (" + room.getRoomTypeName() + ")";
-            }
-            @Override
-            public ResponseRoomDto fromString(String string) {
-                return roomList.stream()
-                        .filter(r -> (r.getName() + " (" + r.getRoomTypeName() + ")").equals(string))
-                        .findFirst()
-                        .orElse(null);
-            }
-        });
+                @Override public ResponseRoomDto fromString(String string) { return null; }
+            });
         roomPicker.setCellFactory(param -> new ListCell<>() {
             @Override
             protected void updateItem(ResponseRoomDto item, boolean empty) {

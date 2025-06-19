@@ -193,6 +193,10 @@ private <C> void openTab(String baseTitle,
         openTab("qltk", "/com/example/frontendquanlikhachsan/views/admin/Account.fxml", null);
     }
 
+    public void openRentalFormViewTab() {
+        openTab("qltk", "/com/example/frontendquanlikhachsan/views/accountant/RentalFormView.fxml", null);
+    }
+
     @FXML
     public void toggleSidebar() {
         isPinned = !isPinned;

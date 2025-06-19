@@ -59,6 +59,12 @@
                                 styleClass="submenu-button"
                                 style="-fx-text-fill: black;"
                                 text="Danh sách khách hàng"/>
+                        <Button onAction="#openRentalFormViewTab"
+                                prefHeight="35.0"
+                                prefWidth="160.0"
+                                styleClass="submenu-button"
+                                style="-fx-text-fill: black;"
+                                text="Tra cứu phiếu thuê"/>
                     </VBox>
                 </TitledPane>
 

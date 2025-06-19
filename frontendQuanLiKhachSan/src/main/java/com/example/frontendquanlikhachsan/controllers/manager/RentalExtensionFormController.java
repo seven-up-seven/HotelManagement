@@ -95,9 +95,11 @@ public class RentalExtensionFormController {
         filtered.setPredicate(dto -> {
             // filter by extension ID
             if (!extIdText.isEmpty()) {
-                try {
-                    if (dto.getId() != Integer.parseInt(extIdText)) return false;
-                } catch(NumberFormatException e){ return false; }
+                // chỉ filter khi extIdText chỉ toàn chữ số
+                if (extIdText.matches("\\d+")) {
+                    String idStr = String.valueOf(dto.getId());
+                    if (!idStr.contains(extIdText)) return false;
+                }
             }
             // filter by rentalFormId
             if (!formIdText.isEmpty()) {

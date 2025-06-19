@@ -44,6 +44,7 @@ module com.example.frontendquanlikhachsan {
     opens com.example.frontendquanlikhachsan.entity.revenueReportDetail to com.fasterxml.jackson.databind;
     opens com.example.frontendquanlikhachsan.entity.userRole to com.fasterxml.jackson.databind;
     opens com.example.frontendquanlikhachsan.auth to com.fasterxml.jackson.databind;
+    opens com.example.frontendquanlikhachsan.entity.roomType to com.fasterxml.jackson.databind;
 
     exports com.example.frontendquanlikhachsan;
 }

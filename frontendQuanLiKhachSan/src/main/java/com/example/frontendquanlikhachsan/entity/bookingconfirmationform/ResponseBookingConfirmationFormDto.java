@@ -11,6 +11,8 @@ public class ResponseBookingConfirmationFormDto {
     private int id;
     private BookingState bookingState;
     private LocalDateTime createdAt;
+    private LocalDateTime bookingDate;
+    private int rentalDays;
     //guest
     private String guestName;
     private String guestEmail;

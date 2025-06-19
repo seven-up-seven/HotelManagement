@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.geometry.Insets?>
+<SplitPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.example.frontendquanlikhachsan.controllers.accountant.RentalFormViewController"
+           prefWidth="1000" prefHeight="600">
+
+    <items>
+        <!-- LEFT: Filter + TableView chỉ để xem -->
+        <VBox spacing="8" style="-fx-background-color:#f4f6f8;">
+            <padding>
+                <Insets top="16" right="16" bottom="16" left="16"/>
+            </padding>
+            <HBox>
+                <Label text="Danh sách Phiếu thuê"
+                       alignment="CENTER_LEFT"
+                       style="-fx-font-size:18px; -fx-font-weight:bold;"/>
+
+                <Button alignment="CENTER_RIGHT"
+                        fx:id="btnLapHoaDon" text="Lập hoá đơn" style="-fx-background-color:#4caf50; -fx-text-fill:white;"/>
+            </HBox>
+
+
+            <!-- Thêm filter nếu cần -->
+            <HBox spacing="6">
+                <TextField fx:id="tfFilterId" promptText="ID..." prefWidth="60"/>
+                <TextField fx:id="tfFilterRoom"  promptText="Phòng..." HBox.hgrow="ALWAYS"/>
+                <TextField fx:id="tfFilterStaff" promptText="Nhân viên..." HBox.hgrow="ALWAYS"/>
+                <DatePicker fx:id="dpFrom" promptText="Từ ngày"/>
+                <DatePicker fx:id="dpTo"   promptText="Đến ngày"/>
+                <ComboBox fx:id="cbPaid" promptText="Thanh toán">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="All"/>
+                            <String fx:value="Paid"/>
+                            <String fx:value="Unpaid"/>
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+                <Button fx:id="btnReset" text="🔄 Reset" onAction="#onResetFilter"/>
+            </HBox>
+
+            <TableView fx:id="tableForm" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
+                    <TableColumn fx:id="colRoomName" text="Phòng"     prefWidth="120"/>
+                    <TableColumn fx:id="colStaffName" text="Nhân viên" prefWidth="120"/>
+                    <TableColumn fx:id="colDate"     text="Ngày thuê" prefWidth="140"/>
+                    <TableColumn fx:id="colDays"     text="Tổng ngày" prefWidth="80"/>
+                    <TableColumn fx:id="colNote"     text="Ghi chú"   prefWidth="180"/>
+                    <TableColumn fx:id="colPaidAt"   text="Thanh toán" prefWidth="140"/>
+                </columns>
+            </TableView>
+        </VBox>
+
+        <!-- RIGHT: Detail + các action thêm chi tiết, thêm gia hạn, thanh toán -->
+        <VBox spacing="12" style="-fx-background-color:#ffffff;">
+            <padding>
+                <Insets top="16" right="16" bottom="16" left="16"/>
+            </padding>
+
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
+                <content>
+                    <VBox fx:id="detailPane" spacing="10"/>
+                </content>
+            </ScrollPane>
+
+            <!-- Actions: xem hoặc thêm chi tiết / gia hạn, và nút thanh toán -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Button fx:id="btnAddDetail"    text="➕ Thêm chi tiết"/>
+                <Button fx:id="btnAddExtension" text="➕ Thêm gia hạn"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="btnCheckout"
+                        text="Thanh toán và trả phòng"
+                        style="-fx-background-color: #28a745; -fx-text-fill: white;"/>
+            </HBox>
+        </VBox>
+    </items>
+</SplitPane>

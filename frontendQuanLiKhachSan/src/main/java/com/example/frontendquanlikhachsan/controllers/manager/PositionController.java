@@ -55,33 +55,43 @@ public class PositionController {
 
     private void showPositionDetail(ResponsePositionDto pos) {
         detailPane.getChildren().clear();
-        Label title=new Label("» Chi tiết chức vụ – ID:"+pos.getId());
+
+        // Tiêu đề
+        Label title = new Label("» Chi tiết chức vụ – ID: " + pos.getId());
         title.setStyle("-fx-font-size:16px; -fx-font-weight:bold; -fx-padding:0 0 8 0;");
 
-        GridPane grid=new GridPane(); grid.setHgap(12); grid.setVgap(12); grid.setPadding(new Insets(8));
-        Function<String,Label> lb=txt->{Label l=new Label(txt);l.setStyle("-fx-font-weight:bold;");return l;};
-        grid.add(lb.apply("Tên:"),0,0);
-        grid.add(new Label(pos.getName()),1,0);
-        grid.add(lb.apply("Lương cơ bản:"),0,1);
-        grid.add(new Label(String.valueOf(pos.getBaseSalary())),1,1);
+        // Thông tin cơ bản
+        GridPane grid = new GridPane();
+        grid.setHgap(12);
+        grid.setVgap(12);
+        grid.setPadding(new Insets(8));
+        Function<String, Label> lb = txt -> {
+            Label l = new Label(txt);
+            l.setStyle("-fx-font-weight:bold;");
+            return l;
+        };
+        grid.add(lb.apply("Tên:"), 0, 0);
+        grid.add(new Label(pos.getName()), 1, 0);
+        grid.add(lb.apply("Lương cơ bản:"), 0, 1);
+        grid.add(new Label(String.valueOf(pos.getBaseSalary())), 1, 1);
 
-        Accordion acc=new Accordion();
-        if(!pos.getStaffIds().isEmpty()){
-            ListView<String> lv=new ListView<>(); lv.setFixedCellSize(24);
-            for(int i=0;i<pos.getStaffIds().size();i++){
-                lv.getItems().add("#"+pos.getStaffIds().get(i)+" - "+pos.getStaffNames().get(i));
-            }
-            lv.setPrefHeight(lv.getItems().size()*lv.getFixedCellSize()+2);
-            acc.getPanes().add(new TitledPane("Nhân viên ("+lv.getItems().size()+")",lv));
-        }
+        // Chỉ hiển thị số lượng nhân viên
+        int staffCount = pos.getStaffIds() == null ? 0 : pos.getStaffIds().size();
+        Label countLabel = new Label("Số nhân viên: " + staffCount);
+        countLabel.setStyle("-fx-padding:8 0 8 0; -fx-font-style:italic;");
 
-        HBox actions=new HBox(12); actions.setPadding(new Insets(12,0,0,0));
-        Button btnEdit=new Button("✏️ Sửa"); btnEdit.setOnAction(e->showEditForm(pos));
-        Button btnDel=new Button("🗑️ Xóa"); btnDel.setOnAction(e->deletePosition(pos));
-        actions.getChildren().addAll(btnEdit,btnDel);
+        // Nút hành động
+        HBox actions = new HBox(12);
+        actions.setPadding(new Insets(12,0,0,0));
+        Button btnEdit = new Button("✏️ Sửa");
+        btnEdit.setOnAction(e -> showEditForm(pos));
+        Button btnDel  = new Button("🗑️ Xóa");
+        btnDel .setOnAction(e -> deletePosition(pos));
+        actions.getChildren().addAll(btnEdit, btnDel);
 
-        detailPane.getChildren().addAll(title,grid,acc,actions);
+        detailPane.getChildren().addAll(title, grid, countLabel, actions);
     }
+
 
     private void deletePosition(ResponsePositionDto pos) {
         Alert c=new Alert(Alert.AlertType.CONFIRMATION,"Xóa chức vụ này?",ButtonType.OK,ButtonType.CANCEL);
