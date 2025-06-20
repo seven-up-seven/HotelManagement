@@ -33,6 +33,8 @@ public class Staff {
 
     private Account account;
 
+    private String email;
+
     private List<Invoice> invoices;
 
     private List<RentalForm> rentalForms;

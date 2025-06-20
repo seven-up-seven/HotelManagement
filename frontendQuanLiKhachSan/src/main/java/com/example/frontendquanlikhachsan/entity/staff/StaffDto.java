@@ -26,4 +26,6 @@ public class StaffDto {
     private Integer positionId;
 
     private Integer accountId;
+
+    private String email;
 }

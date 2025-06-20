@@ -82,6 +82,8 @@ public class LoginController {
             passwordField.setText(savedPassword);
             rememberMeCheckbox.setSelected(true);
         }
+
+        forgotPasswordButton.setOnAction(e -> openForgotPasswordDialog());
     }
 
     private void startBackgroundRotation() {
@@ -200,5 +202,22 @@ public class LoginController {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode jsonNode = mapper.readTree(payload);
         return Integer.parseInt(jsonNode.get("sub").asText());
+    }
+
+    private void openForgotPasswordDialog() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/frontendquanlikhachsan/views/ForgotPassword.fxml"));
+            Parent root = loader.load();
+
+            Stage dialog = new Stage();
+            dialog.initOwner(loginButton.getScene().getWindow());
+            dialog.setTitle("Quên mật khẩu");
+            dialog.setScene(new Scene(root));
+            dialog.setResizable(false);
+            dialog.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError("Không mở được form quên mật khẩu");
+        }
     }
 }
