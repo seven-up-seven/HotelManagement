@@ -25,7 +25,8 @@
                   AnchorPane.rightAnchor="0">
 
                 <!-- Ghim và Home -->
-                <Button onAction="#toggleSidebar" text="Ghim"
+                <Button fx:id="toggleButton"
+                        onAction="#toggleSidebar" text="📌 Ghim"
                         prefWidth="180.0" prefHeight="40.0"
                         styleClass="sidebar-button" />
                 <Button onAction="#openHomeTab" text="🏠 Home"
@@ -37,6 +38,7 @@
 
                 <!-- Quan tri vien -->
                 <TitledPane text="👨‍💼 Quản trị viên" expanded="false"
+                            fx:id="ADMIN"
                             prefWidth="180.0" prefHeight="40.0"
                             styleClass="sidebar-titledpane">
                     <VBox spacing="5" style="-fx-padding: 10;">
@@ -53,6 +55,7 @@
 
                 <!-- Lễ tân -->
                 <TitledPane text="🛎 Lễ tân" expanded="false"
+                            fx:id="RECEPTIONIST"
                             prefWidth="180.0" prefHeight="40.0"
                             styleClass="sidebar-titledpane">
                     <VBox spacing="5" style="-fx-padding: 10;">
@@ -83,6 +86,7 @@
 
                 <!-- Quản lí -->
                 <TitledPane text="📋 Quản lí" expanded="false"
+                            fx:id="MANAGER"
                             prefWidth="180.0" prefHeight="40.0"
                             styleClass="sidebar-titledpane">
                     <VBox spacing="5" style="-fx-padding: 10;">
@@ -139,6 +143,7 @@
 
                 <!-- Kế toán -->
                 <TitledPane text="💰 Kế toán" expanded="false"
+                            fx:id="ACCOUNTANT"
                             prefWidth="180.0" prefHeight="40.0"
                             styleClass="sidebar-titledpane">
                     <VBox spacing="5" style="-fx-padding: 10;">
@@ -165,6 +170,10 @@
                                 text="Lương nhân viên"/>
                     </VBox>
                 </TitledPane>
+
+                <Button onAction="#logout" text="Đăng xuất"
+                        prefWidth="180.0" prefHeight="40.0"
+                        styleClass="sidebar-button"/>
             </VBox>
         </AnchorPane>
     </left>

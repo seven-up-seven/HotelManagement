@@ -1,16 +1,24 @@
 package com.example.frontendquanlikhachsan.controllers;
 
+import com.example.frontendquanlikhachsan.ApiHttpClientCaller;
+import com.example.frontendquanlikhachsan.auth.TokenHolder;
 import com.example.frontendquanlikhachsan.controllers.manager.*;
+import com.example.frontendquanlikhachsan.entity.account.ResponseAccountDto;
+import com.example.frontendquanlikhachsan.entity.staff.ResponseStaffDto;
 import javafx.animation.Interpolator;
 import javafx.animation.PauseTransition;
 import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TitledPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.util.Duration;
 import org.springframework.stereotype.Component;
@@ -33,6 +41,18 @@ public class MainController {
         return tabPane;
     }
     @FXML private AnchorPane sidebarContainer;
+
+    @FXML
+    private TitledPane ADMIN;
+    @FXML
+    private TitledPane MANAGER;
+    @FXML
+    private TitledPane RECEPTIONIST;
+    @FXML
+    private TitledPane ACCOUNTANT;
+
+    @FXML
+    private Button toggleButton; // khai báo thêm nếu chưa có, và gán fx:id="toggleButton" trong FXML
 
     private final Map<String, Integer> tabCounters = new HashMap<>();
     private boolean isPinned = true;
@@ -57,26 +77,10 @@ public class MainController {
             sidebarContainer.setManaged(true);
             sidebarContainer.setVisible(true);
         }
+
+        adjustSidebarByPermission();
     }
 
-//    private void openTab(String title, String fxmlPath) {
-//        try {
-//            FXMLLoader loader = new FXMLLoader(this.getClass().getResource(fxmlPath));
-//            Parent content = loader.load();
-//
-//            int count = tabCounters.getOrDefault(title, 0) + 1;
-//            tabCounters.put(title, count);
-//
-//            String tabTitle = title + " #" + count;
-//            Tab tab = new Tab(tabTitle, content);
-//            tab.setClosable(true);
-//
-//            tabPane.getTabs().add(tab);
-//            tabPane.getSelectionModel().select(tab);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
 private <C> void openTab(String baseTitle,
                          String fxmlPath,
                          Consumer<C> controllerInitializer) {
@@ -225,6 +229,7 @@ private <C> void openTab(String baseTitle,
         } else if (isPinned && !sidebarVisible) {
             showSidebar();
         }
+        toggleButton.setText(isPinned ? "📌 Ghim" : "Ghim");
     }
 
     private void showSidebar() {
@@ -290,5 +295,62 @@ private <C> void openTab(String baseTitle,
                 }
             }
         });
+    }
+
+    public void adjustSidebarByPermission() {
+        new Thread(() -> {
+            try {
+                int currentUserId = TokenHolder.getInstance().getCurrentUserId();
+
+                String staffJson = ApiHttpClientCaller.call("staff/" + currentUserId,
+                        ApiHttpClientCaller.Method.GET, null);
+                ResponseStaffDto staffDto = ApiHttpClientCaller.mapper.readValue(staffJson, ResponseStaffDto.class);
+
+                String accountJson = ApiHttpClientCaller.call("account/" + staffDto.getAccountId(),
+                        ApiHttpClientCaller.Method.GET, null);
+                ResponseAccountDto accountDto = ApiHttpClientCaller.mapper.readValue(accountJson, ResponseAccountDto.class);
+
+                List<String> permissions = accountDto.getUserRolePermissionNames();
+
+                Platform.runLater(() -> {
+                    // Lưu reference đến parent container
+                    Parent sidebarContainer = ADMIN.getParent();
+
+                    // Remove các elements không có permission
+                    if (!permissions.contains("ADMIN") && sidebarContainer instanceof Pane) {
+                        ((Pane) sidebarContainer).getChildren().remove(ADMIN);
+                    }
+                    if (!permissions.contains("MANAGER") && sidebarContainer instanceof Pane) {
+                        ((Pane) sidebarContainer).getChildren().remove(MANAGER);
+                    }
+                    if (!permissions.contains("RECEPTIONIST") && sidebarContainer instanceof Pane) {
+                        ((Pane) sidebarContainer).getChildren().remove(RECEPTIONIST);
+                    }
+                    if (!permissions.contains("ACCOUNTANT") && sidebarContainer instanceof Pane) {
+                        ((Pane) sidebarContainer).getChildren().remove(ACCOUNTANT);
+                    }
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+    @FXML
+    public void logout() {
+        // Xoá token
+        TokenHolder.getInstance().setAccessToken(null);
+        TokenHolder.getInstance().setRefreshToken(null);
+        TokenHolder.getInstance().setCurrentUserId(-1);
+
+        // Quay về màn hình đăng nhập
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/frontendquanlikhachsan/views/Login.fxml"));
+            Parent loginRoot = loader.load();
+            tabPane.getScene().setRoot(loginRoot);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

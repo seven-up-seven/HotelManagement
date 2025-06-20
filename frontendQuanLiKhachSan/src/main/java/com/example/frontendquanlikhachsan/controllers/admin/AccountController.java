@@ -545,8 +545,6 @@ public class AccountController {
                     ? ((ResponseStaffDto) selectedUser).getId()
                     : ((ResponseGuestDto) selectedUser).getId();
 
-
-
             AccountDto newAccount = AccountDto.builder()
                     .username(username)
                     .password(password)
