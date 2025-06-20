@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.text.*?>
-<?import java.time.*?>
 
 <BorderPane xmlns="http://javafx.com/javafx/23.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
@@ -12,33 +11,31 @@
             stylesheets="@../assets/css/Home.css"
             prefWidth="800" prefHeight="500">
 
-    <!-- Top: Tiêu đề -->
+    <!-- Top: Đồng hồ thời gian thực -->
     <top>
-        <Label text="Trang chủ quản lý khách sạn"
-               style="-fx-font-size: 20px; -fx-font-weight: bold;"
-               BorderPane.alignment="CENTER"/>
-    </top>
-
-    <!-- Right: Đồng hồ thời gian thực -->
-    <right>
-        <VBox spacing="10">
+        <VBox alignment="CENTER">
             <padding>
-                <Insets top="10" right="10" bottom="10" left="10"/>
+                <Insets top="15" bottom="15"/>
             </padding>
             <Label text="Thời gian hiện tại:"/>
-            <Label fx:id="clockLabel" text="00:00:00" style="-fx-font-size: 14px;"/>
+            <Label fx:id="clockLabel" text="00:00:00" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
         </VBox>
-    </right>
+    </top>
 
-    <!-- Center: Chào + Form thông tin -->
+    <!-- Center: Form chính -->
     <center>
-        <VBox spacing="10" alignment="CENTER">
+        <VBox spacing="20" alignment="CENTER">
             <padding>
-                <Insets top="10" right="10" bottom="10" left="10"/>
+                <Insets top="20" left="20" right="20" bottom="20"/>
             </padding>
 
-            <!-- Label xin chào -->
-            <Label fx:id="helloLabel" text="Xin chào, [Vai trò] [Tên]"/>
+            <!-- Tiêu đề trang -->
+            <Label text="Trang chủ quản lý khách sạn"
+                   style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+
+            <!-- Lời chào -->
+            <Label fx:id="helloLabel" text="Xin chào, [Vai trò] [Tên]"
+                   style="-fx-font-size: 16px;"/>
 
             <!-- Form thông tin người dùng -->
             <GridPane fx:id="infoForm" hgap="10" vgap="10">

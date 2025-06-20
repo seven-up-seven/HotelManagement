@@ -1,19 +1,14 @@
 /* login.css */
 
-/* 1) Nền chính */
-.login-root {
-    -fx-background-color: linear-gradient(to bottom right, #667eea, #764ba2);
-}
-
 /* 2) Khung login */
 .login-box {
     -fx-background-color: rgba(255, 255, 255, 0.90);
-    -fx-background-radius: 12;
-    -fx-padding: 40;
     -fx-spacing: 20;
     -fx-alignment: center;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 4);
     -fx-pref-width: 360;
+    -fx-padding: 40 30;
+    -fx-background-radius: 15;
 }
 
 /* 3) Tiêu đề */
@@ -65,4 +60,16 @@
 #errorLabel {
     -fx-text-fill: #e74c3c;
     -fx-font-size: 12px;
+}
+
+/* Giao diện nút Quên mật khẩu */
+.text-link-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #667eea;
+    -fx-font-size: 12px;
+    -fx-underline: true;
+    -fx-cursor: hand;
+}
+.text-link-button:hover {
+    -fx-text-fill: #5a6dd0;
 }

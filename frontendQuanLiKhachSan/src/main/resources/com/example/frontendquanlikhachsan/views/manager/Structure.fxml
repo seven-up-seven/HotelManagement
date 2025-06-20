@@ -14,7 +14,7 @@
 <SplitPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="com.example.frontendquanlikhachsan.controllers.manager.StructureController"
-           stylesheets="@structure.css"
+           stylesheets="@../../assets/css/structure.css"
            prefWidth="800.0" prefHeight="600.0">
     <items>
         <!-- LEFT: Cấu trúc Tòa–Tầng–Phòng -->

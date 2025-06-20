@@ -78,6 +78,8 @@ public class MainController {
             sidebarContainer.setVisible(true);
         }
 
+        openHomeTab();
+
         adjustSidebarByPermission();
     }
 

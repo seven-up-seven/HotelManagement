@@ -8,6 +8,7 @@
 <SplitPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="com.example.frontendquanlikhachsan.controllers.manager.RentalFormController"
+           stylesheets="@../../assets/css/View.css"
            prefWidth="1000.0" prefHeight="600.0">
     <items>
         <!-- LEFT: List of Rental Forms -->

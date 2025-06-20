@@ -10,6 +10,7 @@
 <SplitPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="com.example.frontendquanlikhachsan.controllers.accountant.StaffSalaryAccountantController"
+           stylesheets="@../../assets/css/View.css"
            prefWidth="800" prefHeight="600">
     <items>
         <!-- LEFT: danh sách nhân viên -->

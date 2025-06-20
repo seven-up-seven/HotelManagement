@@ -5,6 +5,7 @@
 <SplitPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="com.example.frontendquanlikhachsan.controllers.accountant.InvoiceAccountantController"
+           stylesheets="@../../assets/css/View.css"
            prefWidth="1000.0" prefHeight="600.0">
     <items>
         <VBox spacing="8.0" prefWidth="400.0" style="-fx-background-color:#f4f6f8;">

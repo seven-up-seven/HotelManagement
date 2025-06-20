@@ -1,7 +1,8 @@
 /* Style tổng thể */
 .root {
     -fx-font-family: "Segoe UI", sans-serif;
-    -fx-background-color: #f2f2f2;
+    -fx-background-color: red;
+    -fx-background-image: url("../images/home_background.jpg");
 }
 
 /* Tiêu đề ở trên */
