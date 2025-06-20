@@ -1,0 +1,51 @@
+/* Style tổng thể */
+.root {
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-background-color: #f2f2f2;
+}
+
+/* Tiêu đề ở trên */
+.label {
+    -fx-text-fill: #333333;
+    -fx-font-size: 30px;
+}
+
+/* Phần đồng hồ bên phải */
+#clockLabel {
+    -fx-text-fill: #2c3e50;
+    -fx-padding: 10;
+    -fx-background-color: #dff6ff;
+    -fx-border-color: #5dade2;
+    -fx-border-radius: 10;
+    -fx-font-size: 20px;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 4, 0, 2, 2);
+}
+
+/* VBox chứa đồng hồ */
+.right VBox {
+    -fx-background-color: #eaf6ff;
+    -fx-border-color: #5dade2;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-font-size: 20px;
+    -fx-padding: 10;
+}
+
+/* Form thông tin người dùng ở giữa */
+#infoForm {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #3498db;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-max-height: 200;
+    -fx-font-size: 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0, 2, 2);
+}
+
+/* Các label trong form */
+#infoForm .label {
+    -fx-font-size: 20px;
+    -fx-text-fill: #2c3e50;
+}
