@@ -1,52 +1,103 @@
-/* Style tổng thể */
+/*currently not in use*/
 .root {
     -fx-font-family: "Segoe UI", sans-serif;
-    -fx-background-color: red;
+    -fx-background-color: #f8f8f8;
     -fx-background-image: url("../images/home_background.jpg");
+    -fx-background-repeat: no-repeat, repeat;
+    /* center it in the pane */
+    -fx-background-position: center center;
+    /* scale it to cover the entire area */
+    -fx-background-size: cover;
+    /* fallback fill color while the image loads */
 }
 
-/* Tiêu đề ở trên */
-.label {
-    -fx-text-fill: #333333;
-    -fx-font-size: 30px;
+/* Đồng hồ nhỏ góc phải */
+.top-bar-mini {
+    -fx-background-color: transparent;
 }
 
-/* Phần đồng hồ bên phải */
-#clockLabel {
+.clock-text-mini {
+    -fx-text-fill: #246ef2;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* Tiêu đề */
+.title-text {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
     -fx-text-fill: #2c3e50;
-    -fx-padding: 10;
-    -fx-background-color: #dff6ff;
-    -fx-border-color: #5dade2;
-    -fx-border-radius: 10;
-    -fx-font-size: 20px;
-    -fx-background-radius: 10;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 4, 0, 2, 2);
 }
 
-/* VBox chứa đồng hồ */
-.right VBox {
-    -fx-background-color: #eaf6ff;
-    -fx-border-color: #5dade2;
-    -fx-border-radius: 10;
-    -fx-background-radius: 10;
-    -fx-font-size: 20px;
-    -fx-padding: 10;
+.sub-title-text {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
 }
 
-/* Form thông tin người dùng ở giữa */
+/* Avatar */
+.avatar-img {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 6, 0.3, 2, 2);
+    -fx-background-radius: 50;
+    -fx-border-radius: 50;
+}
+
+/* Thông tin */
 #infoForm {
     -fx-background-color: #ffffff;
     -fx-border-color: #3498db;
     -fx-border-width: 1.5;
     -fx-border-radius: 12;
     -fx-background-radius: 12;
-    -fx-max-height: 200;
-    -fx-font-size: 20px;
+    -fx-font-size: 16px;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0, 2, 2);
+    -fx-padding: 15;
+    -fx-min-width: 400;
 }
 
-/* Các label trong form */
-#infoForm .label {
-    -fx-font-size: 20px;
-    -fx-text-fill: #2c3e50;
+/* Khung ngoài cùng chứa avatar + form */
+.main-box {
+    -fx-padding: 20;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #ddd;
+    -fx-border-radius: 15;
+    -fx-background-radius: 15;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 2, 2);
 }
+
+.clock-container {
+    -fx-alignment: TOP_RIGHT;
+}
+
+.clock-box {
+    -fx-background-color: #246ef2;
+    -fx-padding: 10 20;
+    -fx-spacing: 5;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 4, 0, 2, 2);
+    -fx-alignment: center;
+}
+
+.clock-time {
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.clock-date {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+}
+
+.user-box {
+    -fx-padding: 20;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #ddd;
+    -fx-border-radius: 15;
+    -fx-background-radius: 15;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 2, 2);
+    -fx-max-width: 650px;   /* thêm dòng này để giới hạn chiều rộng */
+}
+

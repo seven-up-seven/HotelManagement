@@ -201,3 +201,16 @@
 .context-menu .menu-item:hover {
     -fx-background-color: rgba(0,0,0,0.1);
 }
+
+.root-pane {
+    /* set the image path */
+    -fx-background-image: url("../images/home_background.jpg");
+    /* don’t repeat the image */
+    -fx-background-repeat: no-repeat, repeat;
+    /* center it in the pane */
+    -fx-background-position: center center;
+    /* scale it to cover the entire area */
+    -fx-background-size: cover;
+    /* fallback fill color while the image loads */
+    -fx-background-color: #f0f4f8;
+}

@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
-<BorderPane fx:id="rootPane" prefHeight="600.0" prefWidth="800.0"
+<BorderPane styleClass="root-pane" prefHeight="600.0" prefWidth="800.0"
             xmlns="http://javafx.com/javafx/23.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
             stylesheets="@../assets/css/NavBar.css"
@@ -25,7 +25,7 @@
                   BorderPane.alignment="CENTER" styleClass="dock-bar">
                 <!-- Scrollable dock -->
                 <ScrollPane fx:id="dockScrollPane" hbarPolicy="NEVER" vbarPolicy="NEVER"
-                            fitToHeight="true" prefHeight="80" styleClass="dock-scroll">
+                            fitToHeight="true" styleClass="dock-scroll">
                     <HBox fx:id="dockItems" alignment="CENTER" spacing="20" styleClass="dock-container">
                         <!-- ADMIN Group -->
                         <Button fx:id="adminButton" text="👤" styleClass="dock-icon">
