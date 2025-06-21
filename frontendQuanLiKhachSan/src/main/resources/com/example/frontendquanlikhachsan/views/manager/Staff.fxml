@@ -52,6 +52,7 @@
                     <TableColumn fx:id="colPosition" text="Chức vụ" prefWidth="100.0"/>
                     <TableColumn fx:id="colSex" text="Giới tính" prefWidth="80.0"/>
                     <TableColumn fx:id="colAge" text="Tuổi" prefWidth="50.0"/>
+                    <TableColumn fx:id="colEmail" text="Email" prefWidth="150.0"/>
                     <TableColumn fx:id="colAddress" text="Địa chỉ" prefWidth="120.0"/>
                     <TableColumn fx:id="colUsername" text="Username" prefWidth="100.0"/>
                 </columns>

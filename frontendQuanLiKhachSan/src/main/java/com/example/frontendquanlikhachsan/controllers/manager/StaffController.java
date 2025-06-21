@@ -47,6 +47,8 @@ public class StaffController {
     private TableColumn<ResponseStaffDto, String> colUsername;
     @FXML
     private TableColumn<ResponseStaffDto, String> colAddress;
+    @FXML
+    private TableColumn<ResponseStaffDto, String> colEmail;
 
     @FXML private TextField  tfFilterId;
     @FXML private TextField  tfFilterName;
@@ -83,6 +85,10 @@ public class StaffController {
         colUsername.setCellValueFactory(cd -> {
             String uname = cd.getValue().getAccountUsername();
             return new ReadOnlyObjectWrapper<>( (uname == null || uname.isBlank()) ? "–" : uname );
+        });
+        colEmail.setCellValueFactory(cd -> {
+            String email = cd.getValue().getEmail();
+            return new ReadOnlyObjectWrapper<>((email == null || email.isBlank()) ? "–" : email);
         });
 
         loadStaffs();
@@ -123,6 +129,8 @@ public class StaffController {
         tfFilterName .textProperty().addListener((o,ov,nv)->apply.run());
         tfFilterIdNum.textProperty().addListener((o,ov,nv)->apply.run());
         cbFilterPosition.valueProperty().addListener((o,ov,nv)->apply.run());
+
+        tableStaff.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
     @FXML
@@ -214,8 +222,11 @@ public class StaffController {
         grid.add(makeLabel.apply("Chức vụ:"), 0, 6);
         grid.add(new Label(Optional.ofNullable(staff.getPositionName()).orElse("–")), 1, 6);
 
+        grid.add(makeLabel.apply("Email:"), 0, 7);
+        grid.add(new Label(Optional.ofNullable(staff.getEmail()).orElse("–")), 1, 7);
+
         // Badge tài khoản
-        grid.add(makeLabel.apply("Tài khoản:"), 0, 7);
+        grid.add(makeLabel.apply("Tài khoản:"), 0, 8);
         Label badge = new Label();
         badge.setStyle("-fx-padding:4 8; -fx-background-radius:4; -fx-text-fill:white;");
         if (staff.getAccountId() == null || staff.getAccountId() == 0) {
@@ -225,7 +236,7 @@ public class StaffController {
             badge.setText("Đã có tài khoản");
             badge.setStyle(badge.getStyle() + "-fx-background-color:#4caf50;");
         }
-        grid.add(badge, 1, 7);
+        grid.add(badge, 1, 8);
 
         HBox relatedBox = new HBox(10);
         relatedBox.setPadding(new Insets(12, 0, 0, 0));
@@ -347,6 +358,11 @@ public class StaffController {
         }
         grid.add(cbPosition, 1, 6);
 
+        grid.add(makeLabel.apply("Email:"), 0, 7);
+        TextField tfEmail = new TextField(Optional.ofNullable(staff.getEmail()).orElse(""));
+        grid.add(tfEmail, 1, 7);
+
+
         HBox btnBox = new HBox(12);
         btnBox.setPadding(new Insets(12, 0, 0, 0));
         Button btnSave = new Button("💾 Lưu");
@@ -359,6 +375,7 @@ public class StaffController {
                 String idNum = tfIdNum.getText().trim();
                 String address = tfAddress.getText().trim();
                 Sex sex = cbSex.getValue();
+                String email = tfEmail.getText().trim();
                 Float salaryMul = Float.parseFloat(tfSalaryMul.getText().trim());
                 PositionDropdownChoice selPos = cbPosition.getValue();
                 Integer positionId = (selPos != null ? selPos.getId() : null);
@@ -369,6 +386,7 @@ public class StaffController {
                         .identificationNumber(idNum)
                         .address(address)
                         .sex(sex)
+                        .email(email)
                         .salaryMultiplier(salaryMul)
                         .positionId(positionId)
                         .build();
@@ -431,16 +449,20 @@ public class StaffController {
         ComboBox<Sex> cbSex = new ComboBox<>(FXCollections.observableArrayList(Sex.values()));
         grid.add(cbSex, 1, 4);
 
+        grid.add(makeLabel.apply("Email:"), 0, 5);
+        TextField tfEmail = new TextField();
+        grid.add(tfEmail, 1, 5);
+
 //        // 6. Hệ số lương
-//        grid.add(makeLabel.apply("Hệ số lương:"), 0, 5);
+//        grid.add(makeLabel.apply("Hệ số lương:"), 0, 6);
 //        TextField tfSalaryMul = new TextField();
 //        tfSalaryMul.setPromptText("VD: 1.2");
-//        grid.add(tfSalaryMul, 1, 5);
+//        grid.add(tfSalaryMul, 1, 6);
 
         // 7. Chức vụ
-        grid.add(makeLabel.apply("Chức vụ:"), 0, 5);
+        grid.add(makeLabel.apply("Chức vụ:"), 0, 6);
         ComboBox<PositionDropdownChoice> cbPosition = new ComboBox<>(FXCollections.observableArrayList(getAllPositions()));
-        grid.add(cbPosition, 1, 5);
+        grid.add(cbPosition, 1, 6);
 
         HBox btnBox = new HBox(12);
         btnBox.setPadding(new Insets(12, 0, 0, 0));
@@ -454,6 +476,7 @@ public class StaffController {
                 String idNum = tfIdNum.getText().trim();
                 String address = tfAddress.getText().trim();
                 Sex sex = cbSex.getValue();
+                String email = tfEmail.getText().trim();
 //                Float salaryMul = Float.parseFloat(tfSalaryMul.getText().trim());
                 PositionDropdownChoice selPos = cbPosition.getValue();
                 Integer positionId = (selPos != null ? selPos.getId() : null);
@@ -467,6 +490,7 @@ public class StaffController {
 //                        .salaryMultiplier(salaryMul) default 1.0
                         .positionId(positionId)
                         .accountId(null)
+                        .email(email)
                         .build();
 
                 ApiHttpClientCaller.call("staff", ApiHttpClientCaller.Method.POST, dto);

@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 @Component
@@ -229,18 +230,30 @@ public class MainController {
 
     @FXML
     public void logout() {
-        // Xoá token
-        TokenHolder.getInstance().setAccessToken(null);
-        TokenHolder.getInstance().setRefreshToken(null);
-        TokenHolder.getInstance().setCurrentUserId(-1);
+        // Hộp thoại xác nhận
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Xác nhận đăng xuất");
+        alert.setHeaderText("Bạn có chắc chắn muốn đăng xuất?");
+        alert.setContentText("Hành động này sẽ đưa bạn về màn hình đăng nhập.");
 
-        // Quay về màn hình đăng nhập
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/frontendquanlikhachsan/views/Login.fxml"));
-            Parent loginRoot = loader.load();
-            tabPane.getScene().setRoot(loginRoot);
-        } catch (IOException e) {
-            e.printStackTrace();
+        // Tùy chọn xác nhận hoặc hủy
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            // Nếu người dùng xác nhận => thực hiện đăng xuất
+            TokenHolder.getInstance().setAccessToken(null);
+            TokenHolder.getInstance().setRefreshToken(null);
+            TokenHolder.getInstance().setCurrentUserId(-1);
+
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/frontendquanlikhachsan/views/Login.fxml"));
+                Parent loginRoot = loader.load();
+                tabPane.getScene().setRoot(loginRoot);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            // Người dùng chọn Hủy => không làm gì cả
+            System.out.println("Huỷ đăng xuất.");
         }
     }
 }
