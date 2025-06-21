@@ -11,10 +11,12 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.util.Duration;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
+@Component
 public class HomeController {
     @FXML
     private Label helloLabel, clockLabel;

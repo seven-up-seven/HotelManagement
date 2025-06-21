@@ -26,12 +26,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.springframework.stereotype.Component;
 
 import java.net.URL;
 import java.util.Base64;
 import java.util.List;
 import java.util.prefs.Preferences;
 
+@Component
 public class LoginController {
 
     @FXML

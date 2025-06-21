@@ -7,7 +7,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ForgotPasswordController {
     @FXML
     private TextField usernameField;

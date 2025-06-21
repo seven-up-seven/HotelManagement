@@ -34,6 +34,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -45,6 +46,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Component
 public class ChatbotController {
     @FXML private ListView<String> chatListView;
     @FXML private TextArea inputArea;

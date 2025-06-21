@@ -1,184 +1,122 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
 
-<?import javafx.scene.control.TitledPane?>
 <BorderPane fx:id="rootPane" prefHeight="600.0" prefWidth="800.0"
             xmlns="http://javafx.com/javafx/23.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
             stylesheets="@../assets/css/NavBar.css"
             fx:controller="com.example.frontendquanlikhachsan.controllers.MainController">
 
-    <left>
-        <AnchorPane fx:id="sidebarContainer" prefWidth="200.0" BorderPane.alignment="CENTER_LEFT">
-            <VBox fx:id="taskbar"
-                  alignment="TOP_CENTER"
-                  spacing="10"
-                  style="-fx-padding: 15; -fx-background-color: #2c3e50;"
-                  AnchorPane.topAnchor="0"
-                  AnchorPane.bottomAnchor="0"
-                  AnchorPane.leftAnchor="0"
-                  AnchorPane.rightAnchor="0">
-
-                <!-- Ghim và Home -->
-                <Button fx:id="toggleButton"
-                        onAction="#toggleSidebar" text="📌 Ghim"
-                        prefWidth="180.0" prefHeight="40.0"
-                        styleClass="sidebar-button" />
-                <Button onAction="#openHomeTab" text="🏠 Home"
-                        prefWidth="180.0" prefHeight="40.0"
-                        styleClass="sidebar-button" />
-                <Button onAction="#openChatbot" text="Trợ lí AI"
-                        prefWidth="180.0" prefHeight="40.0"
-                        styleClass="sidebar-button" />
-
-                <!-- Quan tri vien -->
-                <TitledPane text="👨‍💼 Quản trị viên" expanded="false"
-                            fx:id="ADMIN"
-                            prefWidth="180.0" prefHeight="40.0"
-                            styleClass="sidebar-titledpane">
-                    <VBox spacing="5" style="-fx-padding: 10;">
-                        <Button onAction="#openAccountManagement" text="Quản lý tài khoản"
-                                prefWidth="160.0" styleClass="submenu-button"/>
-                        <Button onAction="#openUserRoleManagement" text="Quản lý vai trò"
-                                prefWidth="160.0" styleClass="submenu-button"/>
-                        <Button onAction="#openHistoryManagement" text="Quản lý lịch sử"
-                                prefWidth="160.0" styleClass="submenu-button"/>
-                        <Button onAction="#openVariableManagement" text="Quản lý tham số"
-                                prefWidth="160.0" styleClass="submenu-button"/>
-                    </VBox>
-                </TitledPane>
-
-                <!-- Lễ tân -->
-                <TitledPane text="🛎 Lễ tân" expanded="false"
-                            fx:id="RECEPTIONIST"
-                            prefWidth="180.0" prefHeight="40.0"
-                            styleClass="sidebar-titledpane">
-                    <VBox spacing="5" style="-fx-padding: 10;">
-                        <Button onAction="#openRoomRentingTab"
-                                text="Thuê phòng"
-                                prefWidth="160.0"
-                                styleClass="submenu-button"/>
-                        <Button onAction="#openEditTab"
-                                prefHeight="35.0"
-                                prefWidth="160.0"
-                                styleClass="submenu-button"
-                                style="-fx-text-fill: black;"
-                                text="Bổ sung phiếu thuê"/>
-                        <Button onAction="#openRentalFormViewTab"
-                                prefHeight="35.0"
-                                prefWidth="160.0"
-                                styleClass="submenu-button"
-                                style="-fx-text-fill: black;"
-                                text="Khởi tạo hoá đơn"/>
-                        <Button onAction="#openInvoiceAccountantTab"
-                                prefHeight="35.0"
-                                prefWidth="160.0"
-                                styleClass="submenu-button"
-                                style="-fx-text-fill: black;"
-                                text="Tra cứu hoá đơn"/>
-                    </VBox>
-                </TitledPane>
-
-                <!-- Quản lí -->
-                <TitledPane text="📋 Quản lí" expanded="false"
-                            fx:id="MANAGER"
-                            prefWidth="180.0" prefHeight="40.0"
-                            styleClass="sidebar-titledpane">
-                    <VBox spacing="5" style="-fx-padding: 10;">
-                        <Button onAction="#openStaffTab"
-                                prefHeight="35.0"
-                                prefWidth="160.0"
-                                styleClass="submenu-button"
-                                style="-fx-text-fill: black;"
-                                text="Nhân viên"/>
-                        <Button onAction="#openPositionTab"
-                                prefHeight="35.0"
-                                prefWidth="160.0"
-                                styleClass="submenu-button"
-                                style="-fx-text-fill: black;"
-                                text="Chức vụ"/>
-                        <Button onAction="#openGuestTab"
-                                prefHeight="35.0"
-                                prefWidth="160.0"
-                                styleClass="submenu-button"
-                                style="-fx-text-fill: black;"
-                                text="Khách hàng"/>
-                        <Button onAction="#openRentalFormTab"
-                                prefHeight="35.0"
-                                prefWidth="160.0"
-                                styleClass="submenu-button"
-                                style="-fx-text-fill: black;"
-                                text="Phiếu thuê"/>
-                        <Button onAction="#openInvoiceTab"
-                                prefHeight="35.0"
-                                prefWidth="160.0"
-                                styleClass="submenu-button"
-                                style="-fx-text-fill: black;"
-                                text="Hoá đơn"/>
-                        <Button onAction="#openStructureTab"
-                                prefHeight="35.0"
-                                prefWidth="160.0"
-                                styleClass="submenu-button"
-                                style="-fx-text-fill: black;"
-                                text="Cấu trúc khách sạn"/>
-                        <Button onAction="#openBookingConfirmationFormTab"
-                                prefHeight="35.0"
-                                prefWidth="160.0"
-                                styleClass="submenu-button"
-                                style="-fx-text-fill: black;"
-                                text="Phiếu đặt phòng"/>
-                        <Button onAction="#openRentalExtensionFormTab"
-                                prefHeight="35.0"
-                                prefWidth="160.0"
-                                style="-fx-text-fill: black;"
-                                styleClass="submenu-button"
-                                text="Phiếu gia hạn"/>
-                    </VBox>
-                </TitledPane>
-
-                <!-- Kế toán -->
-                <TitledPane text="💰 Kế toán" expanded="false"
-                            fx:id="ACCOUNTANT"
-                            prefWidth="180.0" prefHeight="40.0"
-                            styleClass="sidebar-titledpane">
-                    <VBox spacing="5" style="-fx-padding: 10;">
-
-                        <Button onAction="#openReportTab"
-                                prefHeight="35.0"
-                                prefWidth="160.0"
-                                styleClass="submenu-button"
-                                style="-fx-text-fill: black;"
-                                text="Báo cáo tháng"/>
-
-                        <Button onAction="#openInvoiceAccountantTab"
-                                prefHeight="35.0"
-                                prefWidth="160.0"
-                                styleClass="submenu-button"
-                                style="-fx-text-fill: black;"
-                                text="Tra cứu hoá đơn"/>
-
-                        <Button onAction="#openSalaryTab"
-                                prefHeight="35.0"
-                                prefWidth="160.0"
-                                styleClass="submenu-button"
-                                style="-fx-text-fill: black;"
-                                text="Lương nhân viên"/>
-                    </VBox>
-                </TitledPane>
-
-                <Button onAction="#logout" text="Đăng xuất"
-                        prefWidth="180.0" prefHeight="40.0"
-                        styleClass="sidebar-button"/>
-            </VBox>
-        </AnchorPane>
-    </left>
-
     <center>
         <TabPane fx:id="tabPane" tabClosingPolicy="ALL_TABS" BorderPane.alignment="CENTER" />
     </center>
+
+    <bottom>
+        <HBox alignment="CENTER">
+            <HBox fx:id="bottomDock" alignment="CENTER_LEFT" spacing="10"
+                  BorderPane.alignment="CENTER" styleClass="dock-bar">
+                <!-- Scrollable dock -->
+                <ScrollPane fx:id="dockScrollPane" hbarPolicy="NEVER" vbarPolicy="NEVER"
+                            fitToHeight="true" prefHeight="80" styleClass="dock-scroll">
+                    <HBox fx:id="dockItems" alignment="CENTER" spacing="20" styleClass="dock-container">
+                        <!-- ADMIN Group -->
+                        <Button fx:id="adminButton" text="👤" styleClass="dock-icon">
+                            <tooltip>
+                                <Tooltip text="Quản trị viên" />
+                            </tooltip>
+                            <contextMenu>
+                                <ContextMenu fx:id="adminMenu">
+                                    <items>
+                                        <MenuItem text="🔐 Quản lí tài khoản" onAction="#openAccountManagement" />
+                                        <MenuItem text="🧩 Quản lí vai trò" onAction="#openUserRoleManagement" />
+                                        <MenuItem text="📜 Quản lí lịch sử" onAction="#openHistoryManagement" />
+                                        <MenuItem text="⚙️ Quản lí tham số" onAction="#openVariableManagement" />
+                                    </items>
+                                </ContextMenu>
+                            </contextMenu>
+                        </Button>
+
+                        <!-- RECEPTIONIST Group -->
+                        <Button fx:id="receptionistButton" text="🛎" styleClass="dock-icon">
+                            <tooltip>
+                                <Tooltip text="Lễ tân" />
+                            </tooltip>
+                            <contextMenu>
+                                <ContextMenu fx:id="receptionistMenu">
+                                    <items>
+                                        <MenuItem text="🛏 Lập phiếu thuê phòng" onAction="#openRoomRentingTab" />
+                                        <MenuItem text="➕ Bổ sung phiếu thuê" onAction="#openEditTab" />
+                                        <MenuItem text="🧾 Khởi tạo hóa đơn" onAction="#openRentalFormViewTab" />
+                                        <MenuItem text="📂 Tra cứu hóa đơn" onAction="#openInvoiceAccountantTab" />
+                                    </items>
+                                </ContextMenu>
+                            </contextMenu>
+                        </Button>
+
+                        <!-- MANAGER Group -->
+                        <Button fx:id="managerButton" text="📋" styleClass="dock-icon">
+                            <tooltip>
+                                <Tooltip text="Quản lý" />
+                            </tooltip>
+                            <contextMenu>
+                                <ContextMenu fx:id="managerMenu">
+                                    <items>
+                                        <MenuItem text="👨‍💼 Quản lí nhân viên" onAction="#openStaffTab" />
+                                        <MenuItem text="🪪 Quản lí chức vụ" onAction="#openPositionTab" />
+                                        <MenuItem text="🙋‍♂️ Quản lí khách hàng" onAction="#openGuestTab" />
+                                        <MenuItem text="📑 Quản lí phiếu thuê" onAction="#openRentalFormTab" />
+                                        <MenuItem text="📃 Quản lí hoá đơn" onAction="#openInvoiceTab" />
+                                        <MenuItem text="🏨 Cấu trúc khách sạn" onAction="#openStructureTab" />
+                                        <MenuItem text="📅 Đặt phòng" onAction="#openBookingConfirmationFormTab" />
+                                        <MenuItem text="⏳ Gia hạn" onAction="#openRentalExtensionFormTab" />
+                                    </items>
+                                </ContextMenu>
+                            </contextMenu>
+                        </Button>
+
+                        <!-- ACCOUNTANT Group -->
+                        <Button fx:id="accountantButton" text="💰" styleClass="dock-icon">
+                            <tooltip>
+                                <Tooltip text="Kế toán" />
+                            </tooltip>
+                            <contextMenu>
+                                <ContextMenu fx:id="accountantMenu">
+                                    <items>
+                                        <MenuItem text="📊 Báo cáo tháng" onAction="#openReportTab" />
+                                        <MenuItem text="🔍 Tra cứu hóa đơn" onAction="#openInvoiceAccountantTab" />
+                                        <MenuItem text="💸 Lương nhân viên" onAction="#openSalaryTab" />
+                                    </items>
+                                </ContextMenu>
+                            </contextMenu>
+                        </Button>
+
+                        <!-- Other Buttons -->
+                        <Button text="🏠" onAction="#openHomeTab" styleClass="dock-icon">
+                            <tooltip>
+                                <Tooltip text="Trang chủ" />
+                            </tooltip>
+                        </Button>
+                        <Button text="🤖" onAction="#openChatbot" styleClass="dock-icon">
+                            <tooltip>
+                                <Tooltip text="Trợ lý AI" />
+                            </tooltip>
+                        </Button>
+                        <Button text="🚪" onAction="#logout" styleClass="dock-icon">
+                            <tooltip>
+                                <Tooltip text="Đăng xuất" />
+                            </tooltip>
+                        </Button>
+                    </HBox>
+                </ScrollPane>
+            </HBox>
+        </HBox>
+    </bottom>
 </BorderPane>
