@@ -166,6 +166,10 @@ public class MainController {
                 (BookingConfirmationFormController c) -> c.selectBookingConfirmationFormsByIds(ids));
     }
 
+    public void openMapTab() {
+        openTab("Sơ đồ khách sạn", "/com/example/frontendquanlikhachsan/views/manager/Map.fxml",  null);
+    }
+
     // ---------- Accountant ----------
     public void openReportTab() {
         openTab("Báo cáo tháng", "/com/example/frontendquanlikhachsan/views/accountant/RevenueReport.fxml", null);

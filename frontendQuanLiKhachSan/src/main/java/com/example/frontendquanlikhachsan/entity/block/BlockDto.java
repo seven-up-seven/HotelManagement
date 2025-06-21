@@ -10,5 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BlockDto {
+    private Integer Id;
     private String name;
+    private Double posX;
+    private Double posY;
 }

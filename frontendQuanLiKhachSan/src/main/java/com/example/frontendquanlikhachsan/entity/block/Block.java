@@ -13,5 +13,9 @@ public class Block {
 
     private String name;
 
+    private Double posX;
+
+    private Double posY;
+
     private List<Floor> floors = new ArrayList<>();
 }

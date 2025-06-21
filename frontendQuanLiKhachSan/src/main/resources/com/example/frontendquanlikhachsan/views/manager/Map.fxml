@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.frontendquanlikhachsan.controllers.manager.MapController"
+            stylesheets="@../../assets/css/Map.css"
+            prefWidth="900.0" prefHeight="600.0">
+
+    <!-- Header -->
+    <top>
+        <VBox spacing="10.0" styleClass="header-bar" alignment="CENTER">
+            <Label text="Sơ đồ khách sạn" styleClass="main-title"/>
+            <HBox spacing="10.0" alignment="CENTER">
+                <Button fx:id="editMapButton" text="Chỉnh sửa" onAction="#enableMapEditing" styleClass="action-button"/>
+                <Button fx:id="saveMapButton" text="Lưu" disable="true" onAction="#saveMapPositions" styleClass="action-button"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- Content -->
+    <center>
+        <HBox spacing="10.0" alignment="TOP_CENTER" style="-fx-padding: 10;">
+            <VBox spacing="5.0">
+                <Label text="SƠ ĐỒ KHÁCH SẠN HIỆN TẠI" styleClass="section-title"/>
+                <ScrollPane fx:id="mapScrollPane" prefWidth="640.0" prefHeight="460.0"
+                            fitToHeight="true" fitToWidth="true" styleClass="map-scroll">
+                    <content>
+                        <AnchorPane fx:id="mapPane" prefWidth="2000.0" prefHeight="2000.0" styleClass="map-area"/>
+                    </content>
+                </ScrollPane>
+            </VBox>
+
+            <VBox spacing="5.0">
+                <Label text="CÁC TÒA CHƯA ĐẶT VÀO SƠ ĐỒ" styleClass="section-title"/>
+                <VBox fx:id="unplacedBlockContainer" prefWidth="200.0" prefHeight="460.0"
+                      spacing="10.0" styleClass="unplaced-container"/>
+            </VBox>
+        </HBox>
+    </center>
+
+</BorderPane>
