@@ -1,14 +1,9 @@
-/* Bottom dock bar with dynamic width and gradient background */
 .dock-bar {
     /* dynamic width: wrap content of children + padding */
     -fx-min-width: -1;           /* allow to shrink */
     -fx-pref-width: -1;          /* remove fixed width */
     -fx-max-width: -1;           /* no maximum */
-    -fx-background-color: linear-gradient(
-            from 0% 0% to 100% 100%,
-            #4facfe, /* light sky blue */
-            #00f2fe  /* bright cyan */
-    );
+    -fx-background-color: #0e2647;
     -fx-background-radius: 16;   /* rounded corners */
     -fx-padding: 12 20;          /* vertical/horizontal padding */
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, -2);
@@ -19,6 +14,7 @@
 /* Main dock icons larger and scale on hover */
 .dock-container .dock-icon {
     -fx-background-color: transparent;
+    -fx-text-fill: white;
     -fx-pref-width: 70px;
     -fx-pref-height: 70px;
     -fx-font-size: 24px;
@@ -31,7 +27,9 @@
     -fx-scale-x: 1.6;
     -fx-scale-y: 1.6;
 }
-
+.dock-scroll .viewport {
+    -fx-background-color: transparent;
+}
 /* Submenu container styling */
 .dock-popup-wrapper {
     -fx-background-color: transparent;
@@ -76,100 +74,9 @@
     -fx-background-color: transparent;
     -fx-border-color: transparent;
 }
-
-/* Main dock icons */
-.dock-container .dock-icon {
-    -fx-background-color: transparent;
-    -fx-pref-width: 70px;
-    -fx-pref-height: 70px;
-    -fx-font-size: 24px;         /* larger icon/text */
-    -fx-scale-x: 1;
-    -fx-scale-y: 1;
-    -fx-transition: all 0.2s ease;
-    -fx-cursor: hand;
-}
-
-.dock-container .dock-icon:hover {
-    -fx-scale-x: 1.6;            /* more pronounced hover enlargement */
-    -fx-scale-y: 1.6;
-}
-
-/* Popup wrapper with arrow */
-.dock-popup-wrapper {
-    -fx-background-color: transparent;
-}
-
-/* The rounded-rectangle containing submenu buttons */
-.dock-popup-content {
-    -fx-background-color: rgba(255,255,255,0.95);
-    -fx-background-radius: 8;
-    -fx-padding: 10;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 5, 0, 0, 0);
-}
-
-/* Submenu item buttons */
-.dock-popup-button {
-    -fx-background-color: transparent;
-    -fx-font-size: 16px;        /* larger submenu text */
-    -fx-padding: 6 12 6 12;
-    -fx-border-radius: 5px;
-    -fx-cursor: hand;
-    -fx-transition: all 0.2s ease;
-}
-.dock-popup-button:hover {
-    -fx-background-color: rgba(0,0,0,0.1);
-}
-
-.scroll-button {
-    -fx-background-color: rgba(255,255,255,0.3);
-    -fx-text-fill: black;
-    -fx-font-size: 16px;
-    -fx-padding: 6;
-    -fx-cursor: hand;
-    -fx-background-radius: 10;
-}
-.scroll-button:hover {
-    -fx-background-color: rgba(255,255,255,0.6);
-}
-
-.dock-scroll {
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
-}
-
 /* Arrow triangle at top of popup */
 .dock-popup-arrow {
     -fx-fill: rgba(255,255,255,0.95);
-}
-
-/* Surrounding rounded-rectangle */
-.dock-popup-wrapper {
-    -fx-background-color: transparent; /* arrow is separate */
-}
-
-/* The box that holds your submenu buttons */
-.dock-popup-content {
-    -fx-background-color: rgba(255,255,255,0.95);
-    -fx-background-radius: 8;
-    -fx-padding: 8;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 4, 0, 0, 0);
-}
-
-/* Buttons inside that box */
-.dock-popup-button {
-    -fx-background-color: transparent;
-    -fx-pref-width: 60px;
-    -fx-pref-height: 60px;
-    -fx-font-size: 20px;
-    -fx-padding: 8;
-    -fx-border-radius: 6px;
-    -fx-cursor: hand;
-    -fx-transition: all 0.15s ease;
-}
-.dock-popup-button:hover {
-    -fx-scale-x: 1.2;
-    -fx-scale-y: 1.2;
-    -fx-background-color: rgba(0,0,0,0.1);
 }
 
 /* ContextMenu container */
