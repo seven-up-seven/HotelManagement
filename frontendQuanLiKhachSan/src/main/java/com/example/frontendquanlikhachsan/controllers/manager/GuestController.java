@@ -88,6 +88,8 @@ public class GuestController {
             if (nv!=null) showGuestDetail(nv);
         });
 
+        tableGuest.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
         Runnable apply = this::applyFilters;
         tfFilterGuestId.textProperty().addListener((o,ov,nv)->apply.run());
         tfFilterName     .textProperty().addListener((o,ov,nv)->apply.run());

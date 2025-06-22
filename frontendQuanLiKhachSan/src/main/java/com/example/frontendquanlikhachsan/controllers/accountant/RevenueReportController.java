@@ -107,6 +107,8 @@ public class RevenueReportController {
 
         // 6) Lần đầu chỉ load, không tạo
         loadReports();
+
+        tblReport.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
     private void loadReports() {

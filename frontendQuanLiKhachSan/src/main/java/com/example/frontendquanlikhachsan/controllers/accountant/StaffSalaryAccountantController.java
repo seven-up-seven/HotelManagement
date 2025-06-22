@@ -130,6 +130,8 @@ public class StaffSalaryAccountantController {
         tfFilterMulMax.textProperty()  .addListener((o,ov,nv)->apply.run());
         tfFilterSalMin.textProperty()  .addListener((o,ov,nv)->apply.run());
         tfFilterSalMax.textProperty()  .addListener((o,ov,nv)->apply.run());
+
+        tableStaff.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
     private void loadStaffs() {

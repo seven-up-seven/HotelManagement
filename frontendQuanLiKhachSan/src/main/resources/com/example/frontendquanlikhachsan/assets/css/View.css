@@ -2,7 +2,7 @@
 
 /* 1) Root and General Pane Styling */
 .root {
-    -fx-background-color: #f4f6f8; /* Light gray background for consistency */
+    -fx-background-color: #f6f4f8;
     -fx-font-family: "Segoe UI", Arial, sans-serif;
 }
 
@@ -73,7 +73,8 @@
 
 /* 7) TableView */
 .table-view {
-    -fx-background-color: #ffffff;
+    -fx-background-color: #f6f4f8;
+    -fx-control-inner-background: #f6f4f8;
     -fx-border-color: #dddddd;
     -fx-border-radius: 5;
     -fx-background-radius: 5;
@@ -100,14 +101,18 @@
     -fx-background-color: #c8e6c9; /* Green selection, inspired by structure.css */
 }
 
+.table-view .filler {
+    -fx-background-color: #f6f4f8;
+}
+
 /* 8) ScrollPane */
 .scroll-pane {
-    -fx-background-color: transparent;
+    -fx-background-color: #f6f4f8;
     -fx-background: transparent;
 }
 
 .scroll-pane .viewport {
-    -fx-background-color: transparent;
+    -fx-background-color: #f6f4f8;
 }
 
 /* 9) TreeView (for Structure.fxml) */
@@ -152,6 +157,15 @@
     -fx-font-size: 12px;
     -fx-font-weight: bold;
 }
+
+.default-color0.chart-pie { -fx-pie-color: #4caf50; }
+.default-color1.chart-pie { -fx-pie-color: #2196f3; }
+.default-color2.chart-pie { -fx-pie-color: #ff9800; }
+.default-color3.chart-pie { -fx-pie-color: #e91e63; }
+.default-color4.chart-pie { -fx-pie-color: #9c27b0; }
+.default-color5.chart-pie { -fx-pie-color: #ffc107; }
+.default-color6.chart-pie { -fx-pie-color: #00bcd4; }
+.default-color7.chart-pie { -fx-pie-color: #8bc34a; }
 
 /* 11) TitledPane (for Main.fxml sidebar) */
 .titled-pane {
@@ -243,4 +257,23 @@
 
 .list-cell:odd {
     -fx-background-color: #f4f6f8;
+}
+
+/* ➤ Khi dropdown mở ra: đánh dấu lựa chọn */
+.combo-box-popup .list-view .list-cell:selected {
+    -fx-background-color: #667eea;
+    -fx-text-fill: white;
+}
+
+/* ➤ Khi rê chuột trong dropdown */
+.combo-box-popup .list-view .list-cell:hover {
+    -fx-background-color: #5a6dd0;
+    -fx-text-fill: white;
+}
+
+/* ➤ Không tô nền cho ô hiển thị đã chọn */
+.combo-box .list-cell:selected {
+    -fx-background-color: white;
+    -fx-text-fill: #333333; /* hoặc màu khác tuỳ bạn */
+    -fx-font-weight: bold;
 }

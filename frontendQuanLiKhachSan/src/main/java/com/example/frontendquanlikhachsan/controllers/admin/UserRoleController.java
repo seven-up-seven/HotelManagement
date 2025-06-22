@@ -53,6 +53,8 @@ public class UserRoleController {
             }
         });
 
+        tableUserRole.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
         btnCreateRole.setOnAction(e -> showCreateRoleForm());
     }
 

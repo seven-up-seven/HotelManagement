@@ -104,6 +104,8 @@ public class InvoiceController {
         // 5) Chọn 1 invoice để xem detail
         tableInvoice.getSelectionModel().selectedItemProperty()
                 .addListener((obs,old,sel) -> { if (sel!=null) showDetail(sel); });
+
+        tableInvoice.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
     private void loadInvoices() {

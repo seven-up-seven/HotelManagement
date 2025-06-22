@@ -207,6 +207,9 @@ public class RoomRentingController {
         customerTable.setEditable(true);
         colCustomerSelect.setEditable(true);
 
+        customerTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        tableAllGuests.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
         showListView();
     }
 
@@ -389,65 +392,6 @@ public class RoomRentingController {
             showErrorAlert("Lỗi", "Không mở được form tạo khách.");
         }
     }
-
-//    private void initRoomTypePicker() {
-//        new Thread(() -> {
-//            try {
-//                String json = ApiHttpClientCaller.call("room-type", GET, null);
-//                List<RoomTypeDto> types = mapper.readValue(json, new TypeReference<>() {});
-//                Platform.runLater(() -> {
-//                    roomTypePicker.getItems().setAll(types);
-//                    roomTypePicker.setConverter(new StringConverter<>() {
-//                        @Override public String toString(RoomTypeDto rt) {
-//                            return rt == null? "" : rt.getName();
-//                        }
-//                        @Override public RoomTypeDto fromString(String s) { return null; }
-//                    });
-//                });
-//            } catch (Exception ex) {
-//                ex.printStackTrace();
-//                Platform.runLater(() ->
-//                        showErrorAlert("Lỗi tải loại phòng", ex.getMessage())
-//                );
-//            }
-//        }).start();
-//    }
-
-    /** Gọi API GET /room-type/{id} để lấy danh sách phòng trống của loại đã chọn */
-//    private void loadAvailableRooms() {
-//        RoomTypeDto selType = roomTypePicker.getValue();
-//        if (selType == null) {
-//            showErrorAlert("Thiếu dữ liệu", "Vui lòng chọn loại phòng.");
-//            return;
-//        }
-//        new Thread(() -> {
-//            try {
-//                String json = ApiHttpClientCaller.call(
-//                        "room-type/" + selType.getId(),
-//                        GET, null
-//                );
-//                List<ResponseRoomDto> rooms = mapper.readValue(
-//                        json, new TypeReference<>() {}
-//                );
-//                Platform.runLater(() -> {
-//                    if (rooms.isEmpty()) {
-//                        showErrorAlert("Hết phòng", "Không có phòng trống cho loại này.");
-//                        roomPicker.getItems().clear();
-//                        roomPicker.setDisable(true);
-//                    } else {
-//                        roomPicker.getItems().setAll(rooms);
-//                        roomPicker.getSelectionModel().selectFirst();
-//                        roomPicker.setDisable(false);
-//                    }
-//                });
-//            } catch (Exception ex) {
-//                ex.printStackTrace();
-//                Platform.runLater(() ->
-//                        showErrorAlert("Lỗi tải phòng", ex.getMessage())
-//                );
-//            }
-//        }).start();
-//    }
 
     private void showCreateForm() {
         detailPane.getChildren().clear();

@@ -13,7 +13,7 @@
 
 /* Main dock icons larger and scale on hover */
 .dock-container .dock-icon {
-    -fx-background-color: transparent;
+    -fx-background-color: #0e2647;
     -fx-text-fill: white;
     -fx-pref-width: 70px;
     -fx-pref-height: 70px;
@@ -28,32 +28,34 @@
     -fx-scale-y: 1.6;
 }
 .dock-scroll .viewport {
-    -fx-background-color: transparent;
+    -fx-background-color: #0e2647;
 }
 /* Submenu container styling */
+
 .dock-popup-wrapper {
-    -fx-background-color: transparent;
+    -fx-background-color: #0e2647;
 }
+
 .dock-popup-content {
     -fx-background-color: rgba(255,255,255,0.95);
-    -fx-background-radius: 8;
-    -fx-padding: 10;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 5, 0, 0, 0);
+    -fx-background-radius: 10;
+    -fx-padding: 10 14;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 8, 0, 0, 0);
 }
-/* Submenu item buttons - slightly smaller than main icons but enlarged */
+
 .dock-popup-button {
-    -fx-background-color: transparent;
-    -fx-pref-width: 60px;        /* slightly smaller than 70px main icon */
+    -fx-background-color: #0e2647;
+    -fx-pref-width: 60px;
     -fx-pref-height: 60px;
-    -fx-font-size: 20px;         /* slightly smaller font */
-    -fx-padding: 8;              /* center icon/text nicely */
-    -fx-border-radius: 8px;
+    -fx-font-size: 20px;
+    -fx-padding: 8;
+    -fx-border-radius: 10;
     -fx-cursor: hand;
-    -fx-transition: all 0.2s ease;
 }
+
 .dock-popup-button:hover {
-    -fx-scale-x: 1.2;            /* subtle hover scale */
-    -fx-scale-y: 1.2;
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
     -fx-background-color: rgba(0,0,0,0.1);
 }
 
@@ -74,6 +76,7 @@
     -fx-background-color: transparent;
     -fx-border-color: transparent;
 }
+
 /* Arrow triangle at top of popup */
 .dock-popup-arrow {
     -fx-fill: rgba(255,255,255,0.95);

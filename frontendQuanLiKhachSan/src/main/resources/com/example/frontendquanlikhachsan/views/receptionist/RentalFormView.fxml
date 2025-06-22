@@ -12,10 +12,10 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.layout.Region?>
 <?import javafx.geometry.Insets?>
 <SplitPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
+           stylesheets="@../../assets/css/View.css"
            fx:controller="com.example.frontendquanlikhachsan.controllers.receptionist.RentalFormViewController"
            prefWidth="1000" prefHeight="600">
 

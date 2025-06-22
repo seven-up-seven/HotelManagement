@@ -66,6 +66,8 @@ public class RentalExtensionFormController {
         loadExtensions();
         tableExtension.getSelectionModel().selectedItemProperty()
                 .addListener((obs,o,n)-> { if(n!=null) showDetail(n); });
+
+        tableExtension.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
     @FXML private void onResetFilter() {

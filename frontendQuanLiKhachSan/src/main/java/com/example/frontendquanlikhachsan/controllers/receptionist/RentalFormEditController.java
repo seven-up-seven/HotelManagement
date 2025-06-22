@@ -79,6 +79,7 @@ public class RentalFormEditController {
 
         // selection -> show detail
         tableForm.getSelectionModel().selectedItemProperty().addListener((o,old,sel)->{ if(sel!=null) showDetail(sel); });
+        tableForm.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         loadForms();
     }

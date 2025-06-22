@@ -125,6 +125,7 @@
             SortedList<ResponseRentalFormDto> sorted = new SortedList<>(filteredForms);
             sorted.comparatorProperty().bind(tableForm.comparatorProperty());
             tableForm.setItems(sorted);
+            tableForm.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
             btnLapHoaDon.setOnAction(e -> showInvoiceCreatePane());
             // 2) bind columns

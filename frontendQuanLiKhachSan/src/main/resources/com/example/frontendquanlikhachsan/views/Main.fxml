@@ -16,7 +16,7 @@
             fx:controller="com.example.frontendquanlikhachsan.controllers.MainController">
 
     <center>
-        <TabPane fx:id="tabPane" tabClosingPolicy="ALL_TABS" BorderPane.alignment="CENTER" />
+        <TabPane fx:id="tabPane" styleClass="tab-pane" tabClosingPolicy="ALL_TABS" BorderPane.alignment="CENTER" />
     </center>
 
     <bottom>

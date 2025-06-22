@@ -135,6 +135,8 @@ public class BookingConfirmationFormController {
 
         // --- 5) load data lần đầu ---
         loadBookingForms();
+
+        tblBooking.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
 

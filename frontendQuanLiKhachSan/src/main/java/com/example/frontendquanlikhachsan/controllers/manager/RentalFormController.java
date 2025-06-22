@@ -125,7 +125,10 @@ public class RentalFormController {
         loadForms();
         tableForm.getSelectionModel().selectedItemProperty()
                 .addListener((o,old,n)->{ if(n!=null) showDetail(n); });
+
+        tableForm.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
+
     @FXML
     private void onFilterAction() {
         applyFilters();

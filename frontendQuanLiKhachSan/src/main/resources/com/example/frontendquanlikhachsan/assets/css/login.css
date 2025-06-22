@@ -18,20 +18,6 @@
             0 15 15 0;/* bo top-right/bottom-right cho gradient */
 }
 
-
-/*@font-face {*/
-/*    font-family: 'DM Serif Display';*/
-/*    src: url("../fonts/DMSerifDisplay-Italic.ttf");*/
-/*}*/
-/*@font-face {*/
-/*    font-family: 'Margaret Bold';*/
-/*    src: url("../fonts/Margaret-Bold.otf");*/
-/*}*/
-/*@font-face {*/
-/*    font-family: 'Zilla Slab Highlight';*/
-/*    src: url("../fonts/ZillaSlabHighlight-Regular.ttf");*/
-/*}*/
-
 /* 3) Tiêu đề */
 .login-box .title {
     -fx-font-family: 'Rozha One';

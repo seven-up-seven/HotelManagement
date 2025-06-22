@@ -39,6 +39,7 @@ public class PositionController {
         loadPositions();
         tablePosition.setItems(positionList);
         tablePosition.getSelectionModel().selectedItemProperty().addListener((obs,o,n)->{ if(n!=null) showPositionDetail(n); });
+        tablePosition.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
     @FXML private void onCreatePosition() { showCreateForm(); }

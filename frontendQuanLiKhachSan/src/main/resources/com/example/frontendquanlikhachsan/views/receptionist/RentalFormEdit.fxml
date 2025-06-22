@@ -8,9 +8,10 @@
 
 <?import javafx.geometry.Insets?>
 <SplitPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+           stylesheets="@../../assets/css/View.css"
            fx:controller="com.example.frontendquanlikhachsan.controllers.receptionist.RentalFormEditController">
     <items>
-        <VBox spacing="8.0">
+        <VBox spacing="8.0" styleClass="left-pane">
             <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
             <Label text="Danh sách Phiếu thuê" style="-fx-font-size:18px;-fx-font-weight:bold;"/>
             <HBox spacing="8">
@@ -34,7 +35,7 @@
                 </columns>
             </TableView>
         </VBox>
-        <VBox>
+        <VBox styleClass="right-pane">
             <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
             <Label text="Chi tiết Phiếu thuê" style="-fx-font-size:18px;-fx-font-weight:bold;"/>
             <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
