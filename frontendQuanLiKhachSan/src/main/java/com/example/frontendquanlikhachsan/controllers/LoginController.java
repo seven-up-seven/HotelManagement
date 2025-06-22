@@ -11,19 +11,22 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import javafx.animation.Animation;
-import javafx.animation.FadeTransition;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.springframework.stereotype.Component;
@@ -35,6 +38,8 @@ import java.util.prefs.Preferences;
 
 @Component
 public class LoginController {
+    @FXML
+    private Label titleLabel;
 
     @FXML
     private Label errorLabel;
@@ -64,7 +69,7 @@ public class LoginController {
     private final List<String> backgroundImages = List.of(
             "/com/example/frontendquanlikhachsan/assets/images/login_background_1.jpg",
             "/com/example/frontendquanlikhachsan/assets/images/login_background_2.jpg",
-            "/com/example/frontendquanlikhachsan/assets/images/login_background_3.png"
+            "/com/example/frontendquanlikhachsan/assets/images/login_background_3.jpg"
     );
 
     private int currentImageIndex = 0;
@@ -73,6 +78,8 @@ public class LoginController {
 
     @FXML
     public void initialize() {
+        playTypingEffect(titleLabel, 150, 1000);
+
         errorLabel.setVisible(false);
         loginButton.setOnAction(this::handleLogin);
         startBackgroundRotation();
@@ -86,6 +93,42 @@ public class LoginController {
         }
 
         forgotPasswordButton.setOnAction(e -> openForgotPasswordDialog());
+    }
+
+    private void playTypingEffect(Label label, int charDelayMillis, int pauseMillis) {
+        String fullText = label.getText();
+        Timeline tl = new Timeline();
+
+        // 1) Frame 0: clear text
+        tl.getKeyFrames().add(new KeyFrame(Duration.ZERO,
+                e -> label.setText("")
+        ));
+
+        // 2) Mỗi ký tự
+        for (int i = 0; i < fullText.length(); i++) {
+            final int idx = i;
+            tl.getKeyFrames().add(new KeyFrame(
+                    Duration.millis(charDelayMillis * (idx + 1)),
+                    e -> {
+                        if (idx < fullText.length() - 1) {
+                            label.setText(fullText.substring(0, idx + 1) + "...");
+                        } else {
+                            // đến cuối thì show fullText, no '...'
+                            label.setText(fullText);
+                        }
+                    }
+            ));
+        }
+
+        // 3) Extra Pause: giữ nguyên chữ cuối thêm pauseMillis ms
+        tl.getKeyFrames().add(new KeyFrame(
+                Duration.millis(charDelayMillis * fullText.length() + pauseMillis),
+                e -> { /* ko làm gì, chỉ để kéo dài timeline */ }
+        ));
+
+        // 4) Loop vô hạn
+        tl.setCycleCount(Animation.INDEFINITE);
+        tl.play();
     }
 
     private void startBackgroundRotation() {
@@ -208,13 +251,22 @@ public class LoginController {
 
     private void openForgotPasswordDialog() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/frontendquanlikhachsan/views/ForgotPassword.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass()
+                    .getResource("/com/example/frontendquanlikhachsan/views/ForgotPassword.fxml"));
             Parent root = loader.load();
 
             Stage dialog = new Stage();
             dialog.initOwner(loginButton.getScene().getWindow());
             dialog.setTitle("Quên mật khẩu");
-            dialog.setScene(new Scene(root));
+
+            // TẠO Scene và gắn CSS
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(
+                    getClass().getResource("/com/example/frontendquanlikhachsan/assets/css/login.css")
+                            .toExternalForm()
+            );
+            dialog.setScene(scene);
+
             dialog.setResizable(false);
             dialog.showAndWait();
         } catch (Exception e) {
@@ -222,4 +274,5 @@ public class LoginController {
             showError("Không mở được form quên mật khẩu");
         }
     }
+
 }

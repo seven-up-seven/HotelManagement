@@ -2,20 +2,43 @@
 
 /* 2) Khung login */
 .login-box {
-    -fx-background-color: rgba(255, 255, 255, 0.90);
-    -fx-spacing: 20;
-    -fx-alignment: center;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 4);
-    -fx-pref-width: 360;
-    -fx-padding: 40 30;
-    -fx-background-radius: 15;
+    /* layer 1: white semi-transparent */
+    -fx-background-color:
+            rgba(255,255,255,0.90),
+                /* layer 2: gradient trên → dưới */
+            #0e2647;
+
+    /* giữ nguyên inset & radius để gradient chỉ vẽ bên phải */
+    -fx-background-insets:
+            0,           /* full cho white */
+            0 0 0 299px; /* chừa 299px từ trái cho gradient */
+
+    -fx-background-radius:
+            15,       /* bo all corners cho white */
+            0 15 15 0;/* bo top-right/bottom-right cho gradient */
 }
+
+
+/*@font-face {*/
+/*    font-family: 'DM Serif Display';*/
+/*    src: url("../fonts/DMSerifDisplay-Italic.ttf");*/
+/*}*/
+/*@font-face {*/
+/*    font-family: 'Margaret Bold';*/
+/*    src: url("../fonts/Margaret-Bold.otf");*/
+/*}*/
+/*@font-face {*/
+/*    font-family: 'Zilla Slab Highlight';*/
+/*    src: url("../fonts/ZillaSlabHighlight-Regular.ttf");*/
+/*}*/
 
 /* 3) Tiêu đề */
 .login-box .title {
-    -fx-font-size: 24px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #333333;
+    -fx-font-family: 'Rozha One';
+    -fx-font-size: 30px;
+    -fx-font-weight: normal;    /* nếu muốn giữ nguyên weight của font */
+    -fx-text-fill: white;
+    -fx-letter-spacing: -1px;
 }
 
 /* 4) TextField và PasswordField */
@@ -37,23 +60,52 @@
 
 /* 5) Checkbox “Nhớ mật khẩu” */
 .login-box .check-box {
-    -fx-text-fill: #555555;
+    -fx-text-fill: white;
     -fx-font-size: 13px;
 }
 
-/* 6) Nút Login */
+/* ==== Glass Button ==== */
 .login-box .button {
-    -fx-background-color: #667eea;
-    -fx-text-fill: #ffffff;
-    -fx-font-size: 16px;
-    -fx-font-weight: bold;
-    -fx-background-radius: 5;
+    /* nền mờ trắng 15% */
+    -fx-background-color: white;
+    /* bo tròn và viền trắng mờ */
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-color: rgba(255,255,255,0.3);
+    -fx-border-width: 1;
+    /* bóng đổ mềm cho chiều sâu */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 10, 0.2, 0, 4);
+    /* padding cho đẹp */
     -fx-padding: 12 0;
-    -fx-pref-width: 200;
+    /* chữ trắng nổi bật */
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    /* smooth chuyển màu */
+    -fx-cursor: hand;
+}
+.login-box .button:hover {
+    /* tăng độ mờ nền, đổ bóng mạnh hơn */
+    -fx-text-fill: white;
+    -fx-background-color: rgba(255,255,255,0.25);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 15, 0.3, 0, 6);
+}
+.login-box .button:pressed {
+    /* ấn xuống hơi đục hơn */
+    -fx-background-color: rgba(255,255,255,0.35);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 5, 0.1, 0, 2);
 }
 
-.login-box .button:hover {
-    -fx-background-color: #5a6dd0;
+/* đặt xuống cuối file */
+.login-box .button.fancy {
+    -fx-background-color: linear-gradient(to right, #667eea, #89aef8);
+    -fx-background-radius: 20;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-padding: 12 0;
+    /* chuẩn bị cho effect (clip con ripple) */
+    -fx-clip: rect(0, 0, 0, 0);
 }
 
 /* 7) Label lỗi */
@@ -72,4 +124,19 @@
 }
 .text-link-button:hover {
     -fx-text-fill: #5a6dd0;
+}
+.forgot-password-panel {
+    -fx-background-color: #0e2647;
+}
+
+
+.button.fancy {
+    /* phần style fancy của bạn */
+    -fx-background-color: linear-gradient(to right, #667eea, #89aef8);
+    -fx-background-radius: 20;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-padding: 12 0;
 }
