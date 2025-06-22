@@ -81,7 +81,7 @@ public class MapController {
                 AnchorPane.setLeftAnchor(blockContainer, 0.0);
                 unplacedBlockContainer.getChildren().add(wrapper);
 
-                setupDoubleClickToTransfer(blockContainer);
+                setupClickToTransfer(blockContainer);
             } else {
                 blockContainer.setLayoutX(block.getPosX());
                 blockContainer.setLayoutY(block.getPosY());
@@ -107,16 +107,16 @@ public class MapController {
         final double[] offset = new double[2];
 
         node.setOnMousePressed(e -> {
-            offset[0] = e.getSceneX() - node.localToScene(0, 0).getX();
-            offset[1] = e.getSceneY() - node.localToScene(0, 0).getY();
+            offset[0] = e.getX();
+            offset[1] = e.getY();
         });
 
         node.setOnMouseDragged(e -> {
-            double sceneX = e.getSceneX();
-            double sceneY = e.getSceneY();
+            double newX = e.getSceneX() - offset[0];
+            double newY = e.getSceneY() - offset[1];
 
-            node.setLayoutX(sceneX - offset[0]);
-            node.setLayoutY(sceneY - offset[1]);
+            node.setLayoutX(mapPane.sceneToLocal(newX, newY).getX());
+            node.setLayoutY(mapPane.sceneToLocal(newX, newY).getY());
         });
 
         node.setOnMouseReleased(e -> {
@@ -131,6 +131,11 @@ public class MapController {
 
             if (isOutsideVisibleMap) {
                 mapPane.getChildren().remove(node);
+
+                // Reset layout constraints
+                node.setLayoutX(0);
+                node.setLayoutY(0);
+
                 AnchorPane wrapper = new AnchorPane(node);
                 AnchorPane.setTopAnchor(node, 0.0);
                 AnchorPane.setLeftAnchor(node, 0.0);
@@ -141,26 +146,42 @@ public class MapController {
                 node.setOnMouseDragged(null);
                 node.setOnMouseReleased(null);
 
-                // Đăng ký lại double click để có thể mang lại mapPane lần nữa
-                setupDoubleClickToTransfer(node);
+                // Gắn lại click để chuyển về mapPane
+                setupClickToTransfer(node);
             }
         });
     }
 
-    private void setupDoubleClickToTransfer(Node node) {
+    private void setupClickToTransfer(Node node) {
         node.setOnMouseClicked(e -> {
-            if (e.getClickCount() == 2) {
+            if (e.getClickCount() == 1) { // chỉ 1 click thôi
+                // Gỡ khỏi wrapper AnchorPane
                 AnchorPane wrapper = (AnchorPane) node.getParent();
                 wrapper.getChildren().clear();
                 unplacedBlockContainer.getChildren().remove(wrapper);
 
-                // Đặt vào giữa mapPane tạm (có thể cải tiến tính toán theo chuột)
-                node.setLayoutX(100);
-                node.setLayoutY(100);
+                // Reset layout constraints từ AnchorPane
+                AnchorPane.setTopAnchor(node, null);
+                AnchorPane.setLeftAnchor(node, null);
+                AnchorPane.setBottomAnchor(node, null);
+                AnchorPane.setRightAnchor(node, null);
+
+                // Đặt node vào mapPane tại vị trí của chuột (hoặc vị trí mặc định)
+                double newX = e.getSceneX() - mapPane.getBoundsInParent().getMinX();
+                double newY = e.getSceneY() - mapPane.getBoundsInParent().getMinY();
+
+                // Đảm bảo block không bị đặt ngoài map
+                newX = Math.max(0, Math.min(newX, mapScrollPane.getViewportBounds().getWidth() - 100));
+                newY = Math.max(0, Math.min(newY, mapScrollPane.getViewportBounds().getHeight() - 60));
+
+                node.setLayoutX(newX);
+                node.setLayoutY(newY);
                 mapPane.getChildren().add(node);
 
-                // Bật kéo thả
-                enableDrag(node);
+                // Gỡ bỏ event handler click cũ
+                node.setOnMouseClicked(null);
+
+                enableDrag(node); // kích hoạt kéo thả lại
             }
         });
     }
