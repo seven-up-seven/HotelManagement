@@ -1,0 +1,36 @@
+.chat-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2E4053;
+}
+
+.chat-box {
+    -fx-background-color: #F8F9F9;
+    -fx-padding: 10;
+    -fx-border-color: #D5D8DC;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-overflow: scroll;
+}
+
+.input-area {
+    -fx-font-size: 14px;
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #AAB7B8;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 8;
+}
+
+.send-button {
+    -fx-background-color: #2E86C1;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 16;
+    -fx-background-radius: 8;
+}
+
+.status-label {
+    -fx-text-fill: red;
+    -fx-font-size: 12px;
+}

@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.geometry.Side;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -221,15 +222,21 @@ public class MainController {
                 List<String> permissions = accountDto.getUserRolePermissionNames();
 
                 Platform.runLater(() -> {
-                    if (!permissions.contains("ADMIN")) adminButton.setVisible(false);
-                    if (!permissions.contains("MANAGER")) managerButton.setVisible(false);
-                    if (!permissions.contains("RECEPTIONIST")) receptionistButton.setVisible(false);
-                    if (!permissions.contains("ACCOUNTANT")) accountantButton.setVisible(false);
+                    if (!permissions.contains("ADMIN")) removeButtonFromParent(adminButton);
+                    if (!permissions.contains("MANAGER")) removeButtonFromParent(managerButton);
+                    if (!permissions.contains("RECEPTIONIST")) removeButtonFromParent(receptionistButton);
+                    if (!permissions.contains("ACCOUNTANT")) removeButtonFromParent(accountantButton);
                 });
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }).start();
+    }
+
+    private void removeButtonFromParent(Node button) {
+        if (button != null && button.getParent() instanceof Pane) {
+            ((Pane) button.getParent()).getChildren().remove(button);
+        }
     }
 
     @FXML
