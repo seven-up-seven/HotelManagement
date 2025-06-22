@@ -61,11 +61,14 @@ public class MainController {
 
     private void hookMenu(Button btn, ContextMenu menu) {
         btn.setOnMouseClicked(e -> {
-            if (!menu.isShowing()) {
-                menu.show(btn, Side.TOP, 0, -5);
-            } else {
+            if (menu.isShowing()) {
                 menu.hide();
+                return;
             }
+
+            // Tính toán vị trí phía DƯỚI nút
+            Point2D screenPos = btn.localToScreen(0, btn.getHeight());
+            menu.show(btn, screenPos.getX(), screenPos.getY());
         });
     }
 
