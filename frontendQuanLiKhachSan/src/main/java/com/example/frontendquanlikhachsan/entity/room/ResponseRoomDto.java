@@ -28,4 +28,6 @@ public class ResponseRoomDto {
     private List<Integer> bookingConfirmationFormIds;
 
     private List<Integer> rentalFormIds;
+
+    private List<Integer> imageIds;
 }
