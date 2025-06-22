@@ -3,6 +3,7 @@ package com.example.frontendquanlikhachsan;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
@@ -23,11 +24,11 @@ public class HelloApplication extends Application {
             throw new IllegalStateException("Không tìm thấy login.css");
         }
         scene.getStylesheets().add(cssUrl.toExternalForm());
-        stage.setTitle("Quản Lý Khách Sạn");
+        stage.setTitle("Roomify");
         stage.setScene(scene);
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("/com/example/frontendquanlikhachsan/assets/images/logo-image.png")));
         stage.setMaximized(true);
         stage.show();
-
     }
 
     public static void main(String[] args) {

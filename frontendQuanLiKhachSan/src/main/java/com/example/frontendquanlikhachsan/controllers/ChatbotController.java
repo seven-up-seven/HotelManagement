@@ -86,8 +86,10 @@ public class ChatbotController {
             knowledgeSections.put("roomtypes", KnowledgeSectionBuilder.buildRoomTypes(mapper));
             knowledgeSections.put("staff", KnowledgeSectionBuilder.buildStaff(mapper));
             knowledgeSections.put("revenue", KnowledgeSectionBuilder.buildRevenueReports(mapper));
-
-            System.out.println("Đã load knowledge sections: " + knowledgeSections.keySet());
+            knowledgeSections.put("rentalForms", KnowledgeSectionBuilder.buildRentalForms(mapper));
+            knowledgeSections.put("rentalExtensions", KnowledgeSectionBuilder.buildRentalExtensionForms(mapper));
+            knowledgeSections.put("invoiceDetails", KnowledgeSectionBuilder.buildInvoiceDetails(mapper));
+            knowledgeSections.put("revenueDetails", KnowledgeSectionBuilder.buildRevenueReportDetails(mapper));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -102,7 +104,16 @@ public class ChatbotController {
         if (q.contains("khách")) relevant.append(knowledgeSections.getOrDefault("guests", ""));
         if (q.contains("đặt phòng")) relevant.append(knowledgeSections.getOrDefault("booking", ""));
         if (q.contains("nhân viên")) relevant.append(knowledgeSections.getOrDefault("staff", ""));
-        if (q.contains("hóa đơn") || q.contains("doanh thu")) relevant.append(knowledgeSections.getOrDefault("invoices", ""));
+        if (q.contains("hóa đơn")) {
+            relevant.append(knowledgeSections.getOrDefault("invoices", ""));
+            relevant.append(knowledgeSections.getOrDefault("invoiceDetails", ""));
+        }
+        if (q.contains("doanh thu")) {
+            relevant.append(knowledgeSections.getOrDefault("revenue", ""));
+            relevant.append(knowledgeSections.getOrDefault("revenueDetails", ""));
+        }
+        if (q.contains("gia hạn")) relevant.append(knowledgeSections.getOrDefault("rentalExtensions", ""));
+        if (q.contains("phiếu thuê") || q.contains("thuê phòng")) relevant.append(knowledgeSections.getOrDefault("rentalForms", ""));
         if (q.contains("loại phòng")) relevant.append(knowledgeSections.getOrDefault("roomtypes", ""));
         if (q.contains("block") || q.contains("tòa")) relevant.append(knowledgeSections.getOrDefault("blocks", ""));
         if (q.contains("tài khoản")) relevant.append(knowledgeSections.getOrDefault("accounts", ""));

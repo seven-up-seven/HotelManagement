@@ -7,7 +7,11 @@ import com.example.frontendquanlikhachsan.entity.bookingconfirmationform.Respons
 import com.example.frontendquanlikhachsan.entity.floor.ResponseFloorDto;
 import com.example.frontendquanlikhachsan.entity.guest.ResponseGuestDto;
 import com.example.frontendquanlikhachsan.entity.invoice.ResponseInvoiceDto;
+import com.example.frontendquanlikhachsan.entity.invoicedetail.ResponseInvoiceDetailDto;
+import com.example.frontendquanlikhachsan.entity.rentalExtensionForm.ResponseRentalExtensionFormDto;
+import com.example.frontendquanlikhachsan.entity.rentalForm.ResponseRentalFormDto;
 import com.example.frontendquanlikhachsan.entity.revenueReport.ResponseRevenueReportDto;
+import com.example.frontendquanlikhachsan.entity.revenueReportDetail.ResponseRevenueReportDetailDto;
 import com.example.frontendquanlikhachsan.entity.room.ResponseRoomDto;
 import com.example.frontendquanlikhachsan.entity.roomType.ResponseRoomTypeDto;
 import com.example.frontendquanlikhachsan.entity.staff.ResponseStaffDto;
@@ -48,9 +52,20 @@ public class KnowledgeSectionBuilder {
         List<ResponseBookingConfirmationFormDto> list = Arrays.asList(mapper.readValue(json, ResponseBookingConfirmationFormDto[].class));
         kb.append("- Tổng phiếu: ").append(list.size()).append("\n");
         for (ResponseBookingConfirmationFormDto dto : list) {
-            kb.append("  * ID: ").append(dto.getId()).append(", Trạng thái: ").append(dto.getBookingState())
-                    .append(", Khách: ").append(dto.getGuestName()).append(", Phòng: ").append(dto.getRoomName())
-                    .append(", Ngày đặt: ").append(dto.getBookingDate()).append("\n");
+            kb.append("  * ID: ").append(dto.getId())
+                    .append(", Trạng thái: ").append(dto.getBookingState())
+                    .append(", Ngày tạo: ").append(dto.getCreatedAt())
+                    .append(", Ngày đặt: ").append(dto.getBookingDate())
+                    .append(", Số ngày thuê: ").append(dto.getRentalDays())
+                    .append("\n    Khách: ").append(dto.getGuestName())
+                    .append(" (ID: ").append(dto.getGuestId()).append(")")
+                    .append(", Email: ").append(dto.getGuestEmail())
+                    .append(", SĐT: ").append(dto.getGuestPhoneNumber())
+                    .append(", CCCD: ").append(dto.getGuestIdentificationNumber())
+                    .append("\n    Phòng: ").append(dto.getRoomName())
+                    .append(" (ID: ").append(dto.getRoomId()).append(")")
+                    .append(", Loại phòng: ").append(dto.getRoomTypeName())
+                    .append("\n");
         }
         return kb.append("\n").toString();
     }
@@ -73,7 +88,17 @@ public class KnowledgeSectionBuilder {
         List<ResponseGuestDto> list = Arrays.asList(mapper.readValue(json, ResponseGuestDto[].class));
         kb.append("- Số lượng khách: ").append(list.size()).append("\n");
         for (ResponseGuestDto g : list) {
-            kb.append("  * ID: ").append(g.getId()).append(", Tên: ").append(g.getName()).append(", SĐT: ").append(g.getPhoneNumber()).append("\n");
+            kb.append("  * ID: ").append(g.getId())
+                    .append(", Tên: ").append(g.getName())
+                    .append(", Giới tính: ").append(g.getSex())
+                    .append(", Tuổi: ").append(g.getAge())
+                    .append(", CCCD: ").append(g.getIdentificationNumber())
+                    .append(", SĐT: ").append(g.getPhoneNumber())
+                    .append(", Email: ").append(g.getEmail())
+                    .append("\n    - Số phiếu thuê: ").append(g.getRentalFormIds() != null ? g.getRentalFormIds().size() : 0)
+                    .append(", Số hóa đơn: ").append(g.getInvoiceIds() != null ? g.getInvoiceIds().size() : 0)
+                    .append(", Số phiếu đặt phòng: ").append(g.getBookingConfirmationFormIds() != null ? g.getBookingConfirmationFormIds().size() : 0)
+                    .append("\n");
         }
         return kb.append("\n").toString();
     }
@@ -97,8 +122,15 @@ public class KnowledgeSectionBuilder {
         List<ResponseRoomDto> rooms = Arrays.asList(mapper.readValue(json, ResponseRoomDto[].class));
         kb.append("- Số lượng phòng: ").append(rooms.size()).append("\n");
         for (ResponseRoomDto r : rooms) {
-            kb.append("  * ID: ").append(r.getId()).append(", Tên: ").append(r.getName()).append(", Trạng thái: ").append(r.getRoomState())
-                    .append(", Loại phòng: ").append(r.getRoomTypeName()).append("\n");
+            kb.append("  * ID: ").append(r.getId())
+                    .append(", Tên: ").append(r.getName())
+                    .append(", Trạng thái: ").append(r.getRoomState())
+                    .append(", Ghi chú: ").append(r.getNote())
+                    .append(", Loại phòng: ").append(r.getRoomTypeName()).append(" (ID: ").append(r.getRoomTypeId()).append(")")
+                    .append(", Tầng: ").append(r.getFloorName()).append(" (ID: ").append(r.getFloorId()).append(")")
+                    .append("\n    - Số phiếu đặt phòng: ").append(r.getBookingConfirmationFormIds() != null ? r.getBookingConfirmationFormIds().size() : 0)
+                    .append(", Số phiếu thuê: ").append(r.getRentalFormIds() != null ? r.getRentalFormIds().size() : 0)
+                    .append("\n");
         }
         return kb.append("\n").toString();
     }
@@ -109,7 +141,12 @@ public class KnowledgeSectionBuilder {
         List<ResponseRoomTypeDto> list = Arrays.asList(mapper.readValue(json, ResponseRoomTypeDto[].class));
         kb.append("- Số loại phòng: ").append(list.size()).append("\n");
         for (ResponseRoomTypeDto rt : list) {
-            kb.append("  * ID: ").append(rt.getId()).append(", Tên: ").append(rt.getName()).append(", Giá: ").append(String.format("%,.0f", rt.getPrice())).append(" VND\n");
+            kb.append("  * ID: ").append(rt.getId())
+                    .append(", Tên: ").append(rt.getName())
+                    .append(", Giá: ").append(String.format("%,.0f", rt.getPrice())).append(" VND")
+                    .append("\n    - Số phòng thuộc loại: ").append(rt.getRoomIds() != null ? rt.getRoomIds().size() : 0)
+                    .append(", Số báo cáo liên quan: ").append(rt.getRevenueReportDetailIds() != null ? rt.getRevenueReportDetailIds().size() : 0)
+                    .append("\n");
         }
         return kb.append("\n").toString();
     }
@@ -120,7 +157,19 @@ public class KnowledgeSectionBuilder {
         List<ResponseStaffDto> staff = Arrays.asList(mapper.readValue(json, ResponseStaffDto[].class));
         kb.append("- Số lượng nhân viên: ").append(staff.size()).append("\n");
         for (ResponseStaffDto s : staff) {
-            kb.append("  * ID: ").append(s.getId()).append(", Tên: ").append(s.getFullName()).append(", Vị trí: ").append(s.getPositionName()).append("\n");
+            kb.append("  * ID: ").append(s.getId())
+                    .append(", Họ tên: ").append(s.getFullName())
+                    .append(", Giới tính: ").append(s.getSex())
+                    .append(", Tuổi: ").append(s.getAge())
+                    .append(", CCCD: ").append(s.getIdentificationNumber())
+                    .append(", Địa chỉ: ").append(s.getAddress())
+                    .append(", Lương hệ số: ").append(s.getSalaryMultiplier())
+                    .append(", Vị trí: ").append(s.getPositionName()).append(" (ID: ").append(s.getPositionId()).append(")")
+                    .append("\n    - Tài khoản: ").append(s.getAccountUsername()).append(" (ID: ").append(s.getAccountId()).append(")")
+                    .append(", Hóa đơn: ").append(s.getInvoiceIds() != null ? s.getInvoiceIds().size() : 0)
+                    .append(", Phiếu thuê: ").append(s.getRentalFormIds() != null ? s.getRentalFormIds().size() : 0)
+                    .append(", Gia hạn: ").append(s.getRentalExtensionFormIds() != null ? s.getRentalExtensionFormIds().size() : 0)
+                    .append("\n");
         }
         return kb.append("\n").toString();
     }
@@ -130,10 +179,82 @@ public class KnowledgeSectionBuilder {
         var json = ApiHttpClientCaller.call("revenue-report", ApiHttpClientCaller.Method.GET, null);
         List<ResponseRevenueReportDto> reports = Arrays.asList(mapper.readValue(json, ResponseRevenueReportDto[].class));
         kb.append("- Số lượng báo cáo: ").append(reports.size()).append("\n");
-        ResponseRevenueReportDto latest = reports.stream().max(Comparator.comparing(r -> r.getYear() * 100 + r.getMonth())).orElse(null);
-        if (latest != null) {
-            kb.append("  + Báo cáo mới nhất: Tháng ").append(latest.getMonth()).append("/").append(latest.getYear())
-                    .append(", Doanh thu: ").append(String.format("%,.0f", latest.getTotalMonthRevenue())).append(" VND\n");
+        for (ResponseRevenueReportDto r : reports) {
+            kb.append("  * ID: ").append(r.getId())
+                    .append(", Tháng: ").append(r.getMonth())
+                    .append("/").append(r.getYear())
+                    .append(", Doanh thu: ").append(String.format("%,.0f", r.getTotalMonthRevenue())).append(" VND")
+                    .append(", Báo cáo chi tiết: ").append(r.getRevenueReportDetailIds() != null ? r.getRevenueReportDetailIds().size() : 0)
+                    .append("\n");
+        }
+        return kb.append("\n").toString();
+    }
+
+    public static String buildRentalForms(ObjectMapper mapper) throws Exception {
+        StringBuilder kb = new StringBuilder("# Phiếu thuê phòng\n");
+        var json = ApiHttpClientCaller.call("rental-form", ApiHttpClientCaller.Method.GET, null);
+        List<ResponseRentalFormDto> list = Arrays.asList(mapper.readValue(json, ResponseRentalFormDto[].class));
+        kb.append("- Số lượng phiếu thuê: ").append(list.size()).append("\n");
+        for (ResponseRentalFormDto dto : list) {
+            kb.append("  * ID: ").append(dto.getId())
+                    .append(", Ngày thuê: ").append(dto.getRentalDate())
+                    .append(", Số ngày: ").append(dto.getNumberOfRentalDays())
+                    .append(", Ngày thanh toán: ").append(dto.getIsPaidAt())
+                    .append(", Ghi chú: ").append(dto.getNote())
+                    .append("\n    - Phòng: ").append(dto.getRoomName()).append(" (ID: ").append(dto.getRoomId()).append(")")
+                    .append(", Nhân viên: ").append(dto.getStaffName()).append(" (ID: ").append(dto.getStaffId()).append(")")
+                    .append("\n    - Chi tiết thuê: ").append(dto.getRentalFormDetailIds() != null ? dto.getRentalFormDetailIds().size() : 0)
+                    .append(", Gia hạn: ").append(dto.getRentalExtensionFormIds() != null ? dto.getRentalExtensionFormIds().size() : 0)
+                    .append("\n");
+        }
+        return kb.append("\n").toString();
+    }
+
+    public static String buildRentalExtensionForms(ObjectMapper mapper) throws Exception {
+        StringBuilder kb = new StringBuilder("# Phiếu gia hạn thuê phòng\n");
+        var json = ApiHttpClientCaller.call("rental-extension-form", ApiHttpClientCaller.Method.GET, null);
+        List<ResponseRentalExtensionFormDto> list = Arrays.asList(mapper.readValue(json, ResponseRentalExtensionFormDto[].class));
+        kb.append("- Số phiếu gia hạn: ").append(list.size()).append("\n");
+        for (ResponseRentalExtensionFormDto dto : list) {
+            kb.append("  * ID: ").append(dto.getId())
+                    .append(", Số ngày gia hạn: ").append(dto.getNumberOfRentalDays())
+                    .append(", Còn lại: ").append(dto.getDayRemains() != null ? dto.getDayRemains() : "N/A")
+                    .append("\n    - Phòng: ").append(dto.getRentalFormRoomName())
+                    .append(", Phiếu thuê: ").append(dto.getRentalFormId())
+                    .append(", Nhân viên xử lý: ").append(dto.getStaffName()).append(" (ID: ").append(dto.getStaffId()).append(")")
+                    .append("\n");
+        }
+        return kb.append("\n").toString();
+    }
+
+    public static String buildInvoiceDetails(ObjectMapper mapper) throws Exception {
+        StringBuilder kb = new StringBuilder("# Chi tiết hóa đơn\n");
+        var json = ApiHttpClientCaller.call("invoice-detail", ApiHttpClientCaller.Method.GET, null);
+        List<ResponseInvoiceDetailDto> list = Arrays.asList(mapper.readValue(json, ResponseInvoiceDetailDto[].class));
+        kb.append("- Số lượng chi tiết hóa đơn: ").append(list.size()).append("\n");
+        for (ResponseInvoiceDetailDto dto : list) {
+            kb.append("  * ID: ").append(dto.getId())
+                    .append(", Số ngày thuê: ").append(dto.getNumberOfRentalDays())
+                    .append(", Tổng tiền: ").append(String.format("%,.0f", dto.getReservationCost())).append(" VND")
+                    .append("\n    - Hóa đơn: ").append(dto.getInvoiceId())
+                    .append(", Phiếu thuê: ").append(dto.getRentalFormId())
+                    .append(", Phòng: ").append(dto.getRoomId())
+                    .append("\n");
+        }
+        return kb.append("\n").toString();
+    }
+
+    public static String buildRevenueReportDetails(ObjectMapper mapper) throws Exception {
+        StringBuilder kb = new StringBuilder("# Chi tiết báo cáo doanh thu\n");
+        var json = ApiHttpClientCaller.call("revenue-report-detail", ApiHttpClientCaller.Method.GET, null);
+        List<ResponseRevenueReportDetailDto> list = Arrays.asList(mapper.readValue(json, ResponseRevenueReportDetailDto[].class));
+        kb.append("- Số lượng chi tiết báo cáo: ").append(list.size()).append("\n");
+        for (ResponseRevenueReportDetailDto dto : list) {
+            kb.append("  * ID: ").append(dto.getId())
+                    .append(", Doanh thu phòng: ").append(String.format("%,.0f", dto.getTotalRoomRevenue())).append(" VND")
+                    .append("\n    - Báo cáo: ").append(dto.getRevenueReportId())
+                    .append(", Loại phòng: ").append(dto.getRoomTypeName()).append(" (ID: ").append(dto.getRoomTypeId()).append(")")
+                    .append("\n");
         }
         return kb.append("\n").toString();
     }
