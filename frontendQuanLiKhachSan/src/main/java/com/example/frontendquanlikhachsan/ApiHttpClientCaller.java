@@ -11,7 +11,7 @@ import java.net.URI;
 import java.net.http.*;
 
 public class ApiHttpClientCaller {
-    private static final String BASE_URL = "http://localhost:8080/api/";
+    private static final String BASE_URL = "http://localhost:8081/api/";
     private static final HttpClient client = HttpClient.newHttpClient();
     public static final ObjectMapper mapper = new ObjectMapper()
             .registerModule(new JavaTimeModule())

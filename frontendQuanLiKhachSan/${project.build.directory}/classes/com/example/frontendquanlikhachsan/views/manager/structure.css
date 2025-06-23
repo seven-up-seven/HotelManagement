@@ -1,0 +1,34 @@
+/* Đặt trong resources/com/example/frontendquanlikhachsan/styles/structure.css */
+
+/* Toàn bộ TreeView */
+#structureTree {
+    -fx-font-size: 14px;
+    /* Nền xanh dương nhạt */
+    -fx-background-color: #e3f2fd;
+}
+
+/* TreeCell cho Building (depth 0) */
+.tree-cell.building {
+    -fx-text-fill: #2a5d34; /* xanh lá đậm */
+    -fx-font-weight: bold;
+}
+
+/* TreeCell cho Floor (depth 1) */
+.tree-cell.floor {
+    -fx-text-fill: #1e3a5f; /* xanh dương đậm */
+}
+
+/* TreeCell cho Room (depth 2) */
+.tree-cell.room {
+    -fx-text-fill: #444444; /* xám */
+}
+
+/* Khi hover */
+.tree-cell:hover {
+    -fx-background-color: #e8f5e9;
+}
+
+/* Khi chọn */
+.tree-cell:selected {
+    -fx-background-color: #c8e6c9;
+}
