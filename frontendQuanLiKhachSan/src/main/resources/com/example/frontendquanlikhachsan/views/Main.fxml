@@ -16,108 +16,104 @@
             fx:controller="com.example.frontendquanlikhachsan.controllers.MainController">
 
     <center>
-        <TabPane fx:id="tabPane" styleClass="tab-pane" tabClosingPolicy="ALL_TABS" BorderPane.alignment="CENTER" />
+        <TabPane fx:id="tabPane" styleClass="tab-pane" tabClosingPolicy="ALL_TABS" BorderPane.alignment="CENTER"/>
     </center>
 
     <bottom>
-        <HBox alignment="CENTER">
-            <HBox fx:id="bottomDock" alignment="CENTER_LEFT" spacing="10"
-                  BorderPane.alignment="CENTER" styleClass="dock-bar">
-                <!-- Scrollable dock -->
-                <ScrollPane fx:id="dockScrollPane" hbarPolicy="NEVER" vbarPolicy="NEVER"
-                            fitToHeight="true" styleClass="dock-scroll">
-                    <HBox fx:id="dockItems" alignment="CENTER" spacing="20" styleClass="dock-container">
-                        <!-- ADMIN Group -->
-                        <Button fx:id="adminButton" text="👤" styleClass="dock-icon">
-                            <tooltip>
-                                <Tooltip text="Quản trị viên" />
-                            </tooltip>
-                            <contextMenu>
-                                <ContextMenu fx:id="adminMenu">
-                                    <items>
-                                        <MenuItem text="🔐 Quản lí tài khoản" onAction="#openAccountManagement" />
-                                        <MenuItem text="🧩 Quản lí vai trò" onAction="#openUserRoleManagement" />
-                                        <MenuItem text="📜 Quản lí lịch sử" onAction="#openHistoryManagement" />
-                                        <MenuItem text="⚙️ Quản lí tham số" onAction="#openVariableManagement" />
-                                    </items>
-                                </ContextMenu>
-                            </contextMenu>
-                        </Button>
+        <HBox alignment="CENTER" styleClass="dock-bar">
+            <ScrollPane fx:id="dockScrollPane" hbarPolicy="NEVER" vbarPolicy="NEVER"
+                        fitToHeight="true" styleClass="dock-scroll">
+                <HBox fx:id="dockItems" alignment="CENTER" spacing="15" styleClass="dock-container">
+                    <!-- ADMIN Group -->
+                    <Button fx:id="adminButton" text="👤" styleClass="dock-icon">
+                        <tooltip>
+                            <Tooltip text="Quản trị viên"/>
+                        </tooltip>
+                        <contextMenu>
+                            <ContextMenu fx:id="adminMenu" styleClass="context-menu">
+                                <items>
+                                    <MenuItem text="🔐 Quản lí tài khoản" onAction="#openAccountManagement"/>
+                                    <MenuItem text="🧩 Quản lí vai trò" onAction="#openUserRoleManagement"/>
+                                    <MenuItem text="📜 Quản lí lịch sử" onAction="#openHistoryManagement"/>
+                                    <MenuItem text="⚙️ Quản lí tham số" onAction="#openVariableManagement"/>
+                                </items>
+                            </ContextMenu>
+                        </contextMenu>
+                    </Button>
 
-                        <!-- RECEPTIONIST Group -->
-                        <Button fx:id="receptionistButton" text="🛎" styleClass="dock-icon">
-                            <tooltip>
-                                <Tooltip text="Lễ tân" />
-                            </tooltip>
-                            <contextMenu>
-                                <ContextMenu fx:id="receptionistMenu">
-                                    <items>
-                                        <MenuItem text="🛏 Lập phiếu thuê phòng" onAction="#openRoomRentingTab" />
-                                        <MenuItem text="➕ Bổ sung phiếu thuê" onAction="#openEditTab" />
-                                        <MenuItem text="🧾 Khởi tạo hóa đơn" onAction="#openRentalFormViewTab" />
-                                        <MenuItem text="📂 Tra cứu hóa đơn" onAction="#openInvoiceAccountantTab" />
-                                    </items>
-                                </ContextMenu>
-                            </contextMenu>
-                        </Button>
+                    <!-- RECEPTIONIST Group -->
+                    <Button fx:id="receptionistButton" text="🛎" styleClass="dock-icon">
+                        <tooltip>
+                            <Tooltip text="Lễ tân"/>
+                        </tooltip>
+                        <contextMenu>
+                            <ContextMenu fx:id="receptionistMenu" styleClass="context-menu">
+                                <items>
+                                    <MenuItem text="🛏 Lập phiếu thuê phòng" onAction="#openRoomRentingTab"/>
+                                    <MenuItem text="➕ Bổ sung phiếu thuê" onAction="#openEditTab"/>
+                                    <MenuItem text="🧾 Khởi tạo hóa đơn" onAction="#openRentalFormViewTab"/>
+                                    <MenuItem text="📂 Tra cứu hóa đơn" onAction="#openInvoiceAccountantTab"/>
+                                </items>
+                            </ContextMenu>
+                        </contextMenu>
+                    </Button>
 
-                        <!-- MANAGER Group -->
-                        <Button fx:id="managerButton" text="📋" styleClass="dock-icon">
-                            <tooltip>
-                                <Tooltip text="Quản lý" />
-                            </tooltip>
-                            <contextMenu>
-                                <ContextMenu fx:id="managerMenu">
-                                    <items>
-                                        <MenuItem text="👨‍💼 Quản lí nhân viên" onAction="#openStaffTab" />
-                                        <MenuItem text="🪪 Quản lí chức vụ" onAction="#openPositionTab" />
-                                        <MenuItem text="🙋‍♂️ Quản lí khách hàng" onAction="#openGuestTab" />
-                                        <MenuItem text="📑 Quản lí phiếu thuê" onAction="#openRentalFormTab" />
-                                        <MenuItem text="📃 Quản lí hoá đơn" onAction="#openInvoiceTab" />
-                                        <MenuItem text="🏨 Cấu trúc khách sạn" onAction="#openStructureTab" />
-                                        <MenuItem text="📅 Đặt phòng" onAction="#openBookingConfirmationFormTab" />
-                                        <MenuItem text="⏳ Gia hạn" onAction="#openRentalExtensionFormTab" />
-                                        <MenuItem text="⏳ Sơ đồ khách sạn" onAction="#openMapTab" />
-                                    </items>
-                                </ContextMenu>
-                            </contextMenu>
-                        </Button>
+                    <!-- MANAGER Group -->
+                    <Button fx:id="managerButton" text="📋" styleClass="dock-icon">
+                        <tooltip>
+                            <Tooltip text="Quản lý"/>
+                        </tooltip>
+                        <contextMenu>
+                            <ContextMenu fx:id="managerMenu" styleClass="context-menu">
+                                <items>
+                                    <MenuItem text="👨‍💼 Quản lí nhân viên" onAction="#openStaffTab"/>
+                                    <MenuItem text="🪪 Quản lí chức vụ" onAction="#openPositionTab"/>
+                                    <MenuItem text="🙋‍♂️ Quản lí khách hàng" onAction="#openGuestTab"/>
+                                    <MenuItem text="📑 Quản lí phiếu thuê" onAction="#openRentalFormTab"/>
+                                    <MenuItem text="📃 Quản lí hoá đơn" onAction="#openInvoiceTab"/>
+                                    <MenuItem text="🏨 Cấu trúc khách sạn" onAction="#openStructureTab"/>
+                                    <MenuItem text="📅 Đặt phòng" onAction="#openBookingConfirmationFormTab"/>
+                                    <MenuItem text="⏳ Gia hạn" onAction="#openRentalExtensionFormTab"/>
+                                    <MenuItem text="⏳ Sơ đồ khách sạn" onAction="#openMapTab"/>
+                                </items>
+                            </ContextMenu>
+                        </contextMenu>
+                    </Button>
 
-                        <!-- ACCOUNTANT Group -->
-                        <Button fx:id="accountantButton" text="💰" styleClass="dock-icon">
-                            <tooltip>
-                                <Tooltip text="Kế toán" />
-                            </tooltip>
-                            <contextMenu>
-                                <ContextMenu fx:id="accountantMenu">
-                                    <items>
-                                        <MenuItem text="📊 Báo cáo tháng" onAction="#openReportTab" />
-                                        <MenuItem text="🔍 Tra cứu hóa đơn" onAction="#openInvoiceAccountantTab" />
-                                        <MenuItem text="💸 Lương nhân viên" onAction="#openSalaryTab" />
-                                    </items>
-                                </ContextMenu>
-                            </contextMenu>
-                        </Button>
+                    <!-- ACCOUNTANT Group -->
+                    <Button fx:id="accountantButton" text="💰" styleClass="dock-icon">
+                        <tooltip>
+                            <Tooltip text="Kế toán"/>
+                        </tooltip>
+                        <contextMenu>
+                            <ContextMenu fx:id="accountantMenu" styleClass="context-menu">
+                                <items>
+                                    <MenuItem text="📊 Báo cáo tháng" onAction="#openReportTab"/>
+                                    <MenuItem text="🔍 Tra cứu hóa đơn" onAction="#openInvoiceAccountantTab"/>
+                                    <MenuItem text="💸 Lương nhân viên" onAction="#openSalaryTab"/>
+                                </items>
+                            </ContextMenu>
+                        </contextMenu>
+                    </Button>
 
-                        <!-- Other Buttons -->
-                        <Button text="🏠" onAction="#openHomeTab" styleClass="dock-icon">
-                            <tooltip>
-                                <Tooltip text="Trang chủ" />
-                            </tooltip>
-                        </Button>
-                        <Button text="🤖" onAction="#openChatbot" styleClass="dock-icon">
-                            <tooltip>
-                                <Tooltip text="Trợ lý AI" />
-                            </tooltip>
-                        </Button>
-                        <Button text="🚪" onAction="#logout" styleClass="dock-icon">
-                            <tooltip>
-                                <Tooltip text="Đăng xuất" />
-                            </tooltip>
-                        </Button>
-                    </HBox>
-                </ScrollPane>
-            </HBox>
+                    <!-- Other Buttons -->
+                    <Button text="🏠" onAction="#openHomeTab" styleClass="dock-icon">
+                        <tooltip>
+                            <Tooltip text="Trang chủ"/>
+                        </tooltip>
+                    </Button>
+                    <Button text="🤖" onAction="#openChatbot" styleClass="dock-icon">
+                        <tooltip>
+                            <Tooltip text="Trợ lý AI"/>
+                        </tooltip>
+                    </Button>
+                    <Button text="🚪" onAction="#logout" styleClass="dock-icon">
+                        <tooltip>
+                            <Tooltip text="Đăng xuất"/>
+                        </tooltip>
+                    </Button>
+                </HBox>
+            </ScrollPane>
         </HBox>
     </bottom>
 </BorderPane>
