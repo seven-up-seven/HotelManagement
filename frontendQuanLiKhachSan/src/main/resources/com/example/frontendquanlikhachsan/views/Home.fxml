@@ -15,7 +15,7 @@
     <HBox spacing="20" styleClass="dashboard-grid">
         <VBox styleClass="card" spacing="10">
             <HBox spacing="15">
-                <Label text="🛏️" styleClass="card-icon" style="-fx-background-color: linear-gradient(to bottom right, #667eea, #764ba2);"/>
+                <Label text="🛌" styleClass="card-icon" style="-fx-background-color: linear-gradient(to bottom right, #667eea, #764ba2);"/>
                 <Label text="Tình trạng phòng" styleClass="card-title"/>
             </HBox>
             <Label text="128" styleClass="card-value"/>

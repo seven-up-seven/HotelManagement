@@ -20,10 +20,10 @@
     <left>
         <VBox styleClass="sidebar" prefWidth="280.0" spacing="10">
             <VBox styleClass="logo">
-                <Label text="🏨 Hotel MS" styleClass="logo-title"/>
+                <Label text="🏨 Roomify" styleClass="logo-title"/>
                 <Label text="Management System" styleClass="logo-subtitle"/>
             </VBox>
-            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED">
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" styleClass="sidebar-scroll">
                 <VBox spacing="5">
                     <Button text="🏠 Trang chủ" styleClass="nav-item" onAction="#openHomeTab">
                         <tooltip><Tooltip text="Trang chủ"/></tooltip>
@@ -102,17 +102,13 @@
     <center>
         <VBox styleClass="flex-grow">
             <!-- Header -->
-            <HBox styleClass="header" alignment="CENTER_LEFT" spacing="20">
-                <VBox>
-                    <Label text="Hệ thống quản lý khách sạn" styleClass="header-title"/>
-                    <Label fx:id="userGreeting" text="Xin chào, [Vai trò] [Tên]" styleClass="header-info"/>
-                </VBox>
-                <HBox alignment="CENTER_RIGHT" spacing="20">
-                    <VBox styleClass="clock-box">
+            <HBox styleClass="header" alignment="CENTER" spacing="5">
+                <HBox alignment="CENTER_RIGHT" spacing="5">
+                    <!-- Clock box: 2 dòng trong VBox -->
+                    <VBox spacing="3" alignment="CENTER" styleClass="clock-box">
                         <Label fx:id="clockLabel" text="00:00:00" styleClass="clock-time"/>
                         <Label fx:id="dateDayLabel" text="Ngày 01-01-2021 – Thứ hai" styleClass="clock-date"/>
                     </VBox>
-                    <Label fx:id="userAvatar" text="A" styleClass="user-avatar"/>
                 </HBox>
             </HBox>
 
