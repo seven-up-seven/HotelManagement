@@ -1,79 +1,92 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
-<BorderPane xmlns="http://javafx.com/javafx/23.0.1"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.example.frontendquanlikhachsan.controllers.HomeController"
-            stylesheets="@../assets/css/Home.css"
-            prefWidth="900" prefHeight="550">
+<VBox xmlns="http://javafx.com/javafx/23.0.1"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.frontendquanlikhachsan.controllers.HomeController"
+      stylesheets="@../assets/css/ModernHotelApp.css"
+      prefWidth="900" prefHeight="550" spacing="20" styleClass="content">
 
-    <!-- TOP: Modern Clock -->
-    <top>
-        <HBox alignment="TOP_RIGHT" styleClass="clock-container">
-            <padding><Insets top="15" right="25"/></padding>
-            <VBox alignment="CENTER" styleClass="clock-box">
-                <Label fx:id="clockLabel" text="00:00:00" styleClass="clock-time"/>
-                <Label fx:id="dateDayLabel" text="Ngày 01-01-2021 – Thứ hai" styleClass="clock-date"/>
+    <!-- Dashboard Cards -->
+    <HBox spacing="20" styleClass="dashboard-grid">
+        <VBox styleClass="card" spacing="10">
+            <HBox spacing="15">
+                <Label text="🛏️" styleClass="card-icon" style="-fx-background-color: linear-gradient(to bottom right, #667eea, #764ba2);"/>
+                <Label text="Tình trạng phòng" styleClass="card-title"/>
+            </HBox>
+            <Label text="128" styleClass="card-value"/>
+            <Label text="Tổng số phòng khả dụng" styleClass="card-subtitle"/>
+        </VBox>
+        <VBox styleClass="card" spacing="10">
+            <HBox spacing="15">
+                <Label text="💰" styleClass="card-icon" style="-fx-background-color: linear-gradient(to bottom right, #11998e, #38ef7d);"/>
+                <Label text="Doanh thu" styleClass="card-title"/>
+            </HBox>
+            <Label text="2.5M" styleClass="card-value"/>
+            <Label text="VNĐ trong tháng này" styleClass="card-subtitle"/>
+        </VBox>
+        <VBox styleClass="card" spacing="10">
+            <HBox spacing="15">
+                <Label text="📅" styleClass="card-icon" style="-fx-background-color: linear-gradient(to bottom right, #ff6b6b, #ffa726);"/>
+                <Label text="Đặt phòng" styleClass="card-title"/>
+            </HBox>
+            <Label text="89" styleClass="card-value"/>
+            <Label text="Đặt phòng hôm nay" styleClass="card-subtitle"/>
+        </VBox>
+        <VBox styleClass="card" spacing="10">
+            <HBox spacing="15">
+                <Label text="👥" styleClass="card-icon" style="-fx-background-color: linear-gradient(to bottom right, #a8edea, #fed6e3);"/>
+                <Label text="Nhân viên" styleClass="card-title"/>
+            </HBox>
+            <Label text="45" styleClass="card-value"/>
+            <Label text="Nhân viên đang làm việc" styleClass="card-subtitle"/>
+        </VBox>
+    </HBox>
+
+    <!-- User Info -->
+    <VBox styleClass="main-container" spacing="15">
+        <Label text="Hệ thống quản lý khách sạn" styleClass="title-text"/>
+        <Label fx:id="helloLabel" text="Xin chào, [Vai trò] [Tên]" styleClass="sub-title-text"/>
+        <HBox styleClass="user-card" spacing="20">
+            <ImageView fx:id="avatarImageView" fitHeight="100" fitWidth="100" preserveRatio="true" styleClass="avatar-img"/>
+            <VBox spacing="8">
+                <HBox spacing="10">
+                    <Label text="Mã nhân viên:" styleClass="info-label"/>
+                    <Label fx:id="staffIdLabel" styleClass="info-value"/>
+                </HBox>
+                <HBox spacing="10">
+                    <Label text="Tên nhân viên:" styleClass="info-label"/>
+                    <Label fx:id="staffNameLabel" styleClass="info-value"/>
+                </HBox>
+                <HBox spacing="10">
+                    <Label text="CCCD:" styleClass="info-label"/>
+                    <Label fx:id="staffIdentifyNumberLabel" styleClass="info-value"/>
+                </HBox>
+                <HBox spacing="10">
+                    <Label text="Email:" styleClass="info-label"/>
+                    <Label fx:id="staffEmailLabel" styleClass="info-value"/>
+                </HBox>
+                <HBox spacing="10">
+                    <Label text="Quyền hạn:" styleClass="info-label"/>
+                    <Label fx:id="staffRoleLabel" styleClass="info-value"/>
+                </HBox>
+                <HBox spacing="10">
+                    <Label text="Địa chỉ:" styleClass="info-label"/>
+                    <Label fx:id="staffAddressLabel" styleClass="info-value"/>
+                </HBox>
+                <HBox spacing="10">
+                    <Label text="Tuổi:" styleClass="info-label"/>
+                    <Label fx:id="staffAgeLabel" styleClass="info-value"/>
+                </HBox>
+                <HBox spacing="10">
+                    <Label text="Vị trí:" styleClass="info-label"/>
+                    <Label fx:id="staffPositionLabel" styleClass="info-value"/>
+                </HBox>
             </VBox>
         </HBox>
-    </top>
-
-    <!-- CENTER: User Card -->
-    <center>
-        <VBox alignment="CENTER" spacing="20" styleClass="main-container">
-            <Label text="Hệ thống quản lý khách sạn" styleClass="title-text"/>
-            <Label fx:id="helloLabel" text="Xin chào, [Vai trò] [Tên]" styleClass="sub-title-text"/>
-
-            <!-- User Info Card -->
-            <HBox alignment="CENTER" styleClass="user-card">
-                <VBox alignment="CENTER" spacing="10" styleClass="avatar-section">
-                    <ImageView fx:id="avatarImageView"
-                               fitHeight="120" fitWidth="120"
-                               preserveRatio="true"
-                               styleClass="avatar-img"/>
-                </VBox>
-                <VBox styleClass="info-section">
-                    <HBox spacing="15" styleClass="info-row">
-                        <Label text="Mã nhân viên:" styleClass="info-label"/>
-                        <Label fx:id="staffIdLabel" styleClass="info-value"/>
-                    </HBox>
-                    <HBox spacing="15" styleClass="info-row">
-                        <Label text="Tên nhân viên:" styleClass="info-label"/>
-                        <Label fx:id="staffNameLabel" styleClass="info-value"/>
-                    </HBox>
-                    <HBox spacing="15" styleClass="info-row">
-                        <Label text="CCCD:" styleClass="info-label"/>
-                        <Label fx:id="staffIdentifyNumberLabel" styleClass="info-value"/>
-                    </HBox>
-                    <HBox spacing="15" styleClass="info-row">
-                        <Label text="Email:" styleClass="info-label"/>
-                        <Label fx:id="staffEmailLabel" styleClass="info-value"/>
-                    </HBox>
-                    <HBox spacing="15" styleClass="info-row">
-                        <Label text="Quyền hạn:" styleClass="info-label"/>
-                        <Label fx:id="staffRoleLabel" styleClass="info-value"/>
-                    </HBox>
-                    <HBox spacing="15" styleClass="info-row">
-                        <Label text="Địa chỉ:" styleClass="info-label"/>
-                        <Label fx:id="staffAddressLabel" styleClass="info-value"/>
-                    </HBox>
-                    <HBox spacing="15" styleClass="info-row">
-                        <Label text="Tuổi:" styleClass="info-label"/>
-                        <Label fx:id="staffAgeLabel" styleClass="info-value"/>
-                    </HBox>
-                    <HBox spacing="15" styleClass="info-row">
-                        <Label text="Vị trí:" styleClass="info-label"/>
-                        <Label fx:id="staffPositionLabel" styleClass="info-value"/>
-                    </HBox>
-                </VBox>
-            </HBox>
-        </VBox>
-    </center>
-</BorderPane>
+    </VBox>
+</VBox>
