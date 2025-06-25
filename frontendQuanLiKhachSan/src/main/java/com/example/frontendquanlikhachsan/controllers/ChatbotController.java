@@ -29,8 +29,20 @@ public class ChatbotController {
     @FXML private TextArea inputArea;
     @FXML private ScrollPane scrollPane;
 
-    private final String systemPrompt = "Bạn là chatbot hỗ trợ cho phần mềm quản lý khách sạn, được tạo bởi Nhóm 5 Java. Chỉ sử dụng dữ liệu được cung cấp dưới đây để trả lời câu hỏi, không được bịa đặt thông tin. Nếu không tìm thấy thông tin liên quan, trả lời 'Không có dữ liệu phù hợp.'";
-    private final String apiKey = "AIzaSyBf0xyHSQW2A4Y2Tf6d-0R0GD_8XRz0WcE";
+    private final String systemPrompt = """
+        Bạn là chatbot hỗ trợ phần mềm quản lý khách sạn, tạo bởi Nhóm 5 Java. 
+        Chỉ dùng data được cung cấp để trả lời. 
+        Trả lời tuân theo những chỉ dẫn bắt buộc sau:
+        - Nếu không tìm thấy thông tin liên quan, trả lời: 'Không có dữ liệu phù hợp.'
+        - Một phòng được coi là trống khi:
+            + Trạng thái là READY_TO_SERVE
+            + Và phiếu thuê của phòng tương ứng gần nhất đã được thanh toán (tức là ngày thanh toán khác null).
+        - Trạng thái phòng không được suy luận từ bất kì thứ gì khác, tuân theo dữ liệu được đưa.
+        - Một phòng có thể có nhiều phiếu thuê, cứ mỗi lần có khách thuê thì có phiếu thuê, tương tự phiếu đặt.  
+        - Nếu một thực thể có tên, ưu tiên sử dụng tên để trả lời thay vì ID.
+        - Phải quét và xử lý toàn bộ danh sách khi được hỏi, không được bỏ sót.
+        """;
+    private final String apiKey = "AIzaSyDcfGo7McVVf1hl-jvz2Ot_0ZzcEVzhaWw";
     private final String url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + apiKey;
 
     private final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
@@ -99,24 +111,48 @@ public class ChatbotController {
         StringBuilder relevant = new StringBuilder();
         String q = question.toLowerCase();
 
-        if (q.contains("phòng")) relevant.append(knowledgeSections.getOrDefault("rooms", ""));
-        if (q.contains("tầng")) relevant.append(knowledgeSections.getOrDefault("floors", ""));
-        if (q.contains("khách")) relevant.append(knowledgeSections.getOrDefault("guests", ""));
-        if (q.contains("đặt phòng")) relevant.append(knowledgeSections.getOrDefault("booking", ""));
-        if (q.contains("nhân viên")) relevant.append(knowledgeSections.getOrDefault("staff", ""));
-        if (q.contains("hóa đơn")) {
+        if (q.contains("phòng")
+            || q.contains("room")) relevant.append(knowledgeSections.getOrDefault("rooms", ""));
+        if (q.contains("tầng")
+            || q.contains("tòa")
+            || q.contains("block")
+            || q.contains("phòng")
+            || q.contains("room")
+            || q.contains("floor")) relevant.append(knowledgeSections.getOrDefault("floors", ""));
+        if (q.contains("khách")
+            || q.contains("guest")) relevant.append(knowledgeSections.getOrDefault("guests", ""));
+        if (q.contains("đặt phòng")
+            || q.contains("phòng")
+            || q.contains("room")) relevant.append(knowledgeSections.getOrDefault("booking", ""));
+        if (q.contains("nhân viên")
+            || q.contains("phiếu")
+            || q.contains("staff")) relevant.append(knowledgeSections.getOrDefault("staff", ""));
+        if (q.contains("hóa đơn")
+            || q.contains("tiền")
+            || q.contains("phiếu")) {
             relevant.append(knowledgeSections.getOrDefault("invoices", ""));
             relevant.append(knowledgeSections.getOrDefault("invoiceDetails", ""));
         }
-        if (q.contains("doanh thu")) {
+        if (q.contains("doanh thu")
+            || q.contains("báo cáo")
+            || q.contains("tiền")
+            || q.contains("tháng")) {
             relevant.append(knowledgeSections.getOrDefault("revenue", ""));
             relevant.append(knowledgeSections.getOrDefault("revenueDetails", ""));
         }
-        if (q.contains("gia hạn")) relevant.append(knowledgeSections.getOrDefault("rentalExtensions", ""));
-        if (q.contains("phiếu thuê") || q.contains("thuê phòng")) relevant.append(knowledgeSections.getOrDefault("rentalForms", ""));
-        if (q.contains("loại phòng")) relevant.append(knowledgeSections.getOrDefault("roomtypes", ""));
-        if (q.contains("block") || q.contains("tòa")) relevant.append(knowledgeSections.getOrDefault("blocks", ""));
-        if (q.contains("tài khoản")) relevant.append(knowledgeSections.getOrDefault("accounts", ""));
+        if (q.contains("gia hạn")
+            || q.contains("thuê")
+            || q.contains("phiếu")) relevant.append(knowledgeSections.getOrDefault("rentalExtensions", ""));
+        if (q.contains("phiếu")
+            || q.contains("thuê")
+            || q.contains("phòng")) relevant.append(knowledgeSections.getOrDefault("rentalForms", ""));
+        if (q.contains("phòng")) relevant.append(knowledgeSections.getOrDefault("roomtypes", ""));
+        if (q.contains("block")
+            || q.contains("tòa")
+            || q.contains("tầng")
+            || q.contains("floor")) relevant.append(knowledgeSections.getOrDefault("blocks", ""));
+        if (q.contains("tài khoản")
+            || q.contains("acc")) relevant.append(knowledgeSections.getOrDefault("accounts", ""));
 
         if (relevant.length() == 0) {
             relevant.append(knowledgeSections.getOrDefault("rooms", ""));
