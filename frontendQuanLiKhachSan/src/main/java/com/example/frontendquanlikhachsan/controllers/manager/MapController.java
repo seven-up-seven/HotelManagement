@@ -74,6 +74,13 @@ public class MapController {
             StackPane blockContainer = new StackPane(rect, label);
             blockContainer.setPrefSize(100, 60);
             blockContainer.setUserData(block.getId());
+            blockContainer.setOnScroll(event -> {
+                if (event.isControlDown()) {
+                    double currentRotation = blockContainer.getRotate();
+                    double delta = event.getDeltaY() > 0 ? 15 : -15;
+                    blockContainer.setRotate((currentRotation + delta) % 360);
+                }
+            });
 
             if (block.getPosX() == null || block.getPosY() == null || block.getPosX() < 0 || block.getPosY() < 0) {
                 AnchorPane wrapper = new AnchorPane(blockContainer);
