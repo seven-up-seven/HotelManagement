@@ -4,7 +4,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -112,8 +111,8 @@
                 </HBox>
             </HBox>
 
-            <!-- Tab Pane -->
-            <TabPane fx:id="tabPane" styleClass="tab-pane" tabClosingPolicy="ALL_TABS" VBox.vgrow="ALWAYS"/>
+            <!-- Content Pane -->
+            <VBox fx:id="contentPane" styleClass="content-pane" VBox.vgrow="ALWAYS"/>
         </VBox>
     </center>
 </BorderPane>
