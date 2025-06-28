@@ -648,10 +648,15 @@ public class InvoiceController {
         a.setContentText(c);
         a.showAndWait();
     }
-    private void showErrorAlert(String h, String c) {
+    private void showErrorAlert(String header, String content) {
         Alert a = new Alert(Alert.AlertType.ERROR);
-        a.setHeaderText(h);
-        a.setContentText(c);
+        a.setHeaderText(header);
+        a.setContentText(content);
+
+        // Thêm stylesheet cho DialogPane
+        a.getDialogPane().getStylesheets().add(
+                getClass().getResource("/com/example/frontendquanlikhachsan/assets/css/alert.css").toExternalForm()
+        );
         a.showAndWait();
     }
 }

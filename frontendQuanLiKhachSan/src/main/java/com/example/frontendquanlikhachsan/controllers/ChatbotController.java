@@ -217,11 +217,15 @@ public class ChatbotController {
         }
     }
 
-    private void showError(String error) {
+    private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Lỗi");
-        alert.setHeaderText("Có lỗi xảy ra");
-        alert.setContentText(error);
+        alert.setHeaderText("Lỗi");
+        alert.setContentText(message);
+
+        // Thêm stylesheet cho DialogPane
+        alert.getDialogPane().getStylesheets().add(
+                getClass().getResource("/com/example/frontendquanlikhachsan/assets/css/alert.css").toExternalForm()
+        );
         alert.showAndWait();
     }
 }

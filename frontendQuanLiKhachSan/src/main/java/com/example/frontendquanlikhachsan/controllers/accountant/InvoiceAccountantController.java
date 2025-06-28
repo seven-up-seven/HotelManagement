@@ -348,6 +348,9 @@ public class InvoiceAccountantController {
         Alert a = new Alert(Alert.AlertType.ERROR);
         a.setHeaderText(h);
         a.setContentText(c);
+
+        a.getDialogPane().getStylesheets().add(getClass().getResource("/com/example/frontendquanlikhachsan/assets/css/alert.css").toExternalForm()
+        );
         a.showAndWait();
     }
 }

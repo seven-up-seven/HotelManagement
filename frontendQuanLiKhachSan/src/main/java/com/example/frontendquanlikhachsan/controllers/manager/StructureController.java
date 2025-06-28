@@ -484,10 +484,15 @@ public class StructureController {
         return d;
     }
 
-    private void showError(String title, String msg) {
+    private void showError(String header, String content) {
         Alert a = new Alert(Alert.AlertType.ERROR);
-        a.setHeaderText(title);
-        a.setContentText(msg);
+        a.setHeaderText(header);
+        a.setContentText(content);
+
+        // Thêm stylesheet cho DialogPane
+        a.getDialogPane().getStylesheets().add(
+                getClass().getResource("/com/example/frontendquanlikhachsan/assets/css/alert.css").toExternalForm()
+        );
         a.showAndWait();
     }
 

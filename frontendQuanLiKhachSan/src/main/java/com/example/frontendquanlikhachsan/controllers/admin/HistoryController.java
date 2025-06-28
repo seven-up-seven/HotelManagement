@@ -162,6 +162,11 @@ public class HistoryController {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText("Lỗi");
         alert.setContentText(message);
+
+        // Thêm stylesheet cho DialogPane
+        alert.getDialogPane().getStylesheets().add(
+                getClass().getResource("/com/example/frontendquanlikhachsan/assets/css/alert.css").toExternalForm()
+        );
         alert.showAndWait();
     }
 }
