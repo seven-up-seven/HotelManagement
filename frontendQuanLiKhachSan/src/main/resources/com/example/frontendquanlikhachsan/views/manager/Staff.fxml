@@ -24,16 +24,16 @@
                 </padding>
                 <TextField fx:id="tfFilterId"
                            promptText="ID"
-                           HBox.hgrow="ALWAYS"/>
+                           />
                 <TextField fx:id="tfFilterName"
                            promptText="Họ &amp; Tên"
-                           HBox.hgrow="ALWAYS"/>
+                           />
                 <TextField fx:id="tfFilterIdNum"
                            promptText="CCCD/CMND"
-                           HBox.hgrow="ALWAYS"/>
+                           />
                 <ComboBox fx:id="cbFilterPosition"
                           promptText="Chức vụ"
-                          HBox.hgrow="SOMETIMES"/>
+                          />
             </HBox>
 
             <Label text="Danh sách Nhân viên"

@@ -27,10 +27,17 @@
     -fx-background-radius: 10;
 }
 
-.header, .label {
+.label {
     -fx-font-size: 18px;
     -fx-font-weight: bold;
     -fx-text-fill: #764BA2;
+    -fx-padding: 10 0;
+}
+
+.column-header, .header {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
     -fx-padding: 10 0;
 }
 
@@ -39,11 +46,30 @@
     -fx-background-radius: 8;
     -fx-border-color: #b39ddb;
     -fx-border-radius: 8;
-    -fx-padding: 10 12;
+    -fx-padding: 8 12; /* Giảm padding để bù chiều cao */
     -fx-font-size: 14px;
     -fx-pref-height: 40;
-    -fx-pref-width: 150; /* Đặt chiều rộng mặc định để đồng đều */
+    -fx-min-height: 40;
+    -fx-max-height: 40;
+    -fx-pref-width: 150;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 1);
+}
+
+/* Điều chỉnh padding nội bộ của ComboBox */
+.combo-box .combo-box-base {
+    -fx-padding: 0 0 0 5; /* Giảm padding nội bộ */
+    -fx-background-insets: 0;
+}
+
+/* Điều chỉnh DatePicker */
+.date-picker .text-field {
+    -fx-padding: 0 5 0 5; /* Điều chỉnh padding nội bộ của TextField trong DatePicker */
+    -fx-background-insets: 0;
+}
+
+.date-picker .arrow-button {
+    -fx-padding: 0 5 0 0; /* Điều chỉnh padding của nút lịch */
+    -fx-background-insets: 0;
 }
 
 .text-field:focused, .combo-box:focused, .date-picker:focused, .text-area:focused {
