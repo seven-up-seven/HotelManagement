@@ -227,11 +227,15 @@ public class MapController {
         }).start();
     }
 
-    private void showError(String msg) {
+    private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Thông báo");
-        alert.setHeaderText(null);
-        alert.setContentText(msg);
+        alert.setHeaderText("Lỗi");
+        alert.setContentText(message);
+
+        // Thêm stylesheet cho DialogPane
+        alert.getDialogPane().getStylesheets().add(
+                getClass().getResource("/com/example/frontendquanlikhachsan/assets/css/alert.css").toExternalForm()
+        );
         alert.showAndWait();
     }
 }

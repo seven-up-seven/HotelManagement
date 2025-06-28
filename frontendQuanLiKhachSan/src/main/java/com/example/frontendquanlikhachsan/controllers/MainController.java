@@ -380,6 +380,11 @@ public class MainController {
         alert.setHeaderText("Bạn có chắc chắn muốn đăng xuất?");
         alert.setContentText("Hành động này sẽ đưa bạn về màn hình đăng nhập.");
 
+        // Thêm stylesheet cho DialogPane
+        alert.getDialogPane().getStylesheets().add(
+                getClass().getResource("/com/example/frontendquanlikhachsan/assets/css/alert.css").toExternalForm()
+        );
+
         // Tùy chọn xác nhận hoặc hủy
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {

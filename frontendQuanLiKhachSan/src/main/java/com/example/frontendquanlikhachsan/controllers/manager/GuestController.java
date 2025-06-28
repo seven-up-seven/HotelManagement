@@ -312,11 +312,17 @@ public class GuestController {
         a.setContentText(c);
         a.showAndWait();
     }
-    private void showErrorAlert(String h, String c){
-        Alert a=new Alert(Alert.AlertType.ERROR);
-        a.setHeaderText(h);
-        a.setContentText(c);
-        a.showAndWait(); }
+    private void showErrorAlert(String header, String content) {
+        Alert a = new Alert(Alert.AlertType.ERROR);
+        a.setHeaderText(header);
+        a.setContentText(content);
+
+        // Thêm stylesheet cho DialogPane
+        a.getDialogPane().getStylesheets().add(
+                getClass().getResource("/com/example/frontendquanlikhachsan/assets/css/alert.css").toExternalForm()
+        );
+        a.showAndWait();
+    }
 
     private String emptyToNull(String input) {
         if (input == null || input.trim().isEmpty()) return null;
