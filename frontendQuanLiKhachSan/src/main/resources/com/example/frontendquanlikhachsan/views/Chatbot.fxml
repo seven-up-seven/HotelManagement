@@ -2,45 +2,45 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.Region?>
-
 <?import javafx.scene.control.ScrollPane?>
+
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.example.frontendquanlikhachsan.controllers.ChatbotController"
             stylesheets="@../assets/css/Chatbot.css"
             prefHeight="600.0" prefWidth="800.0">
 
-    <VBox fx:id="chatContainer" spacing="10"
-          AnchorPane.topAnchor="10.0" AnchorPane.bottomAnchor="10.0"
-          AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+    <VBox fx:id="chatContainer" styleClass="chat-container" spacing="20"
+          AnchorPane.topAnchor="20.0" AnchorPane.bottomAnchor="20.0"
+          AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
 
-        <!-- Title -->
-        <Label text="Trợ Lý AI Khách Sạn" styleClass="chat-title" alignment="CENTER"/>
+        <!-- Header -->
+        <HBox styleClass="chat-header-box" alignment="CENTER_LEFT">
+            <Label text="🤖" styleClass="card-icon"/>
+            <Label text="Trợ Lý AI Khách Sạn" styleClass="chat-title"/>
+        </HBox>
 
         <!-- Chat Scrollable Section -->
         <ScrollPane fx:id="scrollPane" fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="chat-scrollpane">
-            <VBox fx:id="chatListView" spacing="10" styleClass="chat-box">
+            <VBox fx:id="chatListView" spacing="15" styleClass="chat-box">
                 <padding>
-                    <Insets top="10" right="10" bottom="10" left="10"/>
+                    <Insets top="20" right="10" bottom="20" left="10"/>
                 </padding>
             </VBox>
         </ScrollPane>
 
         <!-- Input Section -->
-        <HBox spacing="10" alignment="CENTER">
-            <TextArea fx:id="inputArea" promptText="Nhập câu hỏi..."
-                      prefHeight="60.0" HBox.hgrow="ALWAYS" styleClass="input-area"/>
+        <HBox styleClass="chat-input" spacing="10">
+            <TextArea fx:id="inputArea" promptText="Nhập câu hỏi..." prefHeight="50.0" HBox.hgrow="ALWAYS"
+                      styleClass="input-area"/>
             <Button text="Gửi" onAction="#handleSend" styleClass="send-button"/>
         </HBox>
 
         <!-- Status/Error Message -->
-        <Label fx:id="statusLabel" text=""
-               styleClass="status-label" visible="false" alignment="CENTER"/>
+        <Label fx:id="statusLabel" text="" styleClass="status-label" visible="false"/>
     </VBox>
 </AnchorPane>
