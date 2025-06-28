@@ -56,6 +56,7 @@ public class MainController {
         openHomeTab();
         adjustSidebarByPermission();
         setupDockSubMenus();
+        tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS);
 
         overlayPane.setVisible(false);
         overlayPane.setMouseTransparent(true);

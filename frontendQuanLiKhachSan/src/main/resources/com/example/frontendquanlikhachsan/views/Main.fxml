@@ -8,7 +8,7 @@
 <BorderPane styleClass="root-pane" prefHeight="600.0" prefWidth="800.0"
             xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
-            stylesheets="@../assets/css/ModernHotelApp.css"
+            stylesheets="@../assets/css/ModernHotelApp.css, @../assets/css/TabPane.css"
             fx:controller="com.example.frontendquanlikhachsan.controllers.MainController">
 
     <!-- Header Section -->
@@ -30,7 +30,7 @@
     <center>
         <StackPane styleClass="main-content">
             <!-- Tab Pane -->
-            <TabPane fx:id="tabPane" styleClass="tab-pane" tabClosingPolicy="ALL_TABS"/>
+            <TabPane fx:id="tabPane" styleClass="tab-pane" tabClosingPolicy="ALL_TABS" stylesheets="@../assets/css/TabPane.css"/>
 
             <!-- Overlay Pane -->
             <Pane fx:id="overlayPane" styleClass="overlay-pane" visible="false" onMouseClicked="#handleOverlayClick">
