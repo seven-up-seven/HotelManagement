@@ -324,6 +324,12 @@
                     detailPane.getChildren().clear();
                     loadForms();
 
+                    ApiHttpClientCaller.call(
+                            "invoice/send-email/"+created.getId(),
+                            ApiHttpClientCaller.Method.POST,
+                            null
+                    );
+
                 } catch (Exception ex) {
                     showErrorAlert("Lỗi lập hoá đơn", ex.getMessage());
                 }
