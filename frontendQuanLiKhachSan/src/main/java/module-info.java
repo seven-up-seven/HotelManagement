@@ -16,11 +16,15 @@ module com.example.frontendquanlikhachsan {
     requires spring.context;
     requires java.validation;
     requires org.apache.tomcat.embed.el;
-    requires java.desktop;
     requires spring.beans;
     requires jakarta.persistence;
     requires com.google.gson;
     requires java.prefs;
+    requires kernel;
+    requires layout;
+    requires io;
+    requires javafx.swing;
+    requires org.apache.poi.ooxml;
 
     opens com.example.frontendquanlikhachsan to javafx.fxml;
     opens com.example.frontendquanlikhachsan.controllers to javafx.fxml;
