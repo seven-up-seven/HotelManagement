@@ -8,7 +8,7 @@
 <VBox xmlns="http://javafx.com/javafx/23.0.1"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.example.frontendquanlikhachsan.controllers.HomeController"
-      stylesheets="@../assets/css/ModernHotelApp.css"
+      stylesheets="@../assets/css/ModernHome.css"
       prefWidth="900" prefHeight="550" spacing="20" styleClass="content">
 
     <!-- Dashboard Cards -->
