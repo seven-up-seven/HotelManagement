@@ -364,6 +364,10 @@ public class InvoiceController {
         btnDelete.setOnAction(e -> {
             Alert c = new Alert(Alert.AlertType.CONFIRMATION,
                     "Xóa hoá đơn này?", ButtonType.OK, ButtonType.CANCEL);
+            c.getDialogPane().setId("dialog");
+            c.getDialogPane().getStylesheets().add(
+                    getClass().getResource("/com/example/frontendquanlikhachsan/assets/css/alert.css").toExternalForm()
+            );
             c.showAndWait().filter(b->b==ButtonType.OK).ifPresent(x->{
                 try {
                     ApiHttpClientCaller.call("invoice/" + dto.getId(), DELETE, null);
