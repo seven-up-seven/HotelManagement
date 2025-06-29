@@ -24,7 +24,7 @@ public class SettingController {
     public void initialize() {
         btnOption1.setOnAction(e -> loadUI("/com/example/frontendquanlikhachsan/views/setting/UserInfo.fxml"));
         btnOption2.setOnAction(e -> loadUI("/com/example/frontendquanlikhachsan/views/setting/Account.fxml"));
-        btnOption3.setOnAction(e -> loadUI("option3"));
+        btnOption3.setOnAction(e -> loadUI("/com/example/frontendquanlikhachsan/views/setting/KeyMap.fxml"));
         loadUI("/com/example/frontendquanlikhachsan/views/setting/UserInfo.fxml");
     }
 

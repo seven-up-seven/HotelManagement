@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -11,4 +10,20 @@
             fx:controller="com.example.frontendquanlikhachsan.controllers.setting.KeyMapController"
             prefHeight="400.0" prefWidth="600.0">
 
+    <VBox spacing="20" layoutX="20" layoutY="20">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+
+        <Label text="Cài đặt phím tắt" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="Phím tắt tìm kiếm:"/>
+            <Label text="Ctrl +"/>
+            <ComboBox fx:id="searchKeyComboBox" prefWidth="80"/>
+            <Button fx:id="saveButton" text="Lưu" onAction="#handleSave"/>
+        </HBox>
+
+        <Label fx:id="statusLabel" text="" style="-fx-text-fill: green;"/>
+    </VBox>
 </AnchorPane>

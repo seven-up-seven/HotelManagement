@@ -3,6 +3,7 @@ package com.example.frontendquanlikhachsan.controllers;
 import com.example.frontendquanlikhachsan.ApiHttpClientCaller;
 import com.example.frontendquanlikhachsan.auth.TokenHolder;
 import com.example.frontendquanlikhachsan.controllers.manager.*;
+import com.example.frontendquanlikhachsan.controllers.setting.KeyMapController;
 import com.example.frontendquanlikhachsan.entity.account.ResponseAccountDto;
 import com.example.frontendquanlikhachsan.entity.staff.ResponseStaffDto;
 import javafx.animation.Animation;
@@ -36,22 +37,30 @@ import java.util.function.Function;
 
 @Component
 public class MainController {
-    @FXML private TabPane tabPane;
-    @FXML private VBox sidebarContainer;
-    @FXML private Pane overlayPane;
-
-    @FXML private Button adminButton;
-    @FXML private ContextMenu adminMenu;
-    @FXML private Button receptionistButton;
-    @FXML private ContextMenu receptionistMenu;
-    @FXML private Button managerButton;
-    @FXML private ContextMenu managerMenu;
-    @FXML private Button accountantButton;
-    @FXML private ContextMenu accountantMenu;
-
-    @FXML private VBox sidebarContainer; // Sidebar overlay
-    @FXML private Button toggleSidebarButton; // Nút toggle sidebar
-    @FXML private Pane overlayPane; // Overlay pane
+    @FXML
+    private TabPane tabPane;
+    @FXML
+    private Button adminButton;
+    @FXML
+    private ContextMenu adminMenu;
+    @FXML
+    private Button receptionistButton;
+    @FXML
+    private ContextMenu receptionistMenu;
+    @FXML
+    private Button managerButton;
+    @FXML
+    private ContextMenu managerMenu;
+    @FXML
+    private Button accountantButton;
+    @FXML
+    private ContextMenu accountantMenu;
+    @FXML
+    private VBox sidebarContainer;
+    @FXML
+    private Button toggleSidebarButton;
+    @FXML
+    private Pane overlayPane; // Overlay pane
 
     @FXML
     private Label dateDayLabel;
@@ -87,9 +96,12 @@ public class MainController {
 
                 // Thêm sự kiện phím tắt Ctrl+T
                 tabPane.getScene().addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-                    if (event.isControlDown() && event.getCode().toString().equals("T")) {
-                        showSearchPopup();
-                        event.consume();
+                    if (event.isControlDown()) {
+                        String shortcutKey = KeyMapController.getSearchKey(); // Lấy từ Preferences
+                        if (event.getCode().getName().equalsIgnoreCase(shortcutKey)) {
+                            showSearchPopup();
+                            event.consume();
+                        }
                     }
                 });
             }
@@ -139,6 +151,8 @@ public class MainController {
         } else {
             sidebarContainer.setStyle("-fx-translate-x: -280px;");
         }
+    }
+
     private void showSidebar() {
         isSidebarVisible = true;
         sidebarContainer.setVisible(true);
@@ -148,11 +162,11 @@ public class MainController {
     }
 
     @FXML
-    public void handleOverlayClick() {
+    public void handleOverlayClick () {
         hideSidebar();
     }
 
-    public void hideSidebar() {
+    public void hideSidebar () {
         if (isSidebarVisible) {
             isSidebarVisible = false;
             sidebarContainer.setVisible(false);
@@ -162,7 +176,7 @@ public class MainController {
         }
     }
 
-    private void showSearchPopup() {
+    private void showSearchPopup () {
         Popup popup = new Popup();
         VBox container = new VBox(10);
         container.setStyle("-fx-background-color: white; -fx-padding: 12; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 0);");
@@ -228,14 +242,14 @@ public class MainController {
         });
     }
 
-    private void setupDockSubMenus() {
+    private void setupDockSubMenus () {
         hookMenu(adminButton, adminMenu);
         hookMenu(managerButton, managerMenu);
         hookMenu(receptionistButton, receptionistMenu);
         hookMenu(accountantButton, accountantMenu);
     }
 
-    private void hookMenu(Button btn, ContextMenu menu) {
+    private void hookMenu (Button btn, ContextMenu menu){
         btn.setOnMouseClicked(e -> {
             if (menu.isShowing()) {
                 menu.hide();
@@ -247,7 +261,7 @@ public class MainController {
         });
     }
 
-    private <C> void openTab(String baseTitle, String fxmlPath, Consumer<C> controllerInitializer) {
+    private <C > void openTab (String baseTitle, String fxmlPath, Consumer < C > controllerInitializer){
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Parent content = loader.load();
@@ -273,114 +287,114 @@ public class MainController {
     }
 
     // Các phương thức openTab (giữ nguyên)
-    public void openHomeTab() {
+    public void openHomeTab () {
         openTab("Trang chủ", "/com/example/frontendquanlikhachsan/views/Home.fxml", null);
     }
 
-    public void openRoomRentingTab() {
+    public void openRoomRentingTab () {
         openTab("Thuê phòng", "/com/example/frontendquanlikhachsan/views/receptionist/RoomRenting.fxml", null);
     }
 
-    public void openEditTab() {
+    public void openEditTab () {
         openTab("Bổ sung phiếu thuê", "/com/example/frontendquanlikhachsan/views/receptionist/RentalFormEdit.fxml", null);
     }
 
-    public void openRentalFormViewTab() {
+    public void openRentalFormViewTab () {
         openTab("Lập hoá đơn", "/com/example/frontendquanlikhachsan/views/receptionist/RentalFormView.fxml", null);
     }
 
-    public void openGuestTab() {
+    public void openGuestTab () {
         openTab("Khách hàng", "/com/example/frontendquanlikhachsan/views/manager/Guest.fxml",
                 (GuestController c) -> c.setMainController(this));
     }
 
-    public void openStaffTab() {
+    public void openStaffTab () {
         openTab("Nhân viên", "/com/example/frontendquanlikhachsan/views/manager/Staff.fxml",
                 (StaffController c) -> c.setMainController(this));
     }
 
-    public void openPositionTab() {
+    public void openPositionTab () {
         openTab("Chức vụ", "/com/example/frontendquanlikhachsan/views/manager/Position.fxml", null);
     }
 
-    public void openRentalFormTab() {
+    public void openRentalFormTab () {
         openTab("Phiếu thuê", "/com/example/frontendquanlikhachsan/views/manager/RentalForm.fxml", null);
     }
 
-    public void openRentalFormTab(List<Integer> ids) {
+    public void openRentalFormTab (List < Integer > ids) {
         openTab("Phiếu thuê", "/com/example/frontendquanlikhachsan/views/manager/RentalForm.fxml",
                 (RentalFormController c) -> c.selectRentalFormsByIds(ids));
     }
 
-    public void openRentalExtensionFormTab() {
+    public void openRentalExtensionFormTab () {
         openTab("Gia hạn thuê", "/com/example/frontendquanlikhachsan/views/manager/RentalExtensionForm.fxml", null);
     }
 
-    public void openRentalExtensionFormTab(List<Integer> ids) {
+    public void openRentalExtensionFormTab (List < Integer > ids) {
         openTab("Gia hạn thuê", "/com/example/frontendquanlikhachsan/views/manager/RentalExtensionForm.fxml",
-        (RentalExtensionFormController c) -> c.selectExtensionsByIds(ids));
+                (RentalExtensionFormController c) -> c.selectExtensionsByIds(ids));
     }
 
-    public void openInvoiceTab() {
+    public void openInvoiceTab () {
         openTab("Hoá đơn", "/com/example/frontendquanlikhachsan/views/manager/Invoice.fxml", null);
     }
 
-    public void openInvoiceTab(List<Integer> ids) {
+    public void openInvoiceTab (List < Integer > ids) {
         openTab("Hoá đơn", "/com/example/frontendquanlikhachsan/views/manager/Invoice.fxml",
                 (InvoiceController c) -> c.selectInvoicesByIds(ids));
     }
 
-    public void openStructureTab() {
+    public void openStructureTab () {
         openTab("Cấu trúc KS", "/com/example/frontendquanlikhachsan/views/manager/Structure.fxml", null);
     }
 
-    public void openBookingConfirmationFormTab() {
+    public void openBookingConfirmationFormTab () {
         openTab("Phiếu đặt phòng", "/com/example/frontendquanlikhachsan/views/manager/BookingConfirmationForm.fxml", null);
     }
 
-    public void openBookingConfirmationFormTab(List<Integer> ids) {
+    public void openBookingConfirmationFormTab (List < Integer > ids) {
         openTab("Phiếu đặt phòng", "/com/example/frontendquanlikhachsan/views/manager/BookingConfirmationForm.fxml",
                 (BookingConfirmationFormController c) -> c.selectBookingConfirmationFormsByIds(ids));
     }
 
-    public void openMapTab() {
+    public void openMapTab () {
         openTab("Sơ đồ khách sạn", "/com/example/frontendquanlikhachsan/views/manager/Map.fxml", null);
     }
 
-    public void openReportTab() {
+    public void openReportTab () {
         openTab("Báo cáo tháng", "/com/example/frontendquanlikhachsan/views/accountant/RevenueReport.fxml", null);
     }
 
-    public void openInvoiceAccountantTab() {
+    public void openInvoiceAccountantTab () {
         openTab("Tra cứu hoá đơn", "/com/example/frontendquanlikhachsan/views/accountant/InvoiceAccountant.fxml", null);
     }
 
-    public void openSalaryTab() {
+    public void openSalaryTab () {
         openTab("Lương nhân viên", "/com/example/frontendquanlikhachsan/views/accountant/StaffSalaryAccountant.fxml", null);
     }
 
-    public void openAccountManagement() {
+    public void openAccountManagement () {
         openTab("Tài khoản", "/com/example/frontendquanlikhachsan/views/admin/Account.fxml", null);
     }
 
-    public void openUserRoleManagement() {
+    public void openUserRoleManagement () {
         openTab("Vai trò", "/com/example/frontendquanlikhachsan/views/admin/UserRole.fxml", null);
     }
 
-    public void openHistoryManagement() {
+    public void openHistoryManagement () {
         openTab("Lịch sử", "/com/example/frontendquanlikhachsan/views/admin/History.fxml", null);
     }
 
-    public void openVariableManagement() {
+    public void openVariableManagement () {
         openTab("Tham số", "/com/example/frontendquanlikhachsan/views/admin/RuleVariable.fxml", null);
     }
 
-    public void openChatbot() {
+    public void openChatbot () {
         openTab("Trợ lý AI", "/com/example/frontendquanlikhachsan/views/Chatbot.fxml", null);
     }
 
     //this tab is opened on a new window besides the app
-    public void openSettings() {
+    public void openSettings () {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/frontendquanlikhachsan/views/setting/Setting.fxml"));
             Parent root = fxmlLoader.load();
@@ -396,13 +410,12 @@ public class MainController {
             settingsStage.initOwner(null);
 
             settingsStage.show();
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
 
-    public void adjustSidebarByPermission() {
+    public void adjustSidebarByPermission () {
         new Thread(() -> {
             try {
                 int currentUserId = TokenHolder.getInstance().getCurrentUserId();
@@ -434,14 +447,14 @@ public class MainController {
         }).start();
     }
 
-    private void removeButtonFromParent(Node button) {
+    private void removeButtonFromParent (Node button){
         if (button != null && button.getParent() instanceof Pane) {
             ((Pane) button.getParent()).getChildren().remove(button);
         }
     }
 
     @FXML
-    public void logout() {
+    public void logout () {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Xác nhận đăng xuất");
         alert.setHeaderText("Bạn có chắc chắn muốn đăng xuất?");
@@ -469,11 +482,11 @@ public class MainController {
         }
     }
 
-    private boolean hasPermission(String role) {
+    private boolean hasPermission (String role){
         return currentUserPermissions.contains(role);
     }
 
-    private void setUpQuickAccess() {
+    private void setUpQuickAccess () {
         quickAccessViews.clear();
 
         if (hasPermission("RECEPTIONIST")) {
