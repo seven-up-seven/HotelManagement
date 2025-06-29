@@ -359,9 +359,9 @@ public class InvoiceController {
         acc.getPanes().add(new TitledPane("Chi tiết hoá đơn", boxD));
 
         // --- Buttons hành động chính ---
-        Button btnEdit = new Button("✏️ Sửa");
+        Button btnEdit = new Button("Sửa");
         btnEdit.setOnAction(e -> showInvoiceForm(dto));
-        Button btnDelete = new Button("🗑️ Xóa");
+        Button btnDelete = new Button("Xóa");
         btnDelete.setOnAction(e -> {
             Alert c = new Alert(Alert.AlertType.CONFIRMATION,
                     "Xóa hoá đơn này?", ButtonType.OK, ButtonType.CANCEL);

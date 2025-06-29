@@ -202,7 +202,7 @@ public class InvoiceAccountantController {
                         + " – " + it.getReservationCost());
             }
         });
-        lvD.setPrefHeight(lvD.getItems().size()*24 + 2);
+        lvD.setPrefHeight(lvD.getItems().size()*42 + 2);
 
         VBox boxD = new VBox(6, lvD);
         boxD.setPadding(new Insets(8,0,0,0));
