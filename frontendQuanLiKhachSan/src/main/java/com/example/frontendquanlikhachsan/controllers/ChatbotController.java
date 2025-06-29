@@ -42,7 +42,7 @@ public class ChatbotController {
         - Nếu một thực thể có tên, ưu tiên sử dụng tên để trả lời thay vì ID.
         - Phải quét và xử lý toàn bộ danh sách khi được hỏi, không được bỏ sót.
         """;
-    private final String apiKey = "AIzaSyDcfGo7McVVf1hl-jvz2Ot_0ZzcEVzhaWw";
+    private final String apiKey = "AIzaSyBri6h5g70u-OiAVNjXMFrbsXnlVAFwMgo";
     private final String url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + apiKey;
 
     private final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
