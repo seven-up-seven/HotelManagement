@@ -229,7 +229,7 @@
                 }
             });
             tableSelected.getColumns().add(colRemove);
-
+            tableSelected.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
 //            ObservableList<ResponseRentalFormDto> selectedForms = FXCollections.observableArrayList();
 //            tableSelected.setItems(selectedForms);

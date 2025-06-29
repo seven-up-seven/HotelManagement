@@ -102,6 +102,10 @@ public class ChatbotController {
             knowledgeSections.put("rentalExtensions", KnowledgeSectionBuilder.buildRentalExtensionForms(mapper));
             knowledgeSections.put("invoiceDetails", KnowledgeSectionBuilder.buildInvoiceDetails(mapper));
             knowledgeSections.put("revenueDetails", KnowledgeSectionBuilder.buildRevenueReportDetails(mapper));
+            knowledgeSections.put("histories", KnowledgeSectionBuilder.buildHistory(mapper));
+            knowledgeSections.put("permissions", KnowledgeSectionBuilder.buildPermission(mapper));
+            knowledgeSections.put("positions", KnowledgeSectionBuilder.buildPosition(mapper));
+            knowledgeSections.put("roles", KnowledgeSectionBuilder.buildRole(mapper));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -109,54 +113,70 @@ public class ChatbotController {
     }
 
     private String getRelevantSections(String question) {
-        StringBuilder relevant = new StringBuilder();
+        Set<String> keys = new LinkedHashSet<>();
         String q = question.toLowerCase();
 
-        if (q.contains("phòng")
-            || q.contains("room")) relevant.append(knowledgeSections.getOrDefault("rooms", ""));
-        if (q.contains("tầng")
-            || q.contains("tòa")
-            || q.contains("block")
-            || q.contains("phòng")
-            || q.contains("room")
-            || q.contains("floor")) relevant.append(knowledgeSections.getOrDefault("floors", ""));
-        if (q.contains("khách")
-            || q.contains("guest")) relevant.append(knowledgeSections.getOrDefault("guests", ""));
-        if (q.contains("đặt phòng")
-            || q.contains("phòng")
-            || q.contains("room")) relevant.append(knowledgeSections.getOrDefault("booking", ""));
-        if (q.contains("nhân viên")
-            || q.contains("phiếu")
-            || q.contains("staff")) relevant.append(knowledgeSections.getOrDefault("staff", ""));
-        if (q.contains("hóa đơn")
-            || q.contains("tiền")
-            || q.contains("phiếu")) {
-            relevant.append(knowledgeSections.getOrDefault("invoices", ""));
-            relevant.append(knowledgeSections.getOrDefault("invoiceDetails", ""));
+        // Ưu tiên: quyền, tài khoản, vai trò
+        if (q.contains("quyền") || q.contains("vai trò") || q.contains("tài khoản")) {
+            keys.add("permissions");
+            keys.add("accounts");
+            keys.add("roles");
         }
-        if (q.contains("doanh thu")
-            || q.contains("báo cáo")
-            || q.contains("tiền")
-            || q.contains("tháng")) {
-            relevant.append(knowledgeSections.getOrDefault("revenue", ""));
-            relevant.append(knowledgeSections.getOrDefault("revenueDetails", ""));
-        }
-        if (q.contains("gia hạn")
-            || q.contains("thuê")
-            || q.contains("phiếu")) relevant.append(knowledgeSections.getOrDefault("rentalExtensions", ""));
-        if (q.contains("phiếu")
-            || q.contains("thuê")
-            || q.contains("phòng")) relevant.append(knowledgeSections.getOrDefault("rentalForms", ""));
-        if (q.contains("phòng")) relevant.append(knowledgeSections.getOrDefault("roomtypes", ""));
-        if (q.contains("block")
-            || q.contains("tòa")
-            || q.contains("tầng")
-            || q.contains("floor")) relevant.append(knowledgeSections.getOrDefault("blocks", ""));
-        if (q.contains("tài khoản")
-            || q.contains("acc")) relevant.append(knowledgeSections.getOrDefault("accounts", ""));
 
-        if (relevant.length() == 0) {
-            relevant.append(knowledgeSections.getOrDefault("rooms", ""));
+        // Vị trí làm việc
+        if (q.contains("vị trí") || q.contains("position")) {
+            keys.add("positions");
+        }
+
+        // Nhân viên
+        if (q.contains("nhân viên") || q.contains("staff")) {
+            keys.add("staff");
+        }
+
+        // Khách thuê
+        if (q.contains("khách") || q.contains("guest")) {
+            keys.add("guests");
+        }
+
+        // Đặt phòng
+        if (q.contains("đặt phòng")) {
+            keys.add("booking");
+        }
+
+        // Phiếu thuê
+        if (q.contains("phiếu") || q.contains("thuê")) {
+            keys.add("rentalForms");
+            keys.add("rentalExtensions");
+            keys.add("invoices");
+            keys.add("invoiceDetails");
+        }
+
+        // Phòng
+        if (q.contains("phòng") || q.contains("room")) {
+            keys.add("rooms");
+            keys.add("roomtypes");
+        }
+
+        // Tầng / Tòa / Block
+        if (q.contains("tầng") || q.contains("floor") || q.contains("tòa") || q.contains("block")) {
+            keys.add("floors");
+            keys.add("blocks");
+        }
+
+        // Doanh thu
+        if (q.contains("doanh thu") || q.contains("báo cáo") || q.contains("tháng") || q.contains("tiền")) {
+            keys.add("revenue");
+            keys.add("revenueDetails");
+        }
+
+        // Fallback nếu không có từ khóa nào khớp
+        if (keys.isEmpty()) {
+            keys.add("rooms");
+        }
+
+        StringBuilder relevant = new StringBuilder();
+        for (String key : keys) {
+            relevant.append(knowledgeSections.getOrDefault(key, ""));
         }
 
         return relevant.toString();

@@ -6,8 +6,11 @@ import com.example.frontendquanlikhachsan.entity.block.ResponseBlockDto;
 import com.example.frontendquanlikhachsan.entity.bookingconfirmationform.ResponseBookingConfirmationFormDto;
 import com.example.frontendquanlikhachsan.entity.floor.ResponseFloorDto;
 import com.example.frontendquanlikhachsan.entity.guest.ResponseGuestDto;
+import com.example.frontendquanlikhachsan.entity.history.ResponseHistoryDto;
 import com.example.frontendquanlikhachsan.entity.invoice.ResponseInvoiceDto;
 import com.example.frontendquanlikhachsan.entity.invoicedetail.ResponseInvoiceDetailDto;
+import com.example.frontendquanlikhachsan.entity.permission.ResponsePermissionDto;
+import com.example.frontendquanlikhachsan.entity.position.ResponsePositionDto;
 import com.example.frontendquanlikhachsan.entity.rentalExtensionForm.ResponseRentalExtensionFormDto;
 import com.example.frontendquanlikhachsan.entity.rentalForm.ResponseRentalFormDto;
 import com.example.frontendquanlikhachsan.entity.revenueReport.ResponseRevenueReportDto;
@@ -15,8 +18,10 @@ import com.example.frontendquanlikhachsan.entity.revenueReportDetail.ResponseRev
 import com.example.frontendquanlikhachsan.entity.room.ResponseRoomDto;
 import com.example.frontendquanlikhachsan.entity.roomType.ResponseRoomTypeDto;
 import com.example.frontendquanlikhachsan.entity.staff.ResponseStaffDto;
+import com.example.frontendquanlikhachsan.entity.userRole.ResponseUserRoleDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class KnowledgeSectionBuilder {
@@ -41,6 +46,100 @@ public class KnowledgeSectionBuilder {
             kb.append("  * ID: ").append(b.getId()).append(", Tên: ").append(b.getName())
                     .append(", Số tầng: ").append(b.getFloorIds() != null ? b.getFloorIds().size() : 0).append("\n");
         }
+        return kb.append("\n").toString();
+    }
+
+    public static String buildHistory(ObjectMapper mapper) throws Exception {
+        StringBuilder kb = new StringBuilder("# Lịch sử hoạt động\n");
+        var json = ApiHttpClientCaller.call("history", ApiHttpClientCaller.Method.GET, null);
+        List<ResponseHistoryDto> historyList = Arrays.asList(mapper.readValue(json, ResponseHistoryDto[].class));
+        kb.append("- Số lượng hành động: ").append(historyList.size()).append("\n");
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
+        for (ResponseHistoryDto his : historyList) {
+            kb.append("  * ID: ").append(his.getId())
+                    .append(", Thời gian: ").append(his.getExecuteAt().format(formatter))
+                    .append(", Người thực hiện: ").append(his.getImpactor())
+                    .append(" (ID: ").append(his.getImpactorId()).append(")")
+                    .append("\n    Đối tượng bị ảnh hưởng: ").append(his.getAffectedObject())
+                    .append(" (ID: ").append(his.getAffectedObjectId()).append(")")
+                    .append(", Hành động: ").append(his.getAction())
+                    .append("\n    Nội dung: ").append(his.getContent())
+                    .append("\n");
+        }
+
+        return kb.append("\n").toString();
+    }
+
+    public static String buildPermission(ObjectMapper mapper) throws Exception {
+        StringBuilder kb = new StringBuilder("# Danh sách quyền hệ thống\n");
+
+        var json = ApiHttpClientCaller.call("permission", ApiHttpClientCaller.Method.GET, null);
+        List<ResponsePermissionDto> permissions = Arrays.asList(mapper.readValue(json, ResponsePermissionDto[].class));
+
+        kb.append("- Tổng số quyền: ").append(permissions.size()).append("\n");
+
+        for (ResponsePermissionDto perm : permissions) {
+            kb.append("  * ID: ").append(perm.getId())
+                    .append(", Tên quyền: ").append(perm.getName()).append("\n");
+
+            if (perm.getUserRoleNames() != null && !perm.getUserRoleNames().isEmpty()) {
+                kb.append("    Áp dụng cho vai trò: ").append(String.join(", ", perm.getUserRoleNames())).append("\n");
+            } else {
+                kb.append("    Không áp dụng cho vai trò nào.\n");
+            }
+        }
+
+        return kb.append("\n").toString();
+    }
+
+    public static String buildPosition(ObjectMapper mapper) throws Exception {
+        StringBuilder kb = new StringBuilder("# Danh sách chức vụ trong hệ thống\n");
+
+        var json = ApiHttpClientCaller.call("position", ApiHttpClientCaller.Method.GET, null);
+        List<ResponsePositionDto> positions = Arrays.asList(mapper.readValue(json, ResponsePositionDto[].class));
+
+        kb.append("- Tổng số chức vụ: ").append(positions.size()).append("\n");
+
+        for (ResponsePositionDto pos : positions) {
+            kb.append("  * ID: ").append(pos.getId())
+                    .append(", Tên chức vụ: ").append(pos.getName())
+                    .append(", Lương cơ bản: ").append(String.format("%,.0f VND", pos.getBaseSalary()))
+                    .append("\n");
+
+            if (pos.getStaffNames() != null && !pos.getStaffNames().isEmpty()) {
+                kb.append("    Nhân viên đảm nhận: ").append(String.join(", ", pos.getStaffNames())).append("\n");
+            } else {
+                kb.append("    Hiện chưa có nhân viên nào đảm nhận.\n");
+            }
+        }
+
+        return kb.append("\n").toString();
+    }
+
+    public static String buildRole(ObjectMapper mapper) throws Exception {
+        StringBuilder kb = new StringBuilder("# Danh sách vai trò người dùng\n");
+
+        var json = ApiHttpClientCaller.call("user-role", ApiHttpClientCaller.Method.GET, null);
+        List<ResponseUserRoleDto> roles = Arrays.asList(mapper.readValue(json, ResponseUserRoleDto[].class));
+
+        kb.append("- Tổng số vai trò: ").append(roles.size()).append("\n");
+
+        for (ResponseUserRoleDto role : roles) {
+            kb.append("  * ID: ").append(role.getId())
+                    .append(", Tên vai trò: ").append(role.getName())
+                    .append("\n");
+
+            if (role.getPermissionNames() != null && !role.getPermissionNames().isEmpty()) {
+                kb.append("  Quyền được cấp: ")
+                        .append(String.join(", ", role.getPermissionNames()))
+                        .append("\n");
+            } else {
+                kb.append("  Vai trò này chưa được cấp quyền nào.\n");
+            }
+        }
+
         return kb.append("\n").toString();
     }
 

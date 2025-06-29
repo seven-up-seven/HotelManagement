@@ -10,14 +10,26 @@ import java.util.prefs.Preferences;
 
 @Component
 public class KeyMapController {
-    @FXML private ComboBox<String> searchKeyComboBox;
-    @FXML private Label statusLabel;
+    @FXML
+    private ComboBox<String> searchKeyComboBox;
+    @FXML
+    private Label statusLabel;
+    @FXML
+    private ComboBox<String> modifierComboBox;
 
     private final Preferences preferences = Preferences.userNodeForPackage(KeyMapController.class);
     private static final String PREF_SEARCH_KEY = "search_shortcut_key";
+    private static final String PREF_SEARCH_MODIFIER = "search_shortcut_modifier";
 
     @FXML
     public void initialize() {
+        modifierComboBox.setItems(FXCollections.observableArrayList(
+                "CTRL", "ALT", "SHIFT", "META"
+        ));
+        // Load saved modifier, default CTRL
+        String savedMod = preferences.get(PREF_SEARCH_MODIFIER, "CTRL");
+        modifierComboBox.setValue(savedMod);
+
         // Populate A-Z
         searchKeyComboBox.setItems(FXCollections.observableArrayList(
                 "A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
@@ -32,16 +44,24 @@ public class KeyMapController {
 
     @FXML
     public void handleSave() {
-        String selectedKey = searchKeyComboBox.getValue();
-        if (selectedKey == null || selectedKey.isBlank()) {
-            statusLabel.setText("Vui lòng chọn phím.");
+        String mod = modifierComboBox.getValue();
+        String key = searchKeyComboBox.getValue();
+        if (mod == null || key == null || key.isBlank()) {
+            statusLabel.setText("Vui lòng chọn đầy đủ phím tắt.");
             statusLabel.setStyle("-fx-text-fill: red;");
             return;
         }
 
-        preferences.put(PREF_SEARCH_KEY, selectedKey);
-        statusLabel.setText("Đã lưu: Ctrl + " + selectedKey);
+        preferences.put(PREF_SEARCH_MODIFIER, mod);
+        preferences.put(PREF_SEARCH_KEY, key);
+
+        statusLabel.setText("Đã lưu: " + mod + " + " + key);
         statusLabel.setStyle("-fx-text-fill: green;");
+    }
+
+    public static String getSearchModifier() {
+        Preferences p = Preferences.userNodeForPackage(KeyMapController.class);
+        return p.get(PREF_SEARCH_MODIFIER, "CTRL");
     }
 
     // Có thể thêm hàm để dùng lại từ MainController

@@ -138,7 +138,6 @@
                                             <MenuItem text="🏨 Cấu trúc khách sạn" onAction="#openStructureTab"/>
                                             <MenuItem text="📅 Đặt phòng" onAction="#openBookingConfirmationFormTab"/>
                                             <MenuItem text="⏳ Gia hạn" onAction="#openRentalExtensionFormTab"/>
-                                            <MenuItem text="🗺️ Sơ đồ khách sạn" onAction="#openMapTab"/>
                                         </items>
                                     </ContextMenu>
                                 </contextMenu>
