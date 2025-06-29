@@ -6,6 +6,7 @@
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.example.frontendquanlikhachsan.controllers.setting.AccountController"
+            stylesheets="@../../assets/css/Setting.css"
             prefHeight="400.0" prefWidth="600.0">
 
     <VBox spacing="15" layoutX="20" layoutY="20">

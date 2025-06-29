@@ -286,8 +286,7 @@ public class InvoiceController {
 
         // --- Tiêu đề ---
         Label title = new Label("Chi tiết Hoá đơn – ID: " + dto.getId());
-        title.setStyle("-fx-font-size:16px; -fx-font-weight:bold; -fx-padding:0 0 8 0;");
-
+        title.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 0 0 8 0; -fx-text-fill: #003269; -fx-background-color: transparent; -fx-border-color: transparent;");
         // --- Grid cơ bản ---
         GridPane grid = new GridPane();
         grid.setHgap(10); grid.setVgap(10); grid.setPadding(new Insets(8));

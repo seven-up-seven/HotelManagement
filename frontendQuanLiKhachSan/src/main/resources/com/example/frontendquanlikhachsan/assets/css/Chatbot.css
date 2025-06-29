@@ -6,7 +6,7 @@
 }
 
 .chat-header-box {
-    -fx-background-color: linear-gradient(to right, #667EEA, #764BA2);
+    -fx-background-color: linear-gradient(to right, #003269, #257bac);
     -fx-background-radius: 10;
     -fx-padding: 15;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);
@@ -24,9 +24,9 @@
 }
 
 .chat-box {
-    -fx-background-color: #f3e7ff;
+    -fx-background-color: #E8F6FF;
     -fx-background-radius: 10;
-    -fx-border-color: #b39ddb;
+    -fx-border-color: #003269;
     -fx-border-width: 2;
     -fx-border-radius: 10;
 }
@@ -41,7 +41,7 @@
     -fx-font-size: 14px;
     -fx-font-family: "Segoe UI";
     -fx-background-color: #ffffff;
-    -fx-border-color: #b39ddb;
+    -fx-border-color: #003269;
     -fx-border-radius: 8;
     -fx-background-radius: 8;
     -fx-padding: 10;
@@ -51,12 +51,12 @@
 }
 
 .input-area:focused {
-    -fx-border-color: #667EEA;
+    -fx-border-color: #003269;
     -fx-border-width: 2;
 }
 
 .send-button {
-    -fx-background-color: #667EEA;
+    -fx-background-color: linear-gradient(to right, #003269, #257bac);
     -fx-text-fill: #ffffff;
     -fx-font-size: 14px;
     -fx-font-weight: bold;
@@ -68,7 +68,7 @@
 }
 
 .send-button:hover {
-    -fx-background-color: #764BA2;
+    -fx-background-color: #003269;
     -fx-scale-x: 1.05;
     -fx-scale-y: 1.05;
     -fx-transition: all 0.2s ease-in-out;

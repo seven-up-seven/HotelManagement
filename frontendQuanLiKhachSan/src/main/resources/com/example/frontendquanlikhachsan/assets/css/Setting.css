@@ -1,0 +1,121 @@
+.root {
+    -fx-background-color: #f5f5fa;
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+}
+
+.label {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #003269;
+    -fx-padding: 10 0;
+}
+
+.text-field, .password-field, .combo-box, .date-picker, .text-area {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 8;
+    -fx-border-color: #87CEEB;
+    -fx-border-radius: 8;
+    -fx-padding: 8 12;
+    -fx-font-size: 14px;
+    -fx-pref-height: 40;
+    -fx-min-height: 40;
+    -fx-max-height: 40;
+    -fx-pref-width: 200;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 1);
+}
+
+.text-field:focused, .password-field:focused, .combo-box:focused, .date-picker:focused, .text-area:focused {
+    -fx-border-color: #003269;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(0,50,105,0.3), 5, 0, 0, 1);
+}
+
+.combo-box .combo-box-base {
+    -fx-background-insets: 0;
+}
+
+.date-picker .text-field {
+    -fx-padding: 0 5 0 5;
+    -fx-background-insets: 0;
+}
+
+.date-picker .arrow-button {
+    -fx-padding: 0 5 0 0;
+    -fx-background-insets: 0;
+}
+
+.button {
+    -fx-background-color: linear-gradient(to right, #003269, #257bac);
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
+}
+
+.button:hover {
+    -fx-background-color: #003269;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+    -fx-transition: all 0.2s ease-in-out;
+}
+
+.button:pressed {
+    -fx-background-color: #00234d;
+}
+
+.button:disabled {
+    -fx-background-color: #87CEEB;
+    -fx-opacity: 0.6;
+}
+
+.image-view {
+    -fx-border-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);
+}
+
+.vbox {
+    -fx-padding: 20;
+    -fx-spacing: 15;
+}
+
+.hbox {
+    -fx-spacing: 10;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.split-pane {
+    -fx-background-color: #f5f5fa;
+    -fx-padding: 0;
+}
+
+.split-pane *.split-pane-divider {
+    -fx-background-color: #87CEEB;
+    -fx-padding: 2;
+}
+
+.left-pane {
+    -fx-background-color: #ffffff;
+    -fx-padding: 16;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+    -fx-background-radius: 10;
+}
+
+.right-pane {
+    -fx-background-color: #ffffff;
+    -fx-padding: 16;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+    -fx-background-radius: 10;
+}
+
+.stack-pane {
+    -fx-background-color: #ffffff;
+}
+
+.status-label {
+    -fx-text-fill: #2e7d32;
+    -fx-font-size: 12px;
+    -fx-padding: 5 0 0 0;
+}

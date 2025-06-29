@@ -8,7 +8,8 @@
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             xmlns="http://javafx.com/javafx"
             fx:controller="com.example.frontendquanlikhachsan.controllers.setting.SettingController"
-            prefHeight="400.0" prefWidth="600.0">
+            stylesheets="@../../assets/css/Setting.css"
+            prefHeight="400.0" prefWidth="900.0">
 
     <!-- Bên trái: Thanh menu -->
     <left>
@@ -27,7 +28,7 @@
             maxWidth="180"
             text="Thông tin người dùng"
             wrapText="true"
-            style="-fx-background-color: #a0c4ff;" />
+             />
 
             <Button fx:id="btnOption2"
                     minHeight="40"
@@ -35,7 +36,7 @@
                     maxWidth="180"
                     text="Thông tin tài khoản"
                     wrapText="true"
-                    style="-fx-background-color: #a0c4ff;" />
+                    />
 
             <Button fx:id="btnOption3"
                     minHeight="40"
@@ -43,7 +44,7 @@
                     maxWidth="180"
                     text="Phím tắt"
                     wrapText="true"
-                    style="-fx-background-color: #a0c4ff;" />
+                    />
         </VBox>
     </left>
 
