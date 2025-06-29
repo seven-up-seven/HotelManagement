@@ -4,39 +4,80 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.CategoryAxis?>
 <SplitPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="com.example.frontendquanlikhachsan.controllers.accountant.RevenueReportController"
-           stylesheets="@../../assets/css/View.css"
-           prefWidth="800" prefHeight="600">
+
+           prefWidth="800" prefHeight="600"
+           dividerPositions="0.45">  <!-- 45% cho left pane -->
+<!--     stylesheets="@../../assets/css/View.css"-->
     <items>
         <!-- LEFT PANE -->
-        <VBox spacing="8" prefWidth="300" styleClass="left-pane">
+        <VBox spacing="8" styleClass="left-pane">
             <padding>
                 <Insets top="16" right="16" bottom="16" left="16"/>
             </padding>
 
-            <Label text="Chọn Tháng/Năm" styleClass="header"/>
+            <Label text="Chọn Năm" styleClass="header"/>
             <HBox spacing="6" alignment="CENTER_LEFT">
-                <ComboBox fx:id="cbYear"  promptText="Năm" prefWidth="100"/>
-                <ComboBox fx:id="cbMonth" promptText="Tháng" prefWidth="100"/>
-                <!-- nút Tạo + Xóa -->
-                <Button fx:id="btnGenerate" text="➕ Tạo"/>
-                <Button fx:id="btnDelete"   text="❌ Xóa" disable="true"/>
+                <ComboBox fx:id="cbYear" promptText="Năm" prefWidth="100"/>
+                <Button fx:id="btnExportPdf" text="Xuất PDF" prefWidth="80"/>
+                <Button fx:id="btnExportExcel" text="Xuất Excel" prefWidth="80"/>
+                <Button fx:id="btnBuilder" text="Build" prefWidth="80"/>
             </HBox>
 
-            <Label text="Danh sách Báo cáo" styleClass="header"/>
-            <TableView fx:id="tblReport" VBox.vgrow="ALWAYS">
-                <columns>
-                    <TableColumn fx:id="colReportId"    text="ID"        prefWidth="50"/>
-                    <TableColumn fx:id="colReportYear"  text="Năm"       prefWidth="70"/>
-                    <TableColumn fx:id="colReportMonth" text="Tháng"     prefWidth="70"/>
-                    <TableColumn fx:id="colReportTotal" text="Doanh thu" prefWidth="100"/>
-                </columns>
-            </TableView>
+            <!-- Phần scrollable: chart + table -->
+            <ScrollPane
+                    hbarPolicy="AS_NEEDED"
+                    vbarPolicy="AS_NEEDED"
+                    pannable="true"
+                    VBox.vgrow="ALWAYS">
+                <content>
+                    <VBox spacing="8">
+                        <HBox spacing="20">
+                            <Label text="Cơ cấu doanh thu theo tháng" styleClass="subheader"/>
+                            <BarChart fx:id="barChart"
+                                      prefHeight="300"
+                                      prefWidth="600">
+                                <xAxis>
+                                    <CategoryAxis label="Tháng"/>
+                                </xAxis>
+                                <yAxis>
+                                    <NumberAxis label="Doanh thu"/>
+                                </yAxis>
+                            </BarChart>
+
+                        </HBox>
+
+
+                        <Label text="Cơ cấu doanh thu theo loại phòng" styleClass="subheader"/>
+                        <PieChart fx:id="annualPieChart"
+                                  prefHeight="500"
+                                  prefWidth="500"/>
+                        <Label fx:id="lblAnnualTotal"
+                               text="Tổng: 0₫"
+                               style="-fx-font-size:14px; -fx-font-weight:bold;"/>
+
+                        <Label text="Danh sách Báo cáo" styleClass="header"/>
+                        <TableView fx:id="tblReport"
+                                   prefHeight="200">
+                            <columns>
+                                <TableColumn fx:id="colReportId"    text="ID"        prefWidth="50"/>
+                                <TableColumn fx:id="colReportYear"  text="Năm"       prefWidth="70"/>
+                                <TableColumn fx:id="colReportMonth" text="Tháng"     prefWidth="70"/>
+                                <TableColumn fx:id="colReportTotal" text="Doanh thu" prefWidth="100"/>
+                            </columns>
+                        </TableView>
+                    </VBox>
+                </content>
+            </ScrollPane>
         </VBox>
 
-        <!-- RIGHT PANE -->
+        <!-- RIGHT PANE (giữ nguyên) -->
         <VBox spacing="8" prefWidth="500" styleClass="right-pane">
             <padding>
                 <Insets top="16" right="16" bottom="16" left="16"/>
@@ -47,7 +88,7 @@
             </Pane>
             <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
                 <content>
-                    <VBox fx:id="detailContainer" spacing="12" />
+                    <VBox fx:id="detailContainer" spacing="12"/>
                 </content>
             </ScrollPane>
         </VBox>

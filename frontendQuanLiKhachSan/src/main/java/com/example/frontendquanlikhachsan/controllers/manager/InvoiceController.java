@@ -468,7 +468,8 @@ public class InvoiceController {
                 });
                 if(!rs.isEmpty()) cbG.getSelectionModel().selectFirst();
             } catch(Exception ex) {
-                showErrorAlert("Lỗi tìm", ex.getMessage());
+                showErrorAlert("Lỗi tìm", "Lỗi tìm kiếm người thanh toán");
+                System.out.print(ex.getMessage());
             }
         });
 
@@ -529,15 +530,15 @@ public class InvoiceController {
         HBox hbSearch     = new HBox(6, tfRFId, tfRRoom, tfRForm, btnSearch);
         form.add(hbSearch, 1, 0, 3,1);
 
-        ComboBox<SearchRentalFormDto> cbRF = new ComboBox<>();
+        ComboBox<ResponseRentalFormDto> cbRF = new ComboBox<>();
         form.add(lb.apply("Kết quả:"), 0,1);
         form.add(cbRF,1,1,3,1);
         cbRF.setConverter(new StringConverter<>() {
-            @Override public String toString(SearchRentalFormDto r) {
-                return r==null? "": "#"+r.getRentalFormId()
+            @Override public String toString(ResponseRentalFormDto r) {
+                return r==null? "": "#"+r.getId()
                         +" – "+r.getRoomName();
             }
-            @Override public SearchRentalFormDto fromString(String s) { return null; }
+            @Override public ResponseRentalFormDto fromString(String s) { return null; }
         });
 
         // --- Tổng số ngày & tổng cost (read-only) ---
@@ -562,19 +563,31 @@ public class InvoiceController {
         btnSearch.setOnAction(e->{
             try {
                 SearchRentalFormDto req = new SearchRentalFormDto();
-                if (!tfRFId.getText().isBlank())
+                if (!tfRFId.getText().isBlank()) {
                     req.setRentalFormId(Integer.parseInt(tfRFId.getText().trim()));
-                if (!tfRRoom.getText().isBlank())
+                }
+                else if(tfRFId.getText().isBlank()){
+                    req.setRentalFormId(null);
+                }
+                if (!tfRRoom.getText().isBlank()) {
                     req.setRoomName(tfRRoom.getText().trim());
-                if (!tfRForm.getText().isBlank())
+                }
+                else if (tfRForm.getText().isBlank()) {
+                    req.setRoomId(null);
+                }
+                if (!tfRForm.getText().isBlank()) {
                     req.setRoomId(Integer.parseInt(tfRForm.getText().trim()));
+                }
+                else if (tfRForm.getText().isBlank()) {
+                    req.setRoomId(null);
+                }
 
                 String j = ApiHttpClientCaller.call("rental-form/search-unpaid", POST, req);
                 List<ResponseRentalFormDto> r = mapper.readValue(j, new TypeReference<List<ResponseRentalFormDto>>(){});
                 // Chuyển đổi ResponseRentalFormDto sang SearchRentalFormDto
-                List<SearchRentalFormDto> rs = r.stream()
-                        .map(rf -> SearchRentalFormDto.builder()
-                                .rentalFormId(rf.getId())
+                List<ResponseRentalFormDto> rs = r.stream()
+                        .map(rf -> ResponseRentalFormDto.builder()
+                                .id(rf.getId())
                                 .roomName(rf.getRoomName())
                                 .roomId(rf.getRoomId())
                                 .build())
@@ -583,14 +596,15 @@ public class InvoiceController {
                 if (!rs.isEmpty()) {
                     cbRF.getSelectionModel().selectFirst();
                     // gọi 2 endpoint tính ngày + cost
-                    int rfId = rs.get(0).getRentalFormId();
+                    int rfId = rs.get(0).getId();
                     String dJ = ApiHttpClientCaller.call("rental-form/"+rfId+"/total-rental-days", GET, null);
                     String cJ = ApiHttpClientCaller.call("rental-form/"+rfId+"/total-cost", GET, null);
                     tfDays.setText(dJ);
                     tfCost.setText(cJ);
                 }
             } catch (Exception ex) {
-                showErrorAlert("Lỗi tìm RF", ex.getMessage());
+                showErrorAlert("Lỗi tìm RF", "Lỗi");
+                System.out.println(ex.getMessage());
             }
         });
 
@@ -598,7 +612,7 @@ public class InvoiceController {
         cbRF.valueProperty().addListener((o,old,sel)->{
             if (sel==null) return;
             try {
-                int rfId = sel.getRentalFormId();
+                int rfId = sel.getId();
                 String dJ = ApiHttpClientCaller.call("rental-form/"+rfId+"/total-rental-days", GET, null);
                 String cJ = ApiHttpClientCaller.call("rental-form/"+rfId+"/total-cost", GET, null);
                 tfDays.setText(dJ);
@@ -607,16 +621,16 @@ public class InvoiceController {
         });
 
         btnSave.setOnAction(e->{
-            SearchRentalFormDto sel = cbRF.getValue();
+            ResponseRentalFormDto sel = cbRF.getValue();
             if (sel==null) { showErrorAlert("Lỗi","Chưa chọn RentalForm"); return; }
             // kiểm tra trùng
-            if (detail==null && parent.getRentalFormIds().contains(sel.getRentalFormId())) {
+            if (detail==null && parent.getRentalFormIds().contains(sel.getId())) {
                 showErrorAlert("Lỗi","RentalForm đã có trong hoá đơn rồi"); return;
             }
             try {
                 InvoiceDetailDto dto = new InvoiceDetailDto();
                 dto.setInvoiceId(parent.getId());
-                dto.setRentalFormId(sel.getRentalFormId());
+                dto.setRentalFormId(sel.getId());
                 dto.setNumberOfRentalDays(Integer.parseInt(tfDays.getText().trim()));
                 dto.setReservationCost(Double.parseDouble(tfCost.getText().trim()));
 

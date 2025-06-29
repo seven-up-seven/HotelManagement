@@ -10,6 +10,7 @@
     import com.example.frontendquanlikhachsan.entity.rentalExtensionForm.RentalExtensionFormDto;
     import com.example.frontendquanlikhachsan.entity.rentalFormDetail.ResponseRentalFormDetailDto;
     import com.example.frontendquanlikhachsan.entity.rentalExtensionForm.ResponseRentalExtensionFormDto;
+    import com.example.frontendquanlikhachsan.entity.revenueReport.RevenueReportDto;
     import com.fasterxml.jackson.core.type.TypeReference;
     import com.fasterxml.jackson.databind.ObjectMapper;
     import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -311,6 +312,8 @@
                         );
                     }
 
+                    generateCurrentMonthReport();
+
                     showInfoAlert("Thành công",
                             "Đã tạo hoá đơn #" + created.getId()
                                     + " và thanh toán " + selectedForms.size() + " phiếu.");
@@ -347,6 +350,33 @@
             detailPane.getChildren().add(vbox);
         }
 
+        /**
+         * Generates a revenue report for the current month/year
+         * Called after successful invoice creation to keep reports current
+         */
+        private void generateCurrentMonthReport() {
+            try {
+                // Get current year and month
+                LocalDate now = LocalDate.now();
+                Short year = (short) now.getYear();
+                Byte month = (byte) now.getMonthValue();
+
+                // Create report request object
+                RevenueReportDto req = new RevenueReportDto();
+                req.setYear(year);
+                req.setMonth(month);
+
+                // Make API call to generate/update the report
+                ApiHttpClientCaller.call("revenue-report", ApiHttpClientCaller.Method.POST, req, "");
+
+                // Optional: Show confirmation in UI
+                // showInfoAlert("Báo cáo cập nhật", "Báo cáo doanh thu tháng " + month + "/" + year + " đã được cập nhật");
+            } catch (Exception ex) {
+                // Log error but don't disrupt invoice flow
+                System.err.println("Không thể cập nhật báo cáo doanh thu: " + ex.getMessage());
+                // Optional: showErrorAlert("Lỗi cập nhật báo cáo", "Không thể cập nhật báo cáo doanh thu: " + ex.getMessage());
+            }
+        }
 
         private void loadForms() {
             try {
