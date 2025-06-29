@@ -19,6 +19,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -61,20 +62,16 @@ public class MainController {
     private Button toggleSidebarButton;
     @FXML
     private Pane overlayPane; // Overlay pane
-    @FXML private HBox ADMIN, RECEPTIONIST, MANAGER, ACCOUNTANT;
-
-    @FXML private TabPane tabPane;
-    @FXML private ScrollPane dockScrollPane;
-    @FXML private HBox dockItems;
-
+    @FXML
+    private HBox ADMIN, RECEPTIONIST, MANAGER, ACCOUNTANT;
+    @FXML
+    private ScrollPane dockScrollPane;
+    @FXML
+    private HBox dockItems;
     @FXML
     private Label dateDayLabel;
     @FXML
     private Label clockLabel;
-
-    @FXML private VBox sidebarContainer; // Sidebar overlay
-    @FXML private Button toggleSidebarButton; // Nút toggle sidebar
-    @FXML private Pane overlayPane; // Overlay pane
 
     private final Map<String, Runnable> quickAccessViews = new HashMap<>();
     private final Map<String, Integer> tabCounters = new HashMap<>();
