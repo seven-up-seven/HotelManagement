@@ -53,11 +53,11 @@
 
                     <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" styleClass="sidebar-scroll" VBox.vgrow="ALWAYS">
                         <VBox spacing="5">
-                            <Button text="🏠 Trang chủ" styleClass="nav-item" onAction="#openHomeTab">
+                            <Button text="🏠 Trang chủ" style="-fx-font-weight: bold" styleClass="nav-item" onAction="#openHomeTab">
                                 <tooltip><Tooltip text="Trang chủ"/></tooltip>
                             </Button>
 
-                            <Button fx:id="adminButton" text="👤 Quản trị viên" styleClass="nav-item">
+                            <Button fx:id="adminButton" text="👤 Quản trị viên" style="-fx-font-weight: bold" styleClass="nav-item">
                                 <tooltip><Tooltip text="Quản trị viên"/></tooltip>
                                 <contextMenu>
                                     <ContextMenu fx:id="adminMenu" styleClass="context-menu">
@@ -71,7 +71,7 @@
                                 </contextMenu>
                             </Button>
 
-                            <Button fx:id="receptionistButton" text="🛎 Lễ tân" styleClass="nav-item">
+                            <Button fx:id="receptionistButton" text="🛎 Lễ tân" style="-fx-font-weight: bold" styleClass="nav-item">
                                 <tooltip><Tooltip text="Lễ tân"/></tooltip>
                                 <contextMenu>
                                     <ContextMenu fx:id="receptionistMenu" styleClass="context-menu">
@@ -85,7 +85,7 @@
                                 </contextMenu>
                             </Button>
 
-                            <Button fx:id="managerButton" text="📋 Quản lý" styleClass="nav-item">
+                            <Button fx:id="managerButton" text="📋 Quản lý" style="-fx-font-weight: bold" styleClass="nav-item">
                                 <Tooltip text="Quản lý"></Tooltip>
                                 <contextMenu>
                                     <ContextMenu fx:id="managerMenu" styleClass="context-menu">
@@ -117,15 +117,15 @@
                                 </contextMenu>
                             </Button>
 
-                            <Button text="🤖 Trợ lý AI" styleClass="nav-item" onAction="#openChatbot">
+                            <Button text="🤖 Trợ lý AI" style="-fx-font-weight: bold" styleClass="nav-item" onAction="#openChatbot">
                                 <tooltip><Tooltip text="Trợ lý AI"/></tooltip>
                             </Button>
 
-                            <Button text="⚙️ Cài đặt" styleClass="nav-item" onAction="#openSettings">
+                            <Button text="⚙️ Cài đặt" style="-fx-font-weight: bold" styleClass="nav-item" onAction="#openSettings">
                                 <tooltip><Tooltip text="Cài đặt"/></tooltip>
                             </Button>
 
-                            <Button text="🚪 Đăng xuất" styleClass="nav-item" onAction="#logout">
+                            <Button text="🚪 Đăng xuất" style="-fx-font-weight: bold"  styleClass="nav-item" onAction="#logout">
                                 <tooltip><Tooltip text="Đăng xuất"/></tooltip>
                             </Button>
                         </VBox>

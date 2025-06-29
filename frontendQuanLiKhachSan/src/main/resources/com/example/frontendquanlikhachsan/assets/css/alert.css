@@ -1,13 +1,13 @@
 .dialog-pane {
     -fx-background-color: #ffffff; /* Màu nền trắng cho nội dung chính */
-    -fx-border-color: linear-gradient(to right, #667eea, #764ba2); /* Gradient tím cho viền */
+    -fx-border-color: linear-gradient(to right, #003269, #257bac); /* Gradient xanh cho viền */
     -fx-border-width: 2px;
     -fx-border-radius: 5px;
     -fx-background-radius: 5px;
 }
 
 .dialog-pane .header-panel {
-    -fx-background-color: linear-gradient(to right, #667eea, #764ba2); /* Gradient tím cho header */
+    -fx-background-color: linear-gradient(to right, #003269, #257bac); /* Gradient xanh cho header */
     -fx-padding: 10px;
 }
 
@@ -24,14 +24,16 @@
 }
 
 .dialog-pane .button {
-    -fx-background-color: linear-gradient(to right, #667eea, #764ba2); /* Gradient tím cho nút */
+    -fx-background-color: linear-gradient(to right, #003269, #257bac); /* Gradient xanh cho nút */
     -fx-text-fill: #ffffff;
     -fx-font-size: 14px;
     -fx-background-radius: 5px;
     -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 2); /* Thêm hiệu ứng bóng */
 }
 
 .dialog-pane .button:hover {
-    -fx-background-color: linear-gradient(to right, #5a6cd6, #6a4292); /* Gradient tím đậm hơn khi hover */
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0, 0, 2);
+    -fx-background-color: linear-gradient(to right, #00234d, #1e5f99); /* Gradient xanh đậm hơn khi hover */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0, 0, 2); /* Tăng độ đậm của bóng khi hover */
 }
+

@@ -271,13 +271,22 @@ public class StaffSalaryAccountantController {
 
 
     private void showError(String h, String c) {
-        var a = new Alert(Alert.AlertType.ERROR, c, ButtonType.OK);
+        Alert a = new Alert(Alert.AlertType.ERROR);
         a.setHeaderText(h);
+        a.setContentText(c);
+
+        a.getDialogPane().getStylesheets().add(getClass().getResource("/com/example/frontendquanlikhachsan/assets/css/alert.css").toExternalForm()
+        );
         a.showAndWait();
     }
-    private void showInfo(String h, String c) {
-        var a = new Alert(Alert.AlertType.INFORMATION, c, ButtonType.OK);
-        a.setHeaderText(h);
+    private void showInfo(String header, String content) {
+        Alert a = new Alert(Alert.AlertType.INFORMATION);
+        a.setHeaderText(header);
+        a.setContentText(content);
+
+        a.getDialogPane().getStylesheets().add(
+                getClass().getResource("/com/example/frontendquanlikhachsan/assets/css/alert.css").toExternalForm()
+        );
         a.showAndWait();
     }
 }
