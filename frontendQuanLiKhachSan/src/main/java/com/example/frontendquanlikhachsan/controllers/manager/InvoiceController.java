@@ -286,8 +286,7 @@ public class InvoiceController {
 
         // --- Tiêu đề ---
         Label title = new Label("Chi tiết Hoá đơn – ID: " + dto.getId());
-        title.setStyle("-fx-font-size:16px; -fx-font-weight:bold; -fx-padding:0 0 8 0;");
-
+        title.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 0 0 8 0; -fx-text-fill: #003269; -fx-background-color: transparent; -fx-border-color: transparent;");
         // --- Grid cơ bản ---
         GridPane grid = new GridPane();
         grid.setHgap(10); grid.setVgap(10); grid.setPadding(new Insets(8));
@@ -656,10 +655,14 @@ public class InvoiceController {
     }
 
     // Helper để show dialog thông báo
-    private void showInfoAlert(String h, String c) {
+    private void showInfoAlert(String header, String content) {
         Alert a = new Alert(Alert.AlertType.INFORMATION);
-        a.setHeaderText(h);
-        a.setContentText(c);
+        a.setHeaderText(header);
+        a.setContentText(content);
+
+        a.getDialogPane().getStylesheets().add(
+                getClass().getResource("/com/example/frontendquanlikhachsan/assets/css/alert.css").toExternalForm()
+        );
         a.showAndWait();
     }
     private void showErrorAlert(String header, String content) {

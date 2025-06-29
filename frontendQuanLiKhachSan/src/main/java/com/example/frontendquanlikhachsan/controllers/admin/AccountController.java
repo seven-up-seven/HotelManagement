@@ -370,6 +370,15 @@ public class AccountController {
 
     private void deleteAccount(ResponseAccountDto acc) {
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Xóa tài khoản này?", ButtonType.OK, ButtonType.CANCEL);
+
+        // Đặt ID cho DialogPane của Alert confirm
+        confirm.getDialogPane().setId("dialog"); // <-- ID này giúp bạn nhắm mục tiêu cụ thể
+
+        // Thêm stylesheet cho DialogPane của alert confirm
+        confirm.getDialogPane().getStylesheets().add(
+                getClass().getResource("/com/example/frontendquanlikhachsan/assets/css/alert.css").toExternalForm()
+        );
+
         confirm.showAndWait().filter(b -> b == ButtonType.OK).ifPresent(b -> {
             try {
                 ApiHttpClientCaller.call("account/" + acc.getId(), ApiHttpClientCaller.Method.DELETE, null);
@@ -377,7 +386,8 @@ public class AccountController {
                 accountList.clear();
                 accountDetailContainer.getChildren().clear();
                 currentPage = 0;
-                isLastPage = false; loadNextPage();
+                isLastPage = false;
+                loadNextPage();
             } catch (Exception ex) {
                 ex.printStackTrace();
                 showError("Lỗi", "Không thể xóa tài khoản.");
@@ -389,6 +399,10 @@ public class AccountController {
         Alert a = new Alert(Alert.AlertType.INFORMATION);
         a.setHeaderText(header);
         a.setContentText(content);
+
+        a.getDialogPane().getStylesheets().add(
+                getClass().getResource("/com/example/frontendquanlikhachsan/assets/css/alert.css").toExternalForm()
+        );
         a.showAndWait();
     }
 

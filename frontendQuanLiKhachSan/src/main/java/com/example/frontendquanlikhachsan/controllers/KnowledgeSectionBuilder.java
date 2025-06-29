@@ -17,9 +17,7 @@ import com.example.frontendquanlikhachsan.entity.roomType.ResponseRoomTypeDto;
 import com.example.frontendquanlikhachsan.entity.staff.ResponseStaffDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class KnowledgeSectionBuilder {
     public static String buildAccounts(ObjectMapper mapper) throws Exception {
@@ -120,11 +118,33 @@ public class KnowledgeSectionBuilder {
         StringBuilder kb = new StringBuilder("# Danh sách phòng\n");
         var json = ApiHttpClientCaller.call("room", ApiHttpClientCaller.Method.GET, null);
         List<ResponseRoomDto> rooms = Arrays.asList(mapper.readValue(json, ResponseRoomDto[].class));
-        kb.append("- Số lượng phòng: ").append(rooms.size()).append("\n");
+
+        Map<String, Integer> roomTypeCount = new HashMap<>();
+        for (ResponseRoomDto r : rooms) {
+            String roomType = r.getRoomTypeName();
+            roomTypeCount.put(roomType, roomTypeCount.getOrDefault(roomType, 0) + 1);
+        }
+
+        Map<String, Integer> roomStateCount = new HashMap<>();
+        for (ResponseRoomDto r : rooms) {
+            String roomState = r.getRoomState().name(); 
+            roomStateCount.put(roomState, roomStateCount.getOrDefault(roomState, 0) + 1);
+        }
+
+        kb.append("- Tổng số phòng: ").append(rooms.size()).append("\n");
+        kb.append("- Số lượng theo loại phòng:\n");
+        for (Map.Entry<String, Integer> entry : roomTypeCount.entrySet()) {
+            kb.append("  * ").append(entry.getKey()).append(": ").append(entry.getValue()).append(" phòng\n");
+        }
+        kb.append("- Số lượng theo trạng thái phòng:\n");
+        for (Map.Entry<String, Integer> entry : roomStateCount.entrySet()) {
+            kb.append("  * ").append(entry.getKey()).append(": ").append(entry.getValue()).append(" phòng\n");
+        }
+
         for (ResponseRoomDto r : rooms) {
             kb.append("  * ID: ").append(r.getId())
                     .append(", Tên: ").append(r.getName())
-                    .append(", Trạng thái: ").append(r.getRoomState())
+                    .append(", Trạng thái: ").append(r.getRoomState().name())
                     .append(", Ghi chú: ").append(r.getNote())
                     .append(", Loại phòng: ").append(r.getRoomTypeName()).append(" (ID: ").append(r.getRoomTypeId()).append(")")
                     .append(", Tầng: ").append(r.getFloorName()).append(" (ID: ").append(r.getFloorId()).append(")")

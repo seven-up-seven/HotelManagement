@@ -28,7 +28,7 @@
 /* === Sidebar === */
 .sidebar {
     -fx-pref-width: 240px;
-    -fx-background-color: linear-gradient(to bottom, #667EEA, #764BA2);
+    -fx-background-color: linear-gradient(to bottom, #003269, #257bac);
     -fx-padding: 20px;
     -fx-spacing: 10px;
 }
@@ -326,8 +326,8 @@
 
 /* Sidebar */
 .sidebar {
-    -fx-pref-width: 300px;
-    -fx-background-color: linear-gradient(to bottom, #6B7280, #4B5563);
+    -fx-pref-width: 200px;
+    -fx-background-color: linear-gradient(to bottom, #003269, #257bac);
     -fx-padding: 20px;
     -fx-spacing: 12px;
 }
@@ -644,8 +644,8 @@
 }
 
 .sidebar {
-    -fx-pref-width: 240px;
-    -fx-background-color: linear-gradient(to bottom, #667EEA, #764BA2);
+    -fx-pref-width: 200px;
+    -fx-background-color: linear-gradient(to bottom, #003269, #257bac);
     -fx-padding: 20px;
     -fx-spacing: 10px;
 }
@@ -678,6 +678,7 @@
     -fx-transition: all 0.3s ease;
     -fx-font-size: 16px;
     -fx-font-weight: 500;
+    -fx-pref-width: 160px;
 }
 
 .nav-item:hover {
@@ -707,7 +708,7 @@
 }
 
 .header {
-    -fx-background-color: linear-gradient(to right, #667EEA, #764BA2);
+    -fx-background-color: linear-gradient(to right, #003269, #257bac);
     -fx-padding: 10;
     -fx-spacing: 10;
 }
@@ -788,7 +789,7 @@
 }
 
 .context-menu .menu-item:hover {
-    -fx-background-color: #667EEA;
+    -fx-background-color: #003269;
     -fx-text-fill: #ffffff;
 }
 
@@ -803,17 +804,17 @@
 }
 
 .sidebar-container {
-    -fx-background-color: linear-gradient(to bottom, #667EEA, #764BA2);
-    -fx-pref-width: 280px;
-    -fx-max-width: 280px;
+    -fx-background-color: linear-gradient(to bottom, #003269, #257bac);
+    -fx-pref-width: 220px;
+    -fx-max-width: 220px;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 0);
     -fx-padding: 0;
 }
 
 .sidebar {
     -fx-background-color: rgba(255,255,255,0.05);
-    -fx-pref-width: 280px;
-    -fx-max-width: 280px;
+    -fx-pref-width: 220px;
+    -fx-max-width: 220px;
 }
 
 .overlay-pane {

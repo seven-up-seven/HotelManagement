@@ -3,46 +3,75 @@ package com.example.frontendquanlikhachsan.controllers;
 import com.example.frontendquanlikhachsan.ApiHttpClientCaller;
 import com.example.frontendquanlikhachsan.auth.TokenHolder;
 import com.example.frontendquanlikhachsan.controllers.manager.*;
+import com.example.frontendquanlikhachsan.controllers.setting.KeyMapController;
 import com.example.frontendquanlikhachsan.entity.account.ResponseAccountDto;
 import com.example.frontendquanlikhachsan.entity.staff.ResponseStaffDto;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Popup;
+import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.springframework.stereotype.Component;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 @Component
 public class MainController {
-    @FXML private HBox ADMIN, RECEPTIONIST, MANAGER, ACCOUNTANT;
-
-    @FXML private TabPane tabPane;
-    @FXML private ScrollPane dockScrollPane;
-    @FXML private HBox dockItems;
-
-    @FXML private Button adminButton;
-    @FXML private ContextMenu adminMenu;
-    @FXML private Button receptionistButton;
-    @FXML private ContextMenu receptionistMenu;
-    @FXML private Button managerButton;
-    @FXML private ContextMenu managerMenu;
-    @FXML private Button accountantButton;
-    @FXML private ContextMenu accountantMenu;
-
-    @FXML private VBox sidebarContainer; // Sidebar overlay
-    @FXML private Button toggleSidebarButton; // Nút toggle sidebar
-    @FXML private Pane overlayPane; // Overlay pane
+    @FXML
+    private TabPane tabPane;
+    @FXML
+    private Button adminButton;
+    @FXML
+    private ContextMenu adminMenu;
+    @FXML
+    private Button receptionistButton;
+    @FXML
+    private ContextMenu receptionistMenu;
+    @FXML
+    private Button managerButton;
+    @FXML
+    private ContextMenu managerMenu;
+    @FXML
+    private Button accountantButton;
+    @FXML
+    private ContextMenu accountantMenu;
+    @FXML
+    private VBox sidebarContainer;
+    @FXML
+    private Button toggleSidebarButton;
+    @FXML
+    private Pane overlayPane; // Overlay pane
+    @FXML
+    private HBox ADMIN, RECEPTIONIST, MANAGER, ACCOUNTANT;
+    @FXML
+    private ScrollPane dockScrollPane;
+    @FXML
+    private HBox dockItems;
+    @FXML
+    private Label dateDayLabel;
+    @FXML
+    private Label clockLabel;
 
     private final Map<String, Runnable> quickAccessViews = new HashMap<>();
     private final Map<String, Integer> tabCounters = new HashMap<>();
@@ -53,6 +82,7 @@ public class MainController {
 
     @FXML
     public void initialize() {
+        startClock();
         openHomeTab();
         adjustSidebarByPermission();
         setupDockSubMenus();
@@ -62,13 +92,58 @@ public class MainController {
         overlayPane.setMouseTransparent(true);
 
         Platform.runLater(() -> {
-            tabPane.getScene().addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-                if (event.isControlDown() && event.getCode().toString().equals("T")) {
-                    showSearchPopup();
-                    event.consume();
-                }
-            });
+            if (tabPane.getScene() != null) {
+                // Thêm sự kiện hover cho root pane
+                tabPane.getScene().addEventFilter(MouseEvent.MOUSE_MOVED, event -> {
+                    double mouseX = event.getSceneX();
+                    if (mouseX <= 20 && !isSidebarVisible) { // Hiển thị khi chuột gần mép trái (20px)
+                        showSidebar();
+                    }
+                });
+
+                // Thêm sự kiện phím tắt Ctrl+T
+                tabPane.getScene().addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+                    if (event.isControlDown()) {
+                        String shortcutKey = KeyMapController.getSearchKey(); // Lấy từ Preferences
+                        if (event.getCode().getName().equalsIgnoreCase(shortcutKey)) {
+                            showSearchPopup();
+                            event.consume();
+                        }
+                    }
+                });
+            }
         });
+
+        // Ẩn sidebar khi chuột rời khỏi
+        sidebarContainer.setOnMouseExited(event -> {
+            if (isSidebarVisible && event.getSceneX() > 280) {
+                hideSidebar();
+            }
+        });
+    }
+
+    private void startClock() {
+        Timeline clock = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+            LocalTime currentTime = LocalTime.now();
+            LocalDate currentDate = LocalDate.now();
+            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+            String dayOfWeek = switch (currentDate.getDayOfWeek()) {
+                case MONDAY -> "Thứ hai";
+                case TUESDAY -> "Thứ ba";
+                case WEDNESDAY -> "Thứ tư";
+                case THURSDAY -> "Thứ năm";
+                case FRIDAY -> "Thứ sáu";
+                case SATURDAY -> "Thứ bảy";
+                case SUNDAY -> "Chủ nhật";
+            };
+
+            clockLabel.setText(currentTime.format(timeFormatter));
+            dateDayLabel.setText(currentDate.format(dateFormatter) + " – " + dayOfWeek);
+        }));
+        clock.setCycleCount(Animation.INDEFINITE);
+        clock.play();
     }
 
     @FXML
@@ -85,6 +160,14 @@ public class MainController {
         }
     }
 
+    private void showSidebar() {
+        isSidebarVisible = true;
+        sidebarContainer.setVisible(true);
+        overlayPane.setVisible(true);
+        overlayPane.setMouseTransparent(false);
+        sidebarContainer.setStyle("-fx-translate-x: 0;");
+    }
+
     @FXML
     public void handleOverlayClick() {
         if (isSidebarVisible) {
@@ -96,8 +179,7 @@ public class MainController {
         }
     }
 
-    @FXML
-    public void hideSidebar() {
+    public void hideSidebar () {
         if (isSidebarVisible) {
             isSidebarVisible = false;
             sidebarContainer.setVisible(false);
@@ -107,7 +189,7 @@ public class MainController {
         }
     }
 
-    private void showSearchPopup() {
+    private void showSearchPopup () {
         Popup popup = new Popup();
         VBox container = new VBox(10);
         container.setStyle("-fx-background-color: white; -fx-padding: 12; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 0);");
@@ -179,14 +261,14 @@ public class MainController {
         });
     }
 
-    private void setupDockSubMenus() {
+    private void setupDockSubMenus () {
         hookMenu(adminButton, adminMenu);
         hookMenu(managerButton, managerMenu);
         hookMenu(receptionistButton, receptionistMenu);
         hookMenu(accountantButton, accountantMenu);
     }
 
-    private void hookMenu(Button btn, ContextMenu menu) {
+    private void hookMenu (Button btn, ContextMenu menu){
         btn.setOnMouseClicked(e -> {
             if (menu.isShowing()) {
                 menu.hide();
@@ -198,8 +280,7 @@ public class MainController {
         });
     }
 
-    // ---------- Generic Tab Opening ----------
-    private <C> void openTab(String baseTitle, String fxmlPath, Consumer<C> controllerInitializer) {
+    private <C > void openTab (String baseTitle, String fxmlPath, Consumer < C > controllerInitializer){
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Parent content = loader.load();
@@ -224,20 +305,20 @@ public class MainController {
         }
     }
 
-    // ---------- Receptionist ----------
-    public void openHomeTab() {
+    public void openHomeTab () {
         openTab("Trang chủ", "/com/example/frontendquanlikhachsan/views/Home.fxml", null);
     }
 
-    public void openRoomRentingTab() {
+    //---------- Receptionist ----------
+    public void openRoomRentingTab () {
         openTab("Thuê phòng", "/com/example/frontendquanlikhachsan/views/receptionist/RoomRenting.fxml", null);
     }
 
-    public void openEditTab() {
+    public void openEditTab () {
         openTab("Bổ sung phiếu thuê", "/com/example/frontendquanlikhachsan/views/receptionist/RentalFormEdit.fxml", null);
     }
 
-    public void openRentalFormViewTab() {
+    public void openRentalFormViewTab () {
         openTab("Lập hoá đơn", "/com/example/frontendquanlikhachsan/views/receptionist/RentalFormView.fxml", null);
     }
 
@@ -247,56 +328,56 @@ public class MainController {
                 (GuestController c) -> c.setMainController(this));
     }
 
-    public void openStaffTab() {
+    public void openStaffTab () {
         openTab("Nhân viên", "/com/example/frontendquanlikhachsan/views/manager/Staff.fxml",
                 (StaffController c) -> c.setMainController(this));
     }
 
-    public void openPositionTab() {
+    public void openPositionTab () {
         openTab("Chức vụ", "/com/example/frontendquanlikhachsan/views/manager/Position.fxml", null);
     }
 
-    public void openRentalFormTab() {
+    public void openRentalFormTab () {
         openTab("Phiếu thuê", "/com/example/frontendquanlikhachsan/views/manager/RentalForm.fxml", null);
     }
 
-    public void openRentalFormTab(List<Integer> ids) {
+    public void openRentalFormTab (List < Integer > ids) {
         openTab("Phiếu thuê", "/com/example/frontendquanlikhachsan/views/manager/RentalForm.fxml",
                 (RentalFormController c) -> c.selectRentalFormsByIds(ids));
     }
 
-    public void openRentalExtensionFormTab() {
+    public void openRentalExtensionFormTab () {
         openTab("Gia hạn thuê", "/com/example/frontendquanlikhachsan/views/manager/RentalExtensionForm.fxml", null);
     }
 
-    public void openRentalExtensionFormTab(List<Integer> ids) {
+    public void openRentalExtensionFormTab (List < Integer > ids) {
         openTab("Gia hạn thuê", "/com/example/frontendquanlikhachsan/views/manager/RentalExtensionForm.fxml",
                 (RentalExtensionFormController c) -> c.selectExtensionsByIds(ids));
     }
 
-    public void openInvoiceTab() {
+    public void openInvoiceTab () {
         openTab("Hoá đơn", "/com/example/frontendquanlikhachsan/views/manager/Invoice.fxml", null);
     }
 
-    public void openInvoiceTab(List<Integer> ids) {
+    public void openInvoiceTab (List < Integer > ids) {
         openTab("Hoá đơn", "/com/example/frontendquanlikhachsan/views/manager/Invoice.fxml",
                 (InvoiceController c) -> c.selectInvoicesByIds(ids));
     }
 
-    public void openStructureTab() {
+    public void openStructureTab () {
         openTab("Cấu trúc KS", "/com/example/frontendquanlikhachsan/views/manager/Structure.fxml", null);
     }
 
-    public void openBookingConfirmationFormTab() {
+    public void openBookingConfirmationFormTab () {
         openTab("Phiếu đặt phòng", "/com/example/frontendquanlikhachsan/views/manager/BookingConfirmationForm.fxml", null);
     }
 
-    public void openBookingConfirmationFormTab(List<Integer> ids) {
+    public void openBookingConfirmationFormTab (List < Integer > ids) {
         openTab("Phiếu đặt phòng", "/com/example/frontendquanlikhachsan/views/manager/BookingConfirmationForm.fxml",
                 (BookingConfirmationFormController c) -> c.selectBookingConfirmationFormsByIds(ids));
     }
 
-    public void openMapTab() {
+    public void openMapTab () {
         openTab("Sơ đồ khách sạn", "/com/example/frontendquanlikhachsan/views/manager/Map.fxml", null);
     }
 
@@ -305,11 +386,11 @@ public class MainController {
         openTab("Báo cáo tháng", "/com/example/frontendquanlikhachsan/views/accountant/RevenueReport.fxml", null);
     }
 
-    public void openInvoiceAccountantTab() {
+    public void openInvoiceAccountantTab () {
         openTab("Tra cứu hoá đơn", "/com/example/frontendquanlikhachsan/views/accountant/InvoiceAccountant.fxml", null);
     }
 
-    public void openSalaryTab() {
+    public void openSalaryTab () {
         openTab("Lương nhân viên", "/com/example/frontendquanlikhachsan/views/accountant/StaffSalaryAccountant.fxml", null);
     }
 
@@ -318,15 +399,15 @@ public class MainController {
         openTab("Tài khoản", "/com/example/frontendquanlikhachsan/views/admin/Account.fxml", null);
     }
 
-    public void openUserRoleManagement() {
+    public void openUserRoleManagement () {
         openTab("Vai trò", "/com/example/frontendquanlikhachsan/views/admin/UserRole.fxml", null);
     }
 
-    public void openHistoryManagement() {
+    public void openHistoryManagement () {
         openTab("Lịch sử", "/com/example/frontendquanlikhachsan/views/admin/History.fxml", null);
     }
 
-    public void openVariableManagement() {
+    public void openVariableManagement () {
         openTab("Tham số", "/com/example/frontendquanlikhachsan/views/admin/RuleVariable.fxml", null);
     }
 
@@ -335,7 +416,29 @@ public class MainController {
         openTab("Trợ lý AI", "/com/example/frontendquanlikhachsan/views/Chatbot.fxml", null);
     }
 
-    public void adjustSidebarByPermission() {
+    //this tab is opened on a new window besides the app
+    public void openSettings () {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/frontendquanlikhachsan/views/setting/Setting.fxml"));
+            Parent root = fxmlLoader.load();
+
+            Stage settingsStage = new Stage();
+            settingsStage.setTitle("Cài đặt");
+
+            Scene scene = new Scene(root);
+            settingsStage.setScene(scene);
+            settingsStage.getIcons().add(new Image(getClass().getResourceAsStream("/com/example/frontendquanlikhachsan/assets/images/setting_icon.png")));
+
+            settingsStage.initModality(Modality.NONE);
+            settingsStage.initOwner(null);
+
+            settingsStage.show();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void adjustSidebarByPermission () {
         new Thread(() -> {
             try {
                 int currentUserId = TokenHolder.getInstance().getCurrentUserId();
@@ -367,7 +470,7 @@ public class MainController {
         }).start();
     }
 
-    private void removeButtonFromParent(Node button) {
+    private void removeButtonFromParent (Node button){
         if (button != null && button.getParent() instanceof Pane) {
             ((Pane) button.getParent()).getChildren().remove(button);
         }
@@ -407,11 +510,11 @@ public class MainController {
         }
     }
 
-    private boolean hasPermission(String role) {
+    private boolean hasPermission (String role){
         return currentUserPermissions.contains(role);
     }
 
-    private void setUpQuickAccess() {
+    private void setUpQuickAccess () {
         quickAccessViews.clear();
 
         if (hasPermission("RECEPTIONIST")) {
@@ -448,5 +551,6 @@ public class MainController {
         // Khác: Ai cũng được dùng
         quickAccessViews.put("Trợ lý AI", this::openChatbot);
         quickAccessViews.put("Trang chủ", this::openHomeTab);
+        quickAccessViews.put("Cài đặt", this::openSettings);
     }
 }

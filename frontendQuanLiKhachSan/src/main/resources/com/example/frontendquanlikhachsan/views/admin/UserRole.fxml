@@ -24,7 +24,7 @@
                    style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
 
             <Button fx:id="btnCreateRole" text="➕ Thêm vai trò mới" maxWidth="Infinity"
-                    style="-fx-font-size: 14px; -fx-background-color: #1976d2; -fx-text-fill: white;" />
+                    />
 
             <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
                 <content>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            xmlns="http://javafx.com/javafx"
+            fx:controller="com.example.frontendquanlikhachsan.controllers.setting.SettingController"
+            stylesheets="@../../assets/css/Setting.css"
+            prefHeight="400.0" prefWidth="900.0">
+
+    <!-- Bên trái: Thanh menu -->
+    <left>
+        <VBox spacing="10" alignment="TOP_CENTER" prefWidth="200" style="-fx-background-color: #f4f4f4;">
+            <Button fx:id="btnSettings" graphicTextGap="5" style="-fx-background-color: transparent;">
+                <graphic>
+                    <!-- Inject the image here -->
+                </graphic>
+            </Button>
+
+            <Separator orientation="VERTICAL"/>
+
+            <Button fx:id="btnOption1"
+                    minHeight="40"
+                    prefWidth="180"
+            maxWidth="180"
+            text="Thông tin người dùng"
+            wrapText="true"
+             />
+
+            <Button fx:id="btnOption2"
+                    minHeight="40"
+                    prefWidth="180"
+                    maxWidth="180"
+                    text="Thông tin tài khoản"
+                    wrapText="true"
+                    />
+
+            <Button fx:id="btnOption3"
+                    minHeight="40"
+                    prefWidth="180"
+                    maxWidth="180"
+                    text="Phím tắt"
+                    wrapText="true"
+                    />
+        </VBox>
+    </left>
+
+    <!-- Bên phải: Nội dung hiển thị -->
+    <center>
+        <StackPane fx:id="contentArea" style="-fx-background-color: white;" />
+    </center>
+
+</BorderPane>

@@ -23,7 +23,7 @@
 
                     <!-- Nút tạo tài khoản -->
                     <Button fx:id="btnCreateAccount" text="➕ Tạo tài khoản mới" maxWidth="Infinity"
-                            style="-fx-font-size: 14px; -fx-background-color: #1976d2; -fx-text-fill: white;" />
+                            />
 
                     <HBox spacing="8.0">
                         <TextField fx:id="tfFilterId" promptText="ID"/>

@@ -83,6 +83,10 @@
                     <Label fx:id="staffAgeLabel" styleClass="info-value"/>
                 </HBox>
                 <HBox spacing="10">
+                    <Label text="Giới tính:" styleClass="info-label"/>
+                    <Label fx:id="staffGenderLabel" styleClass="info-value"/>
+                </HBox>
+                <HBox spacing="10">
                     <Label text="Vị trí:" styleClass="info-label"/>
                     <Label fx:id="staffPositionLabel" styleClass="info-value"/>
                 </HBox>

@@ -525,10 +525,14 @@ public class StaffController {
 
     // --- Alert tiện ích ---
     private void showInfoAlert(String header, String content) {
-        Alert info = new Alert(Alert.AlertType.INFORMATION);
-        info.setHeaderText(header);
-        info.setContentText(content);
-        info.showAndWait();
+        Alert a = new Alert(Alert.AlertType.INFORMATION);
+        a.setHeaderText(header);
+        a.setContentText(content);
+
+        a.getDialogPane().getStylesheets().add(
+                getClass().getResource("/com/example/frontendquanlikhachsan/assets/css/alert.css").toExternalForm()
+        );
+        a.showAndWait();
     }
 
     private void showErrorAlert(String header, String content) {

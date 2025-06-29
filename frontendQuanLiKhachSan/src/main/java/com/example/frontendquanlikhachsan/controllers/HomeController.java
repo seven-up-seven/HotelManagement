@@ -32,7 +32,8 @@ public class HomeController {
             staffIdentifyNumberLabel,
             staffAddressLabel,
             staffAgeLabel,
-            staffPositionLabel;
+            staffPositionLabel,
+            staffGenderLabel;
 
     @FXML
     private Label dateDayLabel;
@@ -79,10 +80,12 @@ public class HomeController {
                 if (staffDto.getSex()== Sex.MALE) {
                     Image avatar = new Image(getClass().getResourceAsStream("/com/example/frontendquanlikhachsan/assets/images/male_staff_icon.png"));
                     avatarImageView.setImage(avatar);
+                    staffGenderLabel.setText("Nam");
                 }
                 else {
                     Image avatar = new Image(getClass().getResourceAsStream("/com/example/frontendquanlikhachsan/assets/images/female_staff_icon.png"));
                     avatarImageView.setImage(avatar);
+                    staffGenderLabel.setText("Nữ");
                 }
 
                 String accountJson = ApiHttpClientCaller.call("account/" + staffDto.getAccountId(), ApiHttpClientCaller.Method.GET, null);
