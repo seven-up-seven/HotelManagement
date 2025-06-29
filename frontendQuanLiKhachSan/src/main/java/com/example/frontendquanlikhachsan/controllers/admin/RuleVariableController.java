@@ -126,10 +126,13 @@ public class RuleVariableController {
         alert.showAndWait();
     }
 
-    private void showInfo(String msg) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setHeaderText("Thông báo");
-        alert.setContentText(msg);
-        alert.showAndWait();
+    private void showInfo(String header) {
+        Alert a = new Alert(Alert.AlertType.INFORMATION);
+        a.setHeaderText(header);
+
+        a.getDialogPane().getStylesheets().add(
+                getClass().getResource("/com/example/frontendquanlikhachsan/assets/css/alert.css").toExternalForm()
+        );
+        a.showAndWait();
     }
 }

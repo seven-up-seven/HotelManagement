@@ -384,7 +384,26 @@ public class RentalFormEditController {
             return null;
         }
     }
+    private void showInfoAlert(String header, String content) {
+        Alert a = new Alert(Alert.AlertType.INFORMATION);
+        a.setHeaderText(header);
+        a.setContentText(content);
 
-    private void showErrorAlert(String h,String c){ Alert a=new Alert(Alert.AlertType.ERROR,c,ButtonType.OK); a.setHeaderText(h); a.showAndWait(); }
-    private void showInfoAlert(String h,String c){ Alert a=new Alert(Alert.AlertType.INFORMATION,c,ButtonType.OK); a.setHeaderText(h); a.showAndWait(); }
+        a.getDialogPane().getStylesheets().add(
+                getClass().getResource("/com/example/frontendquanlikhachsan/assets/css/alert.css").toExternalForm()
+        );
+        a.showAndWait();
+    }
+
+    private void showErrorAlert(String header, String content) {
+        Alert a = new Alert(Alert.AlertType.ERROR);
+        a.setHeaderText(header);
+        a.setContentText(content);
+
+        // Thêm stylesheet cho DialogPane
+        a.getDialogPane().getStylesheets().add(
+                getClass().getResource("/com/example/frontendquanlikhachsan/assets/css/alert.css").toExternalForm()
+        );
+        a.showAndWait();
+    }
 }

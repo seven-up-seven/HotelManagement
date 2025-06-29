@@ -825,10 +825,14 @@ public class RentalFormController {
         detailPane.getChildren().addAll(grid, step2);
     }
 
-    private void showInfoAlert(String h, String c) {
+    private void showInfoAlert(String header, String content) {
         Alert a = new Alert(Alert.AlertType.INFORMATION);
-        a.setHeaderText(h);
-        a.setContentText(c);
+        a.setHeaderText(header);
+        a.setContentText(content);
+
+        a.getDialogPane().getStylesheets().add(
+                getClass().getResource("/com/example/frontendquanlikhachsan/assets/css/alert.css").toExternalForm()
+        );
         a.showAndWait();
     }
 
