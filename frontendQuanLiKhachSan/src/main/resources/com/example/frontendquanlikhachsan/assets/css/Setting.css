@@ -10,12 +10,25 @@
     -fx-padding: 10 0;
 }
 
-.text-field, .password-field, .combo-box, .date-picker, .text-area {
+.text-field, .password-field, .date-picker, .text-area {
     -fx-background-color: #ffffff;
     -fx-background-radius: 8;
     -fx-border-color: #87CEEB;
     -fx-border-radius: 8;
     -fx-padding: 8 12;
+    -fx-font-size: 14px;
+    -fx-pref-height: 40;
+    -fx-min-height: 40;
+    -fx-max-height: 40;
+    -fx-pref-width: 200;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 1);
+}
+
+.combo-box {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 8;
+    -fx-border-color: #87CEEB;
+    -fx-border-radius: 8;
     -fx-font-size: 14px;
     -fx-pref-height: 40;
     -fx-min-height: 40;

@@ -41,12 +41,26 @@
     -fx-padding: 10 0;
 }
 
-.text-field, .combo-box, .date-picker {
+.text-field, .combo-box {
     -fx-background-color: #ffffff;
     -fx-background-radius: 8;
     -fx-border-color: #87CEEB;
     -fx-border-radius: 8;
     -fx-padding: 8 12;
+    -fx-font-size: 14px;
+    -fx-pref-height: 40;
+    -fx-min-height: 40;
+    -fx-max-height: 40;
+    -fx-pref-width: 150;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 1);
+}
+
+.date-picker {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 8;
+    -fx-border-color: #87CEEB;
+    -fx-border-radius: 8;
+    -fx-padding: 1 1;
     -fx-font-size: 14px;
     -fx-pref-height: 40;
     -fx-min-height: 40;
@@ -61,11 +75,6 @@
     -fx-border-color: #87CEEB;
     -fx-border-radius: 8;
     -fx-font-size: 14px;
-}
-
-.combo-box .combo-box-base {
-    -fx-padding: 0 0 0 5;
-    -fx-background-insets: 0;
 }
 
 /* Specific styling for DatePicker */
@@ -194,8 +203,15 @@
     -fx-text-fill: white;
 }
 
+.combo-box .list-cell {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #333333;
+    -fx-font-size: 14px;
+    -fx-padding: 1 1;
+}
+
 .combo-box .list-cell:selected {
-    -fx-background-color: white;
+    -fx-background-color: #ffffff;
     -fx-text-fill: #333333;
     -fx-font-weight: bold;
 }
@@ -236,3 +252,4 @@
 .table-view .column-header .text {
     -fx-fill: white;
 }
+

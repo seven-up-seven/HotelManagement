@@ -50,7 +50,7 @@ public class ChatbotController {
 
     @FXML
     public void initialize() {
-        addChatBubble("🤖 Chatbot sẵn sàng trả lời câu hỏi!", false);
+        addChatBubble("Chatbot sẵn sàng trả lời câu hỏi!", false);
         loadKnowledgeSections();
     }
 
@@ -78,8 +78,8 @@ public class ChatbotController {
         Label msgLabel = new Label((isUser ? "🧑‍💼 " : "🤖 ") + message);
         msgLabel.setWrapText(true);
         msgLabel.setStyle(isUser
-                ? "-fx-background-color: #D6EAF8; -fx-padding: 10; -fx-background-radius: 12; -fx-font-size: 13px;"
-                : "-fx-background-color: #E8F8F5; -fx-padding: 10; -fx-background-radius: 12; -fx-font-size: 13px;");
+                ? "-fx-background-color: #9ACEF5; -fx-padding: 10; -fx-background-radius: 12; -fx-font-size: 13px;"
+                : "-fx-background-color: #96D8CA; -fx-padding: 10; -fx-background-radius: 12; -fx-font-size: 13px;");
 
         bubble.getChildren().add(msgLabel);
         chatListView.getChildren().add(bubble);
