@@ -13,7 +13,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Popup;
@@ -25,9 +25,11 @@ import java.util.function.Function;
 
 @Component
 public class MainController {
+    @FXML private HBox ADMIN, RECEPTIONIST, MANAGER, ACCOUNTANT;
+
     @FXML private TabPane tabPane;
-    @FXML private VBox sidebarContainer;
-    @FXML private Pane overlayPane;
+    @FXML private ScrollPane dockScrollPane;
+    @FXML private HBox dockItems;
 
     @FXML private Button adminButton;
     @FXML private ContextMenu adminMenu;
@@ -38,9 +40,15 @@ public class MainController {
     @FXML private Button accountantButton;
     @FXML private ContextMenu accountantMenu;
 
+    @FXML private VBox sidebarContainer; // Sidebar overlay
+    @FXML private Button toggleSidebarButton; // Nút toggle sidebar
+    @FXML private Pane overlayPane; // Overlay pane
+
     private final Map<String, Runnable> quickAccessViews = new HashMap<>();
     private final Map<String, Integer> tabCounters = new HashMap<>();
+
     private List<String> currentUserPermissions = new ArrayList<>();
+
     private boolean isSidebarVisible = false;
 
     @FXML
@@ -53,48 +61,42 @@ public class MainController {
         overlayPane.setVisible(false);
         overlayPane.setMouseTransparent(true);
 
-        // Di chuyển logic sự kiện hover vào Platform.runLater
         Platform.runLater(() -> {
-            if (tabPane.getScene() != null) {
-                // Thêm sự kiện hover cho root pane
-                tabPane.getScene().addEventFilter(MouseEvent.MOUSE_MOVED, event -> {
-                    double mouseX = event.getSceneX();
-                    if (mouseX <= 20 && !isSidebarVisible) { // Hiển thị khi chuột gần mép trái (20px)
-                        showSidebar();
-                    }
-                });
-
-                // Thêm sự kiện phím tắt Ctrl+T
-                tabPane.getScene().addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-                    if (event.isControlDown() && event.getCode().toString().equals("T")) {
-                        showSearchPopup();
-                        event.consume();
-                    }
-                });
-            }
-        });
-
-        // Ẩn sidebar khi chuột rời khỏi
-        sidebarContainer.setOnMouseExited(event -> {
-            if (isSidebarVisible && event.getSceneX() > 280) {
-                hideSidebar();
-            }
+            tabPane.getScene().addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+                if (event.isControlDown() && event.getCode().toString().equals("T")) {
+                    showSearchPopup();
+                    event.consume();
+                }
+            });
         });
     }
 
-    private void showSidebar() {
-        isSidebarVisible = true;
-        sidebarContainer.setVisible(true);
-        overlayPane.setVisible(true);
-        overlayPane.setMouseTransparent(false);
-        sidebarContainer.setStyle("-fx-translate-x: 0;");
+    @FXML
+    public void toggleSidebar() {
+        isSidebarVisible = !isSidebarVisible;
+        sidebarContainer.setVisible(isSidebarVisible);
+        overlayPane.setVisible(isSidebarVisible);
+        overlayPane.setMouseTransparent(!isSidebarVisible); // Enable/disable interaction
+
+        if (isSidebarVisible) {
+            sidebarContainer.setStyle("-fx-translate-x: 0;");
+        } else {
+            sidebarContainer.setStyle("-fx-translate-x: -280px;");
+        }
     }
 
     @FXML
     public void handleOverlayClick() {
-        hideSidebar();
+        if (isSidebarVisible) {
+            isSidebarVisible = false;
+            sidebarContainer.setVisible(false);
+            overlayPane.setVisible(false);
+            overlayPane.setMouseTransparent(true);
+            sidebarContainer.setStyle("-fx-translate-x: -280px;");
+        }
     }
 
+    @FXML
     public void hideSidebar() {
         if (isSidebarVisible) {
             isSidebarVisible = false;
@@ -115,14 +117,17 @@ public class MainController {
         input.setPromptText("Nhập tên view...");
         ListView<String> listView = new ListView<>();
 
+        // Load ban đầu
         List<String> allViews = new ArrayList<>(quickAccessViews.keySet());
         listView.getItems().addAll(allViews);
 
+        // ------ Hàm chuẩn hoá không dấu ------
         Function<String, String> normalize = text -> java.text.Normalizer
                 .normalize(text, java.text.Normalizer.Form.NFD)
                 .replaceAll("\\p{InCombiningDiacriticalMarks}+", "")
                 .toLowerCase();
 
+        // ------ Lọc khi nhập ------
         input.textProperty().addListener((obs, oldVal, newVal) -> {
             String query = normalize.apply(newVal.trim());
             List<String> filtered = allViews.stream()
@@ -131,10 +136,11 @@ public class MainController {
             listView.getItems().setAll(filtered);
 
             if (!filtered.isEmpty()) {
-                listView.getSelectionModel().selectFirst();
+                listView.getSelectionModel().selectFirst(); // luôn chọn dòng đầu tiên
             }
         });
 
+        // ------ Click chuột ------
         listView.setOnMouseClicked(e -> {
             String selected = listView.getSelectionModel().getSelectedItem();
             if (selected != null) {
@@ -143,6 +149,7 @@ public class MainController {
             }
         });
 
+        // ------ Phím điều hướng ------
         input.setOnKeyPressed(e -> {
             switch (e.getCode()) {
                 case ENTER -> {
@@ -161,13 +168,14 @@ public class MainController {
         container.getChildren().addAll(input, listView);
         popup.getContent().add(container);
 
+        // hiển thị giữa màn hình
         popup.show(tabPane.getScene().getWindow());
         popup.setX(tabPane.getScene().getWindow().getX() + tabPane.getWidth() / 2 - container.getPrefWidth() / 2);
         popup.setY(tabPane.getScene().getWindow().getY() + 100);
 
         Platform.runLater(() -> {
             input.requestFocus();
-            listView.getSelectionModel().selectFirst();
+            listView.getSelectionModel().selectFirst(); // chọn sẵn
         });
     }
 
@@ -190,6 +198,7 @@ public class MainController {
         });
     }
 
+    // ---------- Generic Tab Opening ----------
     private <C> void openTab(String baseTitle, String fxmlPath, Consumer<C> controllerInitializer) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
@@ -215,7 +224,7 @@ public class MainController {
         }
     }
 
-    // Các phương thức openTab (giữ nguyên)
+    // ---------- Receptionist ----------
     public void openHomeTab() {
         openTab("Trang chủ", "/com/example/frontendquanlikhachsan/views/Home.fxml", null);
     }
@@ -232,6 +241,7 @@ public class MainController {
         openTab("Lập hoá đơn", "/com/example/frontendquanlikhachsan/views/receptionist/RentalFormView.fxml", null);
     }
 
+    // ---------- Manager ----------
     public void openGuestTab() {
         openTab("Khách hàng", "/com/example/frontendquanlikhachsan/views/manager/Guest.fxml",
                 (GuestController c) -> c.setMainController(this));
@@ -261,7 +271,7 @@ public class MainController {
 
     public void openRentalExtensionFormTab(List<Integer> ids) {
         openTab("Gia hạn thuê", "/com/example/frontendquanlikhachsan/views/manager/RentalExtensionForm.fxml",
-        (RentalExtensionFormController c) -> c.selectExtensionsByIds(ids));
+                (RentalExtensionFormController c) -> c.selectExtensionsByIds(ids));
     }
 
     public void openInvoiceTab() {
@@ -290,6 +300,7 @@ public class MainController {
         openTab("Sơ đồ khách sạn", "/com/example/frontendquanlikhachsan/views/manager/Map.fxml", null);
     }
 
+    // ---------- Accountant ----------
     public void openReportTab() {
         openTab("Báo cáo tháng", "/com/example/frontendquanlikhachsan/views/accountant/RevenueReport.fxml", null);
     }
@@ -302,6 +313,7 @@ public class MainController {
         openTab("Lương nhân viên", "/com/example/frontendquanlikhachsan/views/accountant/StaffSalaryAccountant.fxml", null);
     }
 
+    // ---------- Admin ----------
     public void openAccountManagement() {
         openTab("Tài khoản", "/com/example/frontendquanlikhachsan/views/admin/Account.fxml", null);
     }
@@ -318,6 +330,7 @@ public class MainController {
         openTab("Tham số", "/com/example/frontendquanlikhachsan/views/admin/RuleVariable.fxml", null);
     }
 
+    // ---------- Khác ----------
     public void openChatbot() {
         openTab("Trợ lý AI", "/com/example/frontendquanlikhachsan/views/Chatbot.fxml", null);
     }
@@ -362,17 +375,21 @@ public class MainController {
 
     @FXML
     public void logout() {
+        // Hộp thoại xác nhận
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Xác nhận đăng xuất");
         alert.setHeaderText("Bạn có chắc chắn muốn đăng xuất?");
         alert.setContentText("Hành động này sẽ đưa bạn về màn hình đăng nhập.");
 
+        // Thêm stylesheet cho DialogPane
         alert.getDialogPane().getStylesheets().add(
                 getClass().getResource("/com/example/frontendquanlikhachsan/assets/css/alert.css").toExternalForm()
         );
 
+        // Tùy chọn xác nhận hoặc hủy
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
+            // Nếu người dùng xác nhận => thực hiện đăng xuất
             TokenHolder.getInstance().setAccessToken(null);
             TokenHolder.getInstance().setRefreshToken(null);
             TokenHolder.getInstance().setCurrentUserId(-1);
@@ -385,6 +402,7 @@ public class MainController {
                 e.printStackTrace();
             }
         } else {
+            // Người dùng chọn Hủy => không làm gì cả
             System.out.println("Huỷ đăng xuất.");
         }
     }
@@ -427,6 +445,7 @@ public class MainController {
             quickAccessViews.put("Quản lí tham số", this::openVariableManagement);
         }
 
+        // Khác: Ai cũng được dùng
         quickAccessViews.put("Trợ lý AI", this::openChatbot);
         quickAccessViews.put("Trang chủ", this::openHomeTab);
     }

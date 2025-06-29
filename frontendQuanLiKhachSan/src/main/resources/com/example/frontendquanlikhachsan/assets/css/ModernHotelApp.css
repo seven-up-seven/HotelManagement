@@ -802,23 +802,12 @@
     -fx-pref-height: 100%;
 }
 
-/* ModernHotelApp.css */
-.root-pane {
-    -fx-background-color: #f4f4f4;
-}
-
 .sidebar-container {
     -fx-background-color: linear-gradient(to bottom, #667EEA, #764BA2);
     -fx-pref-width: 280px;
     -fx-max-width: 280px;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 0);
     -fx-padding: 0;
-    -fx-translate-x: -280px; /* Ẩn sidebar mặc định */
-    -fx-transition: -fx-translate-x 0.3s ease; /* Hiệu ứng chuyển động */
-}
-
-.sidebar-container:hover {
-    -fx-translate-x: 0; /* Hiển thị khi hover */
 }
 
 .sidebar {
@@ -831,26 +820,4 @@
     -fx-background-color: rgba(0, 0, 0, 0.4);
     -fx-pref-width: 100%;
     -fx-pref-height: 100%;
-}
-
-/* Vùng kích hoạt hover ở mép trái */
-.root-pane:hover .sidebar-container {
-    -fx-translate-x: 0;
-}
-
-/* Đảm bảo sidebar chỉ hiển thị khi hover gần mép trái */
-.root-pane {
-    -fx-padding: 0;
-}
-
-.nav-item {
-    -fx-background-color: transparent;
-    -fx-text-fill: white;
-    -fx-font-size: 14px;
-    -fx-padding: 10px;
-    -fx-cursor: hand;
-}
-
-.nav-item:hover {
-    -fx-background-color: rgba(255,255,255,0.1);
 }
