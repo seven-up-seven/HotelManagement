@@ -274,5 +274,4 @@ public class LoginController {
             showError("Không mở được form quên mật khẩu");
         }
     }
-
 }

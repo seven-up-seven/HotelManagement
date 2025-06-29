@@ -54,4 +54,5 @@ module com.example.frontendquanlikhachsan {
     opens com.example.frontendquanlikhachsan.entity.roomType to com.fasterxml.jackson.databind;
 
     exports com.example.frontendquanlikhachsan;
+    opens com.example.frontendquanlikhachsan.controllers.setting to javafx.fxml;
 }

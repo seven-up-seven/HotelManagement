@@ -117,12 +117,12 @@
                                 </contextMenu>
                             </Button>
 
-                            <Button text="🗺️ Sơ đồ khách sạn" styleClass="nav-item" onAction="#openMapTab">
-                                <tooltip><Tooltip text="Sơ đồ khách sạn"/></tooltip>
-                            </Button>
-
                             <Button text="🤖 Trợ lý AI" styleClass="nav-item" onAction="#openChatbot">
                                 <tooltip><Tooltip text="Trợ lý AI"/></tooltip>
+                            </Button>
+
+                            <Button text="⚙️ Cài đặt" styleClass="nav-item" onAction="#openSettings">
+                                <tooltip><Tooltip text="Cài đặt"/></tooltip>
                             </Button>
 
                             <Button text="🚪 Đăng xuất" styleClass="nav-item" onAction="#logout">

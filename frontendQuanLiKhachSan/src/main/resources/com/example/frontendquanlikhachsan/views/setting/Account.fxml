@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.frontendquanlikhachsan.controllers.setting.AccountController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <VBox spacing="15" layoutX="20" layoutY="20">
+        <Label text="Thông tin tài khoản" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+
+        <VBox spacing="10">
+            <HBox spacing="10">
+                <Label text="Tên đăng nhập:"/>
+                <TextField fx:id="usernameField" editable="false"/>
+            </HBox>
+
+            <HBox spacing="10">
+                <Label text="Mật khẩu hiện tại:"/>
+                <PasswordField fx:id="currentPasswordField" promptText="Nhập mật khẩu hiện tại" editable="false"/>
+                <Button fx:id="checkPasswordButton" text="Kiểm tra" onAction="#handleCheckPassword" visible="false"/>
+            </HBox>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Button fx:id="forgotPasswordButton" text="Quên mật khẩu?" onAction="#handleForgotPassword" />
+            </HBox>
+
+            <HBox spacing="10">
+                <Label text="Mật khẩu mới:"/>
+                <PasswordField fx:id="newPasswordField" promptText="Nhập mật khẩu mới" editable="false" visible="false"/>
+            </HBox>
+
+            <HBox spacing="10">
+                <Label text="Xác nhận mật khẩu:"/>
+                <PasswordField fx:id="confirmPasswordField" promptText="Xác nhận mật khẩu mới" editable="false" visible="false"/>
+            </HBox>
+        </VBox>
+
+        <HBox spacing="10">
+            <Button fx:id="editButton" text="Sửa" onAction="#handleEdit"/>
+            <Button fx:id="saveButton" text="Lưu" visible="false" onAction="#handleSave"/>
+        </HBox>
+    </VBox>
+</AnchorPane>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.collections.FXCollections?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<?import java.lang.String?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.frontendquanlikhachsan.controllers.setting.UserInfoController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <VBox spacing="15" layoutX="20" layoutY="20">
+        <Label text="Thông tin người dùng" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+
+        <HBox spacing="20">
+            <ImageView fx:id="avatarImageView" fitHeight="100" fitWidth="100" preserveRatio="true" style="-fx-border-radius: 10;"/>
+            <VBox spacing="10">
+                <HBox spacing="10">
+                    <Label text="Mã nhân viên:"/>
+                    <Label fx:id="staffIdLabel"/>
+                </HBox>
+                <HBox spacing="10">
+                    <Label text="Tên nhân viên:"/>
+                    <TextField fx:id="staffNameField" editable="false"/>
+                </HBox>
+                <HBox spacing="10">
+                    <Label text="CCCD:"/>
+                    <TextField fx:id="identifyField" editable="false"/>
+                </HBox>
+                <HBox spacing="10">
+                    <Label text="Email:"/>
+                    <TextField fx:id="emailField" editable="false"/>
+                </HBox>
+                <HBox spacing="10">
+                    <Label text="Địa chỉ:"/>
+                    <TextField fx:id="addressField" editable="false"/>
+                </HBox>
+                <HBox spacing="10">
+                    <Label text="Tuổi:"/>
+                    <TextField fx:id="ageField" editable="false"/>
+                </HBox>
+                <HBox spacing="10">
+                    <Label text="Giới tính:"/>
+                    <ComboBox fx:id="genderComboBox" disable="true">
+                        <items>
+                            <FXCollections fx:factory="observableArrayList">
+                                <String fx:value="Nam"/>
+                                <String fx:value="Nữ"/>
+                            </FXCollections>
+                        </items>
+                    </ComboBox>
+                </HBox>
+                <HBox spacing="10">
+                    <Label text="Quyền hạn:"/>
+                    <Label fx:id="staffRoleLabel"/>
+                </HBox>
+                <HBox spacing="10">
+                    <Label text="Vị trí:"/>
+                    <Label fx:id="staffPositionLabel"/>
+                </HBox>
+            </VBox>
+        </HBox>
+
+        <HBox spacing="10">
+            <Button fx:id="editButton" text="Sửa" onAction="#handleEdit"/>
+            <Button fx:id="saveButton" text="Lưu" onAction="#handleSave" visible="false"/>
+        </HBox>
+    </VBox>
+</AnchorPane>

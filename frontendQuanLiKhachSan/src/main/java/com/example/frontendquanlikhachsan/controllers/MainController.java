@@ -5,20 +5,31 @@ import com.example.frontendquanlikhachsan.auth.TokenHolder;
 import com.example.frontendquanlikhachsan.controllers.manager.*;
 import com.example.frontendquanlikhachsan.entity.account.ResponseAccountDto;
 import com.example.frontendquanlikhachsan.entity.staff.ResponseStaffDto;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Popup;
+import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.springframework.stereotype.Component;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -44,6 +55,11 @@ public class MainController {
     @FXML private Button toggleSidebarButton; // Nút toggle sidebar
     @FXML private Pane overlayPane; // Overlay pane
 
+    @FXML
+    private Label dateDayLabel;
+    @FXML
+    private Label clockLabel;
+
     private final Map<String, Runnable> quickAccessViews = new HashMap<>();
     private final Map<String, Integer> tabCounters = new HashMap<>();
 
@@ -53,6 +69,7 @@ public class MainController {
 
     @FXML
     public void initialize() {
+        startClock();
         openHomeTab();
         adjustSidebarByPermission();
         setupDockSubMenus();
@@ -69,6 +86,30 @@ public class MainController {
                 }
             });
         });
+    }
+
+    private void startClock() {
+        Timeline clock = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+            LocalTime currentTime = LocalTime.now();
+            LocalDate currentDate = LocalDate.now();
+            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+            String dayOfWeek = switch (currentDate.getDayOfWeek()) {
+                case MONDAY -> "Thứ hai";
+                case TUESDAY -> "Thứ ba";
+                case WEDNESDAY -> "Thứ tư";
+                case THURSDAY -> "Thứ năm";
+                case FRIDAY -> "Thứ sáu";
+                case SATURDAY -> "Thứ bảy";
+                case SUNDAY -> "Chủ nhật";
+            };
+
+            clockLabel.setText(currentTime.format(timeFormatter));
+            dateDayLabel.setText(currentDate.format(dateFormatter) + " – " + dayOfWeek);
+        }));
+        clock.setCycleCount(Animation.INDEFINITE);
+        clock.play();
     }
 
     @FXML
@@ -335,6 +376,29 @@ public class MainController {
         openTab("Trợ lý AI", "/com/example/frontendquanlikhachsan/views/Chatbot.fxml", null);
     }
 
+    //this tab is opened on a new window besides the app
+    public void openSettings() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/frontendquanlikhachsan/views/setting/Setting.fxml"));
+            Parent root = fxmlLoader.load();
+
+            Stage settingsStage = new Stage();
+            settingsStage.setTitle("Cài đặt");
+
+            Scene scene = new Scene(root);
+            settingsStage.setScene(scene);
+            settingsStage.getIcons().add(new Image(getClass().getResourceAsStream("/com/example/frontendquanlikhachsan/assets/images/setting_icon.png")));
+
+            settingsStage.initModality(Modality.NONE);
+            settingsStage.initOwner(null);
+
+            settingsStage.show();
+        }
+        catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
     public void adjustSidebarByPermission() {
         new Thread(() -> {
             try {
@@ -448,5 +512,6 @@ public class MainController {
         // Khác: Ai cũng được dùng
         quickAccessViews.put("Trợ lý AI", this::openChatbot);
         quickAccessViews.put("Trang chủ", this::openHomeTab);
+        quickAccessViews.put("Cài đặt", this::openSettings);
     }
 }
