@@ -167,8 +167,8 @@ public class RentalExtensionFormController {
 
         HBox actions = new HBox(10);
         actions.setPadding(new Insets(12,0,0,0));
-        Button btnEdit = new Button("✏️ Sửa"); btnEdit.setOnAction(e-> showEditForm(dto));
-        Button btnDel  = new Button("🗑️ Xóa"); btnDel.setOnAction(e-> deleteExtension(dto));
+        Button btnEdit = new Button("Sửa"); btnEdit.setOnAction(e-> showEditForm(dto));
+        Button btnDel  = new Button("Xóa"); btnDel.setOnAction(e-> deleteExtension(dto));
         actions.getChildren().addAll(btnEdit, btnDel);
 
         detailPane.getChildren().addAll(title, grid, actions);

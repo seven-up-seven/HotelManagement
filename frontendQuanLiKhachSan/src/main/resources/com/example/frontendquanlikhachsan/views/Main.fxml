@@ -138,7 +138,6 @@
                                             <MenuItem text="Cấu trúc khách sạn" style="-fx-font-weight: bold;" onAction="#openStructureTab"/>
                                             <MenuItem text="Đặt phòng" style="-fx-font-weight: bold;" onAction="#openBookingConfirmationFormTab"/>
                                             <MenuItem text="Gia hạn" style="-fx-font-weight: bold;" onAction="#openRentalExtensionFormTab"/>
-                                            <MenuItem text="Sơ đồ khách sạn" style="-fx-font-weight: bold;" onAction="#openMapTab"/>
                                         </items>
                                     </ContextMenu>
                                 </contextMenu>

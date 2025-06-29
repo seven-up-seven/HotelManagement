@@ -18,7 +18,7 @@
                 </StackPane>
                 <Label text="Tình trạng phòng" styleClass="card-title"/>
             </HBox>
-            <Label text="128" styleClass="card-value"/>
+            <Label fx:id="totalRoomLabel" text="128" styleClass="card-value"/>
             <Label text="Tổng số phòng khả dụng" styleClass="card-subtitle"/>
         </VBox>
 
@@ -30,7 +30,7 @@
                 </StackPane>
                 <Label text="Doanh thu" styleClass="card-title"/>
             </HBox>
-            <Label text="2.5M" styleClass="card-value"/>
+            <Label fx:id="incomeLabel" text="2.5M" styleClass="card-value"/>
             <Label text="VNĐ trong tháng này" styleClass="card-subtitle"/>
         </VBox>
 
@@ -42,7 +42,7 @@
                 </StackPane>
                 <Label text="Đặt phòng" styleClass="card-title"/>
             </HBox>
-            <Label text="89" styleClass="card-value"/>
+            <Label fx:id="todayRentedRoomLabel" text="89" styleClass="card-value"/>
             <Label text="Đặt phòng hôm nay" styleClass="card-subtitle"/>
         </VBox>
 
@@ -54,7 +54,7 @@
                 </StackPane>
                 <Label text="Nhân viên" styleClass="card-title"/>
             </HBox>
-            <Label text="45" styleClass="card-value"/>
+            <Label fx:id="totalStaffLabel" text="45" styleClass="card-value"/>
             <Label text="Số nhân viên hiện tại" styleClass="card-subtitle"/>
         </VBox>
         <VBox styleClass="card" spacing="10">
@@ -65,7 +65,7 @@
                 </StackPane>
                 <Label text="Khách lưu trú" styleClass="card-title"/>
             </HBox>
-            <Label text="45" styleClass="card-value"/>
+            <Label fx:id="totalGuestLabel" text="45" styleClass="card-value"/>
             <Label text="Số khách đang ở" styleClass="card-subtitle"/>
         </VBox>
     </HBox>

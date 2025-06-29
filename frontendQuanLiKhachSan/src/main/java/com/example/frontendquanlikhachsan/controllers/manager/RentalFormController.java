@@ -227,11 +227,11 @@ public class RentalFormController {
         //double click sửa chi tiết
         lvD.setOnMouseClicked(e -> { if (e.getClickCount()==2) showDetailForm(dto, lvD.getSelectionModel().getSelectedItem()); });
 
-        lvD.setPrefHeight(lvD.getItems().size()*24+2);
+        lvD.setPrefHeight(lvD.getItems().size()*42+2);
 
 
         // delete button below the list
-        Button btnDelDetail = new Button("🗑️ Xóa chi tiết");
+        Button btnDelDetail = new Button("Xóa chi tiết");
         btnDelDetail.setOnAction(e -> {
             ResponseRentalFormDetailDto sel = lvD.getSelectionModel().getSelectedItem();
             if (sel == null) return;
@@ -277,9 +277,9 @@ public class RentalFormController {
             }
         });
         lvE.setOnMouseClicked(e -> { if (e.getClickCount()==2) showExtensionForm(dto, lvE.getSelectionModel().getSelectedItem()); });
-        lvE.setPrefHeight(lvE.getItems().size()*24+2);
+        lvE.setPrefHeight(lvE.getItems().size()*42+2);
 
-        Button btnDelExt = new Button("🗑️ Xóa gia hạn");
+        Button btnDelExt = new Button("Xóa gia hạn");
         btnDelExt.setOnAction(e -> {
             ResponseRentalExtensionFormDto sel = lvE.getSelectionModel().getSelectedItem();
             if (sel == null) return;
@@ -312,8 +312,8 @@ public class RentalFormController {
         HBox actions = new HBox(10);
         actions.setPadding(new Insets(12,0,0,0));
         actions.getChildren().addAll(
-                new Button("✏️ Sửa") {{ setOnAction(ev->showForm(dto)); }},
-                new Button("🗑️ Xóa") {{ setOnAction(ev->deleteForm(dto)); }}
+                new Button("Sửa") {{ setOnAction(ev->showForm(dto)); }},
+                new Button("Xóa") {{ setOnAction(ev->deleteForm(dto)); }}
         );
 
         detailPane.getChildren().addAll(title, grid, acc, actions);
@@ -511,7 +511,7 @@ public class RentalFormController {
         detailPane.getChildren().clear();
         Label title = new Label(detail == null
                 ? "➕ Thêm Chi tiết"
-                : "✏️ Sửa Chi tiết #" + detail.getId());
+                : "Sửa Chi tiết #" + detail.getId());
         title.setStyle("-fx-font-size:14px; -fx-font-weight:bold; -fx-padding:0 0 8 0;");
 
         // --- Form container ---

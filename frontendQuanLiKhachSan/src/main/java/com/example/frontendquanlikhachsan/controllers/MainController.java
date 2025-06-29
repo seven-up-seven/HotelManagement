@@ -103,12 +103,21 @@ public class MainController {
 
                 // Thêm sự kiện phím tắt Ctrl+T
                 tabPane.getScene().addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-                    if (event.isControlDown()) {
-                        String shortcutKey = KeyMapController.getSearchKey(); // Lấy từ Preferences
-                        if (event.getCode().getName().equalsIgnoreCase(shortcutKey)) {
-                            showSearchPopup();
-                            event.consume();
-                        }
+                    String modifier = KeyMapController.getSearchModifier();
+                    String shortcutKey = KeyMapController.getSearchKey();
+
+                    boolean isModifierPressed = switch (modifier) {
+                        case "ALT"   -> event.isAltDown();
+                        case "SHIFT" -> event.isShiftDown();
+                        case "META"  -> event.isMetaDown();
+                        default      -> event.isControlDown();
+                    };
+
+                    boolean isKeyMatch = event.getCode().getName().equalsIgnoreCase(shortcutKey);
+
+                    if (isModifierPressed && isKeyMatch) {
+                        showSearchPopup();
+                        event.consume();
                     }
                 });
             }
@@ -436,10 +445,6 @@ public class MainController {
                 (BookingConfirmationFormController c) -> c.selectBookingConfirmationFormsByIds(ids));
     }
 
-    public void openMapTab () {
-        openTab("Sơ đồ khách sạn", "/com/example/frontendquanlikhachsan/views/manager/Map.fxml", null);
-    }
-
     // ---------- Accountant ----------
     public void openReportTab() {
         openTab("Báo cáo tháng", "/com/example/frontendquanlikhachsan/views/accountant/RevenueReport.fxml", null);
@@ -591,7 +596,6 @@ public class MainController {
             quickAccessViews.put("Quản lí hoá đơn", this::openInvoiceTab);
             quickAccessViews.put("Cấu trúc khách sạn", this::openStructureTab);
             quickAccessViews.put("Quản lí phiếu đặt phòng", this::openBookingConfirmationFormTab);
-            quickAccessViews.put("Sơ đồ khách sạn", this::openMapTab);
         }
 
         if (hasPermission("ACCOUNTANT")) {

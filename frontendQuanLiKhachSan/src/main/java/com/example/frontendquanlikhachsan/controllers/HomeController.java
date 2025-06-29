@@ -4,7 +4,10 @@ import com.example.frontendquanlikhachsan.ApiHttpClientCaller;
 import com.example.frontendquanlikhachsan.auth.TokenHolder;
 import com.example.frontendquanlikhachsan.entity.account.ResponseAccountDto;
 import com.example.frontendquanlikhachsan.entity.enums.Sex;
+import com.example.frontendquanlikhachsan.entity.room.ResponseRoomDto;
 import com.example.frontendquanlikhachsan.entity.staff.ResponseStaffDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -19,6 +22,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Component
 public class HomeController {
@@ -39,35 +43,65 @@ public class HomeController {
     private Label dateDayLabel;
     @FXML
     private ImageView avatarImageView;
+    @FXML
+    private Label totalRoomLabel;
+    @FXML
+    private Label incomeLabel;
+    @FXML
+    private Label todayRentedRoomLabel;
+    @FXML
+    private Label totalStaffLabel;
+    @FXML
+    private Label totalGuestLabel;
+
+    private final ObjectMapper mapper = new ObjectMapper()
+            .registerModule(new JavaTimeModule());
 
     @FXML
     public void initialize() {
-        startClock();
         loadCurrentUserInfo();
+        loadHomeData();
     }
 
-    private void startClock() {
-        Timeline clock = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
-            LocalTime currentTime = LocalTime.now();
-            LocalDate currentDate = LocalDate.now();
-            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    private void loadHomeData() {
+        new Thread(() -> {
+            try {
+                // 1. Gọi API trong background thread
+                String incomeJson = ApiHttpClientCaller.call("invoice/today-money-amount", ApiHttpClientCaller.Method.GET, null);
+                double totalMoney = Double.parseDouble(incomeJson);
 
-            String dayOfWeek = switch (currentDate.getDayOfWeek()) {
-                case MONDAY -> "Thứ hai";
-                case TUESDAY -> "Thứ ba";
-                case WEDNESDAY -> "Thứ tư";
-                case THURSDAY -> "Thứ năm";
-                case FRIDAY -> "Thứ sáu";
-                case SATURDAY -> "Thứ bảy";
-                case SUNDAY -> "Chủ nhật";
-            };
+                String roomJson = ApiHttpClientCaller.call("room/ready", ApiHttpClientCaller.Method.GET, null);
+                List<ResponseRoomDto> rooms = List.of(mapper.readValue(roomJson, ResponseRoomDto[].class));
 
-            clockLabel.setText(currentTime.format(timeFormatter));
-            dateDayLabel.setText(currentDate.format(dateFormatter) + " – " + dayOfWeek);
-        }));
-        clock.setCycleCount(Animation.INDEFINITE);
-        clock.play();
+                String rentalsJson = ApiHttpClientCaller.call("rental-form/today-rental-forms", ApiHttpClientCaller.Method.GET, null);
+                int totalRentals = Integer.parseInt(rentalsJson);
+
+                String staffJson = ApiHttpClientCaller.call("staff/staff-amount", ApiHttpClientCaller.Method.GET, null);
+                int staffCount = Integer.parseInt(staffJson);
+
+                String guestJson = ApiHttpClientCaller.call("guest/guest-stay", ApiHttpClientCaller.Method.GET, null);
+                int guestCount = Integer.parseInt(guestJson);
+
+                // 2. Cập nhật UI trong thread chính
+                Platform.runLater(() -> {
+                    incomeLabel.setText(totalMoney + " VNĐ");
+                    totalRoomLabel.setText(String.valueOf(rooms.size()));
+                    todayRentedRoomLabel.setText(String.valueOf(totalRentals));
+                    totalStaffLabel.setText(String.valueOf(staffCount));
+                    totalGuestLabel.setText(String.valueOf(guestCount));
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace(); // log lỗi để debug
+                Platform.runLater(() -> {
+                    incomeLabel.setText("Lỗi");
+                    totalRoomLabel.setText("Lỗi");
+                    todayRentedRoomLabel.setText("Lỗi");
+                    totalStaffLabel.setText("Lỗi");
+                    totalGuestLabel.setText("Lỗi");
+                });
+            }
+        }).start();
     }
 
     private void loadCurrentUserInfo() {

@@ -20,9 +20,9 @@
 
         <HBox spacing="10" alignment="CENTER_LEFT">
             <Label text="Phím tắt tìm kiếm:"/>
-            <Label text="Ctrl +"/>
+            <ComboBox fx:id="modifierComboBox" prefWidth="80"/>
             <ComboBox fx:id="searchKeyComboBox" prefWidth="80"/>
-            <Button fx:id="saveButton" text="Lưu" onAction="#handleSave"/>
+            <Button text="Lưu" onAction="#handleSave"/>
         </HBox>
 
         <Label fx:id="statusLabel" text="" style="-fx-text-fill: green;"/>
