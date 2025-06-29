@@ -197,7 +197,66 @@ public class MainController {
 
         TextField input = new TextField();
         input.setPromptText("Nhập tên view...");
+        input.setStyle("""
+            -fx-font-size: 14px;
+            -fx-padding: 10;
+            -fx-background-radius: 8;
+            -fx-border-color: #87CEEB;
+            -fx-border-radius: 8;
+        """);
+        input.setPromptText("Nhập tên view...");
         ListView<String> listView = new ListView<>();
+        listView.setCellFactory(lv -> {
+            ListCell<String> cell = new ListCell<>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setText(null);
+                        setStyle("");
+                    } else {
+                        setText(item);
+                        setStyle("""
+                    -fx-padding: 10;
+                    -fx-font-size: 13px;
+                    -fx-background-color: #ffffff;
+                    -fx-border-color: transparent transparent #f0f0f0 transparent;
+                """);
+                    }
+                }
+            };
+
+            // CSS khi hover
+            cell.hoverProperty().addListener((obs, oldVal, isHovered) -> {
+                if (!cell.isEmpty()) {
+                    if (isHovered) {
+                        cell.setStyle("""
+                    -fx-padding: 10;
+                    -fx-font-size: 13px;
+                    -fx-background-color: #e6f3fa;
+                    -fx-border-color: transparent transparent #f0f0f0 transparent;
+                """);
+                    } else {
+                        cell.setStyle("""
+                    -fx-padding: 10;
+                    -fx-font-size: 13px;
+                    -fx-background-color: #ffffff;
+                    -fx-border-color: transparent transparent #f0f0f0 transparent;
+                """);
+                    }
+                }
+            });
+
+            return cell;
+        });
+
+        listView.setStyle("""
+    -fx-font-size: 13px;
+    -fx-background-radius: 8;
+    -fx-border-color: #87CEEB;
+    -fx-border-radius: 8;
+    -fx-padding: 4;
+""");
 
         // Load ban đầu
         List<String> allViews = new ArrayList<>(quickAccessViews.keySet());

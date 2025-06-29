@@ -326,13 +326,14 @@ public class InvoiceController {
                 else setText("Mã chi tiết #" + it.getId()
                         + " Mã phiếu thuê #" + it.getRentalFormId()
                         + " Giá thuê – " + it.getReservationCost() + " (" + it.getNumberOfRentalDays() + " ngày)");
+                setPrefHeight(42);
             }
         });
         lvD.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2)
                 showInvoiceDetailForm(dto, lvD.getSelectionModel().getSelectedItem());
         });
-        lvD.setPrefHeight(lvD.getItems().size()*24 + 2);
+        lvD.setPrefHeight(lvD.getItems().size()*42 + 2);
 
         // nút Thêm / Xoá chi tiết
         Button btnAddD = new Button("➕ Thêm chi tiết");

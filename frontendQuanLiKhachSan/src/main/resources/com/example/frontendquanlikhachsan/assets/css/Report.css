@@ -144,7 +144,7 @@
 }
 
 .table-view .column-header {
-    -fx-background-color: linear-gradient(to right, #003269, #257bac);
+    -fx-background-color: #257bac;
     -fx-text-fill: #ffffff;
     -fx-font-weight: bold;
     -fx-padding: 10;
@@ -227,7 +227,7 @@
 }
 
 .table-view .column-header {
-    -fx-background-color: linear-gradient(to right, #003269, #257bac);
+    -fx-background-color: #257bac;
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-padding: 10;

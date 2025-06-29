@@ -62,6 +62,12 @@ public class AccessTokenExpirationChecker {
         alert.setTitle("Thông báo");
         alert.setHeaderText("Phiên làm việc sắp hết hạn");
         alert.setContentText("Bạn có muốn mở rộng phiên làm việc không?");
+
+        // Gắn stylesheet vào DialogPane
+        alert.getDialogPane().getStylesheets().add(
+                getClass().getResource("/com/example/frontendquanlikhachsan/assets/css/alert.css").toExternalForm()
+        );
+
         ButtonType yesBtn = new ButtonType("Có");
         ButtonType noBtn = new ButtonType("Không", ButtonBar.ButtonData.CANCEL_CLOSE);
         alert.getButtonTypes().setAll(yesBtn, noBtn);

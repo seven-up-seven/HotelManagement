@@ -144,7 +144,7 @@
 }
 
 .table-view .column-header {
-    -fx-background-color: linear-gradient(to right, #003269, #257bac);
+    -fx-background-color: #257bac;
     -fx-text-fill: #ffffff;
     -fx-font-weight: bold;
     -fx-padding: 10;
@@ -227,7 +227,7 @@
 }
 
 .table-view .column-header {
-    -fx-background-color: linear-gradient(to right, #003269, #257bac);
+    -fx-background-color: #257bac;
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-padding: 10;
@@ -253,3 +253,10 @@
     -fx-fill: white;
 }
 
+.date-picker-popup .month-year-pane .button {
+    -fx-pref-width: 25px;
+    -fx-pref-height: 25px;
+    -fx-scale-x: 0.8;
+    -fx-scale-y: 0.8;
+    -fx-padding: 2;
+}

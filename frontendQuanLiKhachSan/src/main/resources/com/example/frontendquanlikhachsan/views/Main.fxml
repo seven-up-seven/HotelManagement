@@ -82,10 +82,10 @@
                                 <contextMenu>
                                     <ContextMenu fx:id="adminMenu" styleClass="context-menu">
                                         <items>
-                                            <MenuItem text="🔐 Quản lí tài khoản" onAction="#openAccountManagement"/>
-                                            <MenuItem text="🧩 Quản lí vai trò" onAction="#openUserRoleManagement"/>
-                                            <MenuItem text="📜 Quản lí lịch sử" onAction="#openHistoryManagement"/>
-                                            <MenuItem text="⚙️ Quản lí tham số" onAction="#openVariableManagement"/>
+                                            <MenuItem text="Quản lí tài khoản" style="-fx-font-weight: bold;" onAction="#openAccountManagement"/>
+                                            <MenuItem text="Quản lí vai trò" style="-fx-font-weight: bold;" onAction="#openUserRoleManagement"/>
+                                            <MenuItem text="Quản lí lịch sử" style="-fx-font-weight: bold;" onAction="#openHistoryManagement"/>
+                                            <MenuItem text="Quản lí tham số" style="-fx-font-weight: bold;" onAction="#openVariableManagement"/>
                                         </items>
                                     </ContextMenu>
                                 </contextMenu>
@@ -106,10 +106,10 @@
                                 <contextMenu>
                                     <ContextMenu fx:id="receptionistMenu" styleClass="context-menu">
                                         <items>
-                                            <MenuItem text="🛏 Lập phiếu thuê phòng" onAction="#openRoomRentingTab"/>
-                                            <MenuItem text="➕ Bổ sung phiếu thuê" onAction="#openEditTab"/>
-                                            <MenuItem text="🧾 Khởi tạo hóa đơn" onAction="#openRentalFormViewTab"/>
-                                            <MenuItem text="📂 Tra cứu hóa đơn" onAction="#openInvoiceAccountantTab"/>
+                                            <MenuItem text="Lập phiếu thuê phòng" style="-fx-font-weight: bold;" onAction="#openRoomRentingTab"/>
+                                            <MenuItem text="Bổ sung phiếu thuê" style="-fx-font-weight: bold;" onAction="#openEditTab"/>
+                                            <MenuItem text="Khởi tạo hóa đơn" style="-fx-font-weight: bold;" onAction="#openRentalFormViewTab"/>
+                                            <MenuItem text="Tra cứu hóa đơn" style="-fx-font-weight: bold;" onAction="#openInvoiceAccountantTab"/>
                                         </items>
                                     </ContextMenu>
                                 </contextMenu>
@@ -130,15 +130,15 @@
                                 <contextMenu>
                                     <ContextMenu fx:id="managerMenu" styleClass="context-menu">
                                         <items>
-                                            <MenuItem text="👨‍💼 Quản lý nhân viên" onAction="#openStaffTab"/>
-                                            <MenuItem text="🪪 Quản lý chức vụ" onAction="#openPositionTab"/>
-                                            <MenuItem text="🙋‍♂️ Quản lý khách hàng" onAction="#openGuestTab"/>
-                                            <MenuItem text="📑 Quản lý phiếu thuê" onAction="#openRentalFormTab"/>
-                                            <MenuItem text="📃 Quản lý hóa đơn" onAction="#openInvoiceTab"/>
-                                            <MenuItem text="🏨 Cấu trúc khách sạn" onAction="#openStructureTab"/>
-                                            <MenuItem text="📅 Đặt phòng" onAction="#openBookingConfirmationFormTab"/>
-                                            <MenuItem text="⏳ Gia hạn" onAction="#openRentalExtensionFormTab"/>
-                                            <MenuItem text="🗺️ Sơ đồ khách sạn" onAction="#openMapTab"/>
+                                            <MenuItem text="Quản lý nhân viên" style="-fx-font-weight: bold;" onAction="#openStaffTab"/>
+                                            <MenuItem text="Quản lý chức vụ" style="-fx-font-weight: bold;" onAction="#openPositionTab"/>
+                                            <MenuItem text="Quản lý khách hàng" style="-fx-font-weight: bold;" onAction="#openGuestTab"/>
+                                            <MenuItem text="Quản lý phiếu thuê" style="-fx-font-weight: bold;" onAction="#openRentalFormTab"/>
+                                            <MenuItem text="Quản lý hóa đơn" style="-fx-font-weight: bold;" onAction="#openInvoiceTab"/>
+                                            <MenuItem text="Cấu trúc khách sạn" style="-fx-font-weight: bold;" onAction="#openStructureTab"/>
+                                            <MenuItem text="Đặt phòng" style="-fx-font-weight: bold;" onAction="#openBookingConfirmationFormTab"/>
+                                            <MenuItem text="Gia hạn" style="-fx-font-weight: bold;" onAction="#openRentalExtensionFormTab"/>
+                                            <MenuItem text="Sơ đồ khách sạn" style="-fx-font-weight: bold;" onAction="#openMapTab"/>
                                         </items>
                                     </ContextMenu>
                                 </contextMenu>
@@ -159,9 +159,9 @@
                                 <contextMenu>
                                     <ContextMenu fx:id="accountantMenu" styleClass="context-menu">
                                         <items>
-                                            <MenuItem text="📊 Báo cáo tháng" onAction="#openReportTab"/>
-                                            <MenuItem text="🔍 Tra cứu hóa đơn" onAction="#openInvoiceAccountantTab"/>
-                                            <MenuItem text="💸 Lương nhân viên" onAction="#openSalaryTab"/>
+                                            <MenuItem text="Báo cáo tháng" style="-fx-font-weight: bold;" onAction="#openReportTab"/>
+                                            <MenuItem text="Tra cứu hóa đơn" style="-fx-font-weight: bold;" onAction="#openInvoiceAccountantTab"/>
+                                            <MenuItem text="Lương nhân viên" style="-fx-font-weight: bold;" onAction="#openSalaryTab"/>
                                         </items>
                                     </ContextMenu>
                                 </contextMenu>
