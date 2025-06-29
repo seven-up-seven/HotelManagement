@@ -83,31 +83,85 @@
                     <ColumnConstraints halignment="LEFT"/>
                 </columnConstraints>
 
-                <Label text="🆔 Mã NV:" styleClass="info-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                <!-- Row 0 -->
+                <HBox spacing="6" alignment="CENTER_LEFT" GridPane.rowIndex="0" GridPane.columnIndex="0">
+                    <StackPane prefWidth="24" prefHeight="24" style="-fx-background-radius: 12; -fx-background-color: #667eea;">
+                        <Label text="🆔" style="-fx-font-size: 12px; -fx-text-fill: white;" />
+                    </StackPane>
+                    <Label text="Mã NV:" styleClass="info-label"/>
+                </HBox>
                 <Label fx:id="staffIdLabel" styleClass="info-value" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
-                <Label text="👤 Tên:" styleClass="info-label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                <!-- Row 1 -->
+                <HBox spacing="6" alignment="CENTER_LEFT" GridPane.rowIndex="1" GridPane.columnIndex="0">
+                    <StackPane prefWidth="24" prefHeight="24" style="-fx-background-radius: 12; -fx-background-color: #764ba2;">
+                        <Label text="👤" style="-fx-font-size: 12px; -fx-text-fill: white;" />
+                    </StackPane>
+                    <Label text="Tên:" styleClass="info-label"/>
+                </HBox>
                 <Label fx:id="staffNameLabel" styleClass="info-value" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
-                <Label text="📇 CCCD:" styleClass="info-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                <!-- Row 2 -->
+                <HBox spacing="6" alignment="CENTER_LEFT" GridPane.rowIndex="2" GridPane.columnIndex="0">
+                    <StackPane prefWidth="24" prefHeight="24" style="-fx-background-radius: 12; -fx-background-color: #ff6b6b;">
+                        <Label text="📇" style="-fx-font-size: 12px; -fx-text-fill: white;" />
+                    </StackPane>
+                    <Label text="CCCD:" styleClass="info-label"/>
+                </HBox>
                 <Label fx:id="staffIdentifyNumberLabel" styleClass="info-value" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
 
-                <Label text="📧 Email:" styleClass="info-label" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                <!-- Row 3 -->
+                <HBox spacing="6" alignment="CENTER_LEFT" GridPane.rowIndex="3" GridPane.columnIndex="0">
+                    <StackPane prefWidth="24" prefHeight="24" style="-fx-background-radius: 12; -fx-background-color: #11998e;">
+                        <Label text="📧" style="-fx-font-size: 12px; -fx-text-fill: white;" />
+                    </StackPane>
+                    <Label text="Email:" styleClass="info-label"/>
+                </HBox>
                 <Label fx:id="staffEmailLabel" styleClass="info-value" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
 
-                <Label text="🔑 Quyền:" styleClass="info-label" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                <!-- Row 4 -->
+                <HBox spacing="6" alignment="CENTER_LEFT" GridPane.rowIndex="4" GridPane.columnIndex="0">
+                    <StackPane prefWidth="24" prefHeight="24" style="-fx-background-radius: 12; -fx-background-color: #ffa726;">
+                        <Label text="🔑" style="-fx-font-size: 12px; -fx-text-fill: white;" />
+                    </StackPane>
+                    <Label text="Quyền:" styleClass="info-label"/>
+                </HBox>
                 <Label fx:id="staffRoleLabel" styleClass="info-value" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
 
-                <Label text="🏠 Địa chỉ:" styleClass="info-label" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+                <!-- Row 5 -->
+                <HBox spacing="6" alignment="CENTER_LEFT" GridPane.rowIndex="5" GridPane.columnIndex="0">
+                    <StackPane prefWidth="24" prefHeight="24" style="-fx-background-radius: 12; -fx-background-color: #38ef7d;">
+                        <Label text="🏠" style="-fx-font-size: 12px; -fx-text-fill: white;" />
+                    </StackPane>
+                    <Label text="Địa chỉ:" styleClass="info-label"/>
+                </HBox>
                 <Label fx:id="staffAddressLabel" styleClass="info-value" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
 
-                <Label text="🎂 Tuổi:" styleClass="info-label" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+                <!-- Row 6 -->
+                <HBox spacing="6" alignment="CENTER_LEFT" GridPane.rowIndex="6" GridPane.columnIndex="0">
+                    <StackPane prefWidth="24" prefHeight="24" style="-fx-background-radius: 12; -fx-background-color: #fed6e3;">
+                        <Label text="🎂" style="-fx-font-size: 12px; -fx-text-fill: white;" />
+                    </StackPane>
+                    <Label text="Tuổi:" styleClass="info-label"/>
+                </HBox>
                 <Label fx:id="staffAgeLabel" styleClass="info-value" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
 
-                <Label text="⚧ Giới tính:" styleClass="info-label" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
+                <!-- Row 7 -->
+                <HBox spacing="6" alignment="CENTER_LEFT" GridPane.rowIndex="7" GridPane.columnIndex="0">
+                    <StackPane prefWidth="24" prefHeight="24" style="-fx-background-radius: 12; -fx-background-color: #fec194;">
+                        <Label text="⚧" style="-fx-font-size: 12px; -fx-text-fill: white;" />
+                    </StackPane>
+                    <Label text="Giới tính:" styleClass="info-label"/>
+                </HBox>
                 <Label fx:id="staffGenderLabel" styleClass="info-value" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
 
-                <Label text="📌 Vị trí:" styleClass="info-label" GridPane.rowIndex="8" GridPane.columnIndex="0"/>
+                <!-- Row 8 -->
+                <HBox spacing="6" alignment="CENTER_LEFT" GridPane.rowIndex="8" GridPane.columnIndex="0">
+                    <StackPane prefWidth="24" prefHeight="24" style="-fx-background-radius: 12; -fx-background-color: #ff0061;">
+                        <Label text="📌" style="-fx-font-size: 12px; -fx-text-fill: white;" />
+                    </StackPane>
+                    <Label text="Vị trí:" styleClass="info-label"/>
+                </HBox>
                 <Label fx:id="staffPositionLabel" styleClass="info-value" GridPane.rowIndex="8" GridPane.columnIndex="1"/>
             </GridPane>
         </HBox>

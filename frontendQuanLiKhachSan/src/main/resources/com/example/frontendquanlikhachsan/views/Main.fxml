@@ -53,11 +53,31 @@
 
                     <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" styleClass="sidebar-scroll" VBox.vgrow="ALWAYS">
                         <VBox spacing="5">
-                            <Button text="🏠 Trang chủ" style="-fx-font-weight: bold" styleClass="nav-item" onAction="#openHomeTab">
+                            <!-- Trang chủ -->
+                            <Button onAction="#openHomeTab" styleClass="nav-item">
+                                <graphic>
+                                    <HBox spacing="10" alignment="CENTER_LEFT">
+                                        <StackPane prefWidth="32" prefHeight="32"
+                                                   style="-fx-background-color: linear-gradient(to right, #667eea, #764ba2); -fx-background-radius: 16;">
+                                            <Label text="🏠" style="-fx-text-fill: white; -fx-font-size: 14;" />
+                                        </StackPane>
+                                        <Label text="Trang chủ" style="-fx-font-weight: bold; -fx-text-fill: white;" />
+                                    </HBox>
+                                </graphic>
                                 <tooltip><Tooltip text="Trang chủ"/></tooltip>
                             </Button>
 
-                            <Button fx:id="adminButton" text="👤 Quản trị viên" style="-fx-font-weight: bold" styleClass="nav-item">
+                            <!-- Quản trị viên -->
+                            <Button fx:id="adminButton" styleClass="nav-item">
+                                <graphic>
+                                    <HBox spacing="10" alignment="CENTER_LEFT">
+                                        <StackPane prefWidth="32" prefHeight="32"
+                                                   style="-fx-background-color: linear-gradient(to right, #11998e, #38ef7d); -fx-background-radius: 16;">
+                                            <Label text="👤" style="-fx-text-fill: white; -fx-font-size: 14;" />
+                                        </StackPane>
+                                        <Label text="Quản trị viên" style="-fx-font-weight: bold; -fx-text-fill: white;" />
+                                    </HBox>
+                                </graphic>
                                 <tooltip><Tooltip text="Quản trị viên"/></tooltip>
                                 <contextMenu>
                                     <ContextMenu fx:id="adminMenu" styleClass="context-menu">
@@ -71,7 +91,17 @@
                                 </contextMenu>
                             </Button>
 
-                            <Button fx:id="receptionistButton" text="🛎 Lễ tân" style="-fx-font-weight: bold" styleClass="nav-item">
+                            <!-- Lễ tân -->
+                            <Button fx:id="receptionistButton" styleClass="nav-item">
+                                <graphic>
+                                    <HBox spacing="10" alignment="CENTER_LEFT">
+                                        <StackPane prefWidth="32" prefHeight="32"
+                                                   style="-fx-background-color: linear-gradient(to right, #ff6b6b, #ffa726); -fx-background-radius: 16;">
+                                            <Label text="🛎" style="-fx-text-fill: white; -fx-font-size: 14;" />
+                                        </StackPane>
+                                        <Label text="Lễ tân" style="-fx-font-weight: bold; -fx-text-fill: white;" />
+                                    </HBox>
+                                </graphic>
                                 <tooltip><Tooltip text="Lễ tân"/></tooltip>
                                 <contextMenu>
                                     <ContextMenu fx:id="receptionistMenu" styleClass="context-menu">
@@ -85,8 +115,18 @@
                                 </contextMenu>
                             </Button>
 
-                            <Button fx:id="managerButton" text="📋 Quản lý" style="-fx-font-weight: bold" styleClass="nav-item">
-                                <Tooltip text="Quản lý"></Tooltip>
+                            <!-- Quản lý -->
+                            <Button fx:id="managerButton" styleClass="nav-item" style="-fx-pref-width: 150px;" >
+                                <graphic>
+                                    <HBox spacing="10" alignment="CENTER_LEFT">
+                                        <StackPane prefWidth="32" prefHeight="32"
+                                                   style="-fx-background-color: linear-gradient(to right, #ff9966, #ff5e62); -fx-background-radius: 16;">
+                                            <Label text="📋" style="-fx-text-fill: white; -fx-font-size: 14;" />
+                                        </StackPane>
+                                        <Label text="Quản lý" style="-fx-font-weight: bold; -fx-text-fill: white;" />
+                                    </HBox>
+                                </graphic>
+                                <Tooltip text="Quản lý"/>
                                 <contextMenu>
                                     <ContextMenu fx:id="managerMenu" styleClass="context-menu">
                                         <items>
@@ -104,7 +144,17 @@
                                 </contextMenu>
                             </Button>
 
-                            <Button fx:id="accountantButton" text="💰 Kế toán" styleClass="nav-item">
+                            <!-- Kế toán -->
+                            <Button fx:id="accountantButton" styleClass="nav-item">
+                                <graphic>
+                                    <HBox spacing="10" alignment="CENTER_LEFT">
+                                        <StackPane prefWidth="32" prefHeight="32"
+                                                   style="-fx-background-color: linear-gradient(to right, #a8edea, #fed6e3); -fx-background-radius: 16;">
+                                            <Label text="💰" style="-fx-text-fill: white; -fx-font-size: 14;" />
+                                        </StackPane>
+                                        <Label text="Kế toán" style="-fx-font-weight: bold; -fx-text-fill: white;" />
+                                    </HBox>
+                                </graphic>
                                 <tooltip><Tooltip text="Kế toán"/></tooltip>
                                 <contextMenu>
                                     <ContextMenu fx:id="accountantMenu" styleClass="context-menu">
@@ -117,15 +167,45 @@
                                 </contextMenu>
                             </Button>
 
-                            <Button text="🤖 Trợ lý AI" style="-fx-font-weight: bold" styleClass="nav-item" onAction="#openChatbot">
+                            <!-- Trợ lý AI -->
+                            <Button onAction="#openChatbot" styleClass="nav-item">
+                                <graphic>
+                                    <HBox spacing="10" alignment="CENTER_LEFT">
+                                        <StackPane prefWidth="32" prefHeight="32"
+                                                   style="-fx-background-color: linear-gradient(to right, #00c6ff, #0072ff); -fx-background-radius: 16;">
+                                            <Label text="🤖" style="-fx-text-fill: white; -fx-font-size: 14;" />
+                                        </StackPane>
+                                        <Label text="Trợ lý AI" style="-fx-font-weight: bold; -fx-text-fill: white;" />
+                                    </HBox>
+                                </graphic>
                                 <tooltip><Tooltip text="Trợ lý AI"/></tooltip>
                             </Button>
 
-                            <Button text="⚙️ Cài đặt" style="-fx-font-weight: bold" styleClass="nav-item" onAction="#openSettings">
+                            <!-- Cài đặt -->
+                            <Button onAction="#openSettings" styleClass="nav-item">
+                                <graphic>
+                                    <HBox spacing="10" alignment="CENTER_LEFT">
+                                        <StackPane prefWidth="32" prefHeight="32"
+                                                   style="-fx-background-color: linear-gradient(to right, #bdc3c7, #2c3e50); -fx-background-radius: 16;">
+                                            <Label text="⚙" style="-fx-text-fill: white; -fx-font-size: 14;" />
+                                        </StackPane>
+                                        <Label text="Cài đặt" style="-fx-font-weight: bold; -fx-text-fill: white;" />
+                                    </HBox>
+                                </graphic>
                                 <tooltip><Tooltip text="Cài đặt"/></tooltip>
                             </Button>
 
-                            <Button text="🚪 Đăng xuất" style="-fx-font-weight: bold"  styleClass="nav-item" onAction="#logout">
+                            <!-- Đăng xuất -->
+                            <Button onAction="#logout" styleClass="nav-item">
+                                <graphic>
+                                    <HBox spacing="10" alignment="CENTER_LEFT">
+                                        <StackPane prefWidth="32" prefHeight="32"
+                                                   style="-fx-background-color: linear-gradient(to right, #ee0979, #ff6a00); -fx-background-radius: 16;">
+                                            <Label text="🚪" style="-fx-text-fill: white; -fx-font-size: 14;" />
+                                        </StackPane>
+                                        <Label text="Đăng xuất" style="-fx-font-weight: bold; -fx-text-fill: white;" />
+                                    </HBox>
+                                </graphic>
                                 <tooltip><Tooltip text="Đăng xuất"/></tooltip>
                             </Button>
                         </VBox>

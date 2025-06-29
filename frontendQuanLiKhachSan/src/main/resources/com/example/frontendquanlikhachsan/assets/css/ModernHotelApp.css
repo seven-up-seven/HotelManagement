@@ -678,7 +678,7 @@
     -fx-transition: all 0.3s ease;
     -fx-font-size: 16px;
     -fx-font-weight: 500;
-    -fx-pref-width: 160px;
+    -fx-pref-width: 180px;
 }
 
 .nav-item:hover {
@@ -805,16 +805,16 @@
 
 .sidebar-container {
     -fx-background-color: linear-gradient(to bottom, #003269, #257bac);
-    -fx-pref-width: 220px;
-    -fx-max-width: 220px;
+    -fx-pref-width: 235px;
+    -fx-max-width: 235px;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 0);
     -fx-padding: 0;
 }
 
 .sidebar {
     -fx-background-color: rgba(255,255,255,0.05);
-    -fx-pref-width: 220px;
-    -fx-max-width: 220px;
+    -fx-pref-width: 235px;
+    -fx-max-width: 235px;
 }
 
 .overlay-pane {
