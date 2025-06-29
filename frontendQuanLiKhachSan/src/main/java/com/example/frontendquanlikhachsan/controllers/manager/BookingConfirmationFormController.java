@@ -378,8 +378,8 @@ public class BookingConfirmationFormController {
         detailPane.getChildren().add(createBoldRow("Số ngày thuê:", String.valueOf(rd)));
 
         // --- tạo HBox chứa 2 nút Sửa + Xóa ---
-        Button btnEdit  = new Button("✏️ Sửa");
-        Button btnDelete= new Button("❌ Xóa");
+        Button btnEdit  = new Button("Sửa");
+        Button btnDelete= new Button("Xóa");
         btnEdit.setOnAction(e -> showBookingForm(d.getId()));
         btnDelete.setOnAction(e -> {
             try {

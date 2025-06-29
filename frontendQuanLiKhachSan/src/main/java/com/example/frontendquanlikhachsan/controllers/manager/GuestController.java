@@ -218,8 +218,8 @@ public class GuestController {
 
         HBox actions = new HBox(10);
         actions.setPadding(new Insets(10, 0, 0, 0));
-        Button btnEdit = new Button("✏️ Sửa"); btnEdit.setOnAction(e -> showEditForm(g));
-        Button btnDel  = new Button("🗑️ Xóa"); btnDel.setOnAction(e -> deleteGuest(g));
+        Button btnEdit = new Button("Sửa"); btnEdit.setOnAction(e -> showEditForm(g));
+        Button btnDel  = new Button("Xóa"); btnDel.setOnAction(e -> deleteGuest(g));
         actions.getChildren().addAll(btnEdit, btnDel);
         detailPane.getChildren().add(actions);
     }

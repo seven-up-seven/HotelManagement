@@ -326,13 +326,14 @@ public class InvoiceController {
                 else setText("Mã chi tiết #" + it.getId()
                         + " Mã phiếu thuê #" + it.getRentalFormId()
                         + " Giá thuê – " + it.getReservationCost() + " (" + it.getNumberOfRentalDays() + " ngày)");
+                setPrefHeight(42);
             }
         });
         lvD.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2)
                 showInvoiceDetailForm(dto, lvD.getSelectionModel().getSelectedItem());
         });
-        lvD.setPrefHeight(lvD.getItems().size()*24 + 2);
+        lvD.setPrefHeight(lvD.getItems().size()*42 + 2);
 
         // nút Thêm / Xoá chi tiết
         Button btnAddD = new Button("➕ Thêm chi tiết");
@@ -358,9 +359,9 @@ public class InvoiceController {
         acc.getPanes().add(new TitledPane("Chi tiết hoá đơn", boxD));
 
         // --- Buttons hành động chính ---
-        Button btnEdit = new Button("✏️ Sửa");
+        Button btnEdit = new Button("Sửa");
         btnEdit.setOnAction(e -> showInvoiceForm(dto));
-        Button btnDelete = new Button("🗑️ Xóa");
+        Button btnDelete = new Button("Xóa");
         btnDelete.setOnAction(e -> {
             Alert c = new Alert(Alert.AlertType.CONFIRMATION,
                     "Xóa hoá đơn này?", ButtonType.OK, ButtonType.CANCEL);

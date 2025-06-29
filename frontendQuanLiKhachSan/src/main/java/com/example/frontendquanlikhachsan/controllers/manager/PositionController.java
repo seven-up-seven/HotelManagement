@@ -84,9 +84,9 @@ public class PositionController {
         // Nút hành động
         HBox actions = new HBox(12);
         actions.setPadding(new Insets(12,0,0,0));
-        Button btnEdit = new Button("✏️ Sửa");
+        Button btnEdit = new Button("Sửa");
         btnEdit.setOnAction(e -> showEditForm(pos));
-        Button btnDel  = new Button("🗑️ Xóa");
+        Button btnDel  = new Button("Xóa");
         btnDel .setOnAction(e -> deletePosition(pos));
         actions.getChildren().addAll(btnEdit, btnDel);
 

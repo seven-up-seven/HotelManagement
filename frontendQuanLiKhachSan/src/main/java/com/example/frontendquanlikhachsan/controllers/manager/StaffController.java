@@ -268,9 +268,9 @@ public class StaffController {
         // Nút Sửa / Xóa
         HBox actionBox = new HBox(12);
         actionBox.setPadding(new Insets(12, 0, 0, 0));
-        Button btnEdit = new Button("✏️ Chỉnh sửa");
+        Button btnEdit = new Button("Chỉnh sửa");
         btnEdit.setOnAction(evt -> showEditForm(staff));
-        Button btnDelete = new Button("🗑️ Xóa");
+        Button btnDelete = new Button("Xóa");
         btnDelete.setOnAction(evt -> deleteStaff(staff));
         actionBox.getChildren().addAll(btnEdit, btnDelete);
         detailPane.getChildren().add(actionBox);

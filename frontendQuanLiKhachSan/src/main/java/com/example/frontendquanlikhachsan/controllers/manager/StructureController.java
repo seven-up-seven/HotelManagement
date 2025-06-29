@@ -154,17 +154,17 @@ public class StructureController {
         MenuItem miNewB = new MenuItem("➕ Tạo tòa"); miNewB.setOnAction(e->showBlockForm(null));
         menuBackground = new ContextMenu(miNewB);
 
-        MenuItem miEditB = new MenuItem("✏️ Sửa tòa"); miEditB.setOnAction(e->showBlockForm(getSelectedBlockId()));
+        MenuItem miEditB = new MenuItem("Sửa tòa"); miEditB.setOnAction(e->showBlockForm(getSelectedBlockId()));
         MenuItem miNewF = new MenuItem("➕ Tạo tầng"); miNewF.setOnAction(e->showFloorForm(null));
         MenuItem miDelB = new MenuItem("❌ Xóa tòa"); miDelB.setOnAction(e->deleteBuilding());
         menuBuilding = new ContextMenu(miEditB,new SeparatorMenuItem(),miNewF,miDelB);
 
-        MenuItem miEditF = new MenuItem("✏️ Sửa tầng"); miEditF.setOnAction(e->showFloorForm(getSelectedFloorId()));
+        MenuItem miEditF = new MenuItem("Sửa tầng"); miEditF.setOnAction(e->showFloorForm(getSelectedFloorId()));
         MenuItem miNewR = new MenuItem("➕ Tạo phòng"); miNewR.setOnAction(e->showRoomForm(null));
         MenuItem miDelF = new MenuItem("❌ Xóa tầng"); miDelF.setOnAction(e->deleteFloor());
         menuFloor = new ContextMenu(miEditF,new SeparatorMenuItem(),miNewR,miDelF);
 
-        MenuItem miEditR = new MenuItem("✏️ Sửa phòng"); miEditR.setOnAction(e->showRoomForm(getSelectedRoomId()));
+        MenuItem miEditR = new MenuItem("Sửa phòng"); miEditR.setOnAction(e->showRoomForm(getSelectedRoomId()));
         MenuItem miDelR = new MenuItem("❌ Xóa phòng"); miDelR.setOnAction(e->deleteRoom());
         menuRoom = new ContextMenu(miEditR,miDelR);
     }
