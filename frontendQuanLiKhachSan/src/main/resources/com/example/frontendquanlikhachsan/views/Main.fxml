@@ -11,6 +11,21 @@
             stylesheets="@../assets/css/ModernHotelApp.css, @../assets/css/TabPane.css"
             fx:controller="com.example.frontendquanlikhachsan.controllers.MainController">
 
+    <!-- Header Section -->
+    <top>
+        <HBox styleClass="header" alignment="CENTER_LEFT" spacing="10">
+            <Button fx:id="toggleSidebarButton" text="☰" styleClass="toggle-button" onAction="#toggleSidebar"/>
+            <Label text="🏨 Roomify" styleClass="logo-title"/>
+            <Label text="Management System" styleClass="logo-subtitle" />
+            <HBox alignment="CENTER_RIGHT" spacing="5" HBox.hgrow="ALWAYS">
+                <VBox spacing="3" alignment="CENTER" styleClass="clock-box">
+                    <Label fx:id="clockLabel" text="00:00:00" styleClass="clock-time"/>
+                    <Label fx:id="dateDayLabel" text="Ngày 01-01-2021 – Thứ hai" styleClass="clock-date"/>
+                </VBox>
+            </HBox>
+        </HBox>
+    </top>
+
     <!-- Main Content Area -->
     <center>
         <StackPane styleClass="main-content">

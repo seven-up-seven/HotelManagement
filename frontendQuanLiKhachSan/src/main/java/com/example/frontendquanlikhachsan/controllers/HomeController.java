@@ -42,7 +42,32 @@ public class HomeController {
 
     @FXML
     public void initialize() {
+        startClock();
         loadCurrentUserInfo();
+    }
+
+    private void startClock() {
+        Timeline clock = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+            LocalTime currentTime = LocalTime.now();
+            LocalDate currentDate = LocalDate.now();
+            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+            String dayOfWeek = switch (currentDate.getDayOfWeek()) {
+                case MONDAY -> "Thứ hai";
+                case TUESDAY -> "Thứ ba";
+                case WEDNESDAY -> "Thứ tư";
+                case THURSDAY -> "Thứ năm";
+                case FRIDAY -> "Thứ sáu";
+                case SATURDAY -> "Thứ bảy";
+                case SUNDAY -> "Chủ nhật";
+            };
+
+            clockLabel.setText(currentTime.format(timeFormatter));
+            dateDayLabel.setText(currentDate.format(dateFormatter) + " – " + dayOfWeek);
+        }));
+        clock.setCycleCount(Animation.INDEFINITE);
+        clock.play();
     }
 
     private void loadCurrentUserInfo() {
