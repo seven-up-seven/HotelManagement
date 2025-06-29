@@ -10,7 +10,7 @@
 <SplitPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="com.example.frontendquanlikhachsan.controllers.accountant.StaffSalaryAccountantController"
-           stylesheets="@../../assets/css/View.css"
+           stylesheets="@../../assets/css/StaffSalary.css"
            prefWidth="800" prefHeight="600">
     <items>
         <!-- LEFT: danh sách nhân viên -->
@@ -49,7 +49,7 @@
 
             </HBox>
 
-            <Label text="Danh sách nhân viên" styleClass="header"/>
+            <Label text="Danh sách nhân viên" styleClass="label"/>
             <TableView fx:id="tableStaff" VBox.vgrow="ALWAYS">
                 <columns>
                     <TableColumn fx:id="colId"        text="ID"        prefWidth="50"/>
@@ -66,7 +66,7 @@
             <padding>
                 <Insets top="16" right="16" bottom="16" left="16"/>
             </padding>
-            <Label text="Chi tiết &amp; Sửa hệ số lương" styleClass="header"/>
+            <Label text="Chi tiết &amp; Sửa hệ số lương" styleClass="label"/>
             <VBox fx:id="detailPane" spacing="12.0"/>
         </VBox>
     </items>

@@ -11,9 +11,9 @@
 <SplitPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="com.example.frontendquanlikhachsan.controllers.accountant.RevenueReportController"
-           stylesheets="@../../assets/css/ModernHotelApp.css"
+           stylesheets="@../../assets/css/Report.css"
            prefWidth="800" prefHeight="600"
-           dividerPositions="0.65">  <!-- 45% cho left pane -->
+           dividerPositions="0.55">  <!-- 45% cho left pane -->
 <!--     stylesheets="@../../assets/css/View.css"-->
     <items>
         <!-- LEFT PANE -->
@@ -22,12 +22,12 @@
                 <Insets top="16" right="16" bottom="16" left="16"/>
             </padding>
 
-            <Label text="Chọn Năm" styleClass="header"/>
+            <Label text="Chọn Năm" styleClass="label"/>
             <HBox spacing="6" alignment="CENTER_LEFT">
                 <ComboBox fx:id="cbYear" promptText="Năm" prefWidth="100"/>
-                <Button fx:id="btnExportPdf" text="Xuất PDF" prefWidth="80"/>
-                <Button fx:id="btnExportExcel" text="Xuất Excel" prefWidth="80"/>
-                <Button fx:id="btnBuilder" text="Build" prefWidth="80"/>
+                <Button fx:id="btnExportPdf" text="Xuất PDF" prefWidth="120"/>
+                <Button fx:id="btnExportExcel" text="Xuất Excel" prefWidth="120"/>
+                <Button fx:id="btnBuilder" text="Build" prefWidth="80" visible="false"/>
             </HBox>
 
             <!-- Phần scrollable: chart + table -->
@@ -61,7 +61,7 @@
                                text="Tổng: 0₫"
                                style="-fx-font-size:14px; -fx-font-weight:bold;"/>
 
-                        <Label text="Danh sách Báo cáo" styleClass="header"/>
+                        <Label text="Danh sách Báo cáo" styleClass="label"/>
                         <TableView fx:id="tblReport"
                                    prefHeight="200">
                             <columns>
@@ -81,7 +81,7 @@
             <padding>
                 <Insets top="16" right="16" bottom="16" left="16"/>
             </padding>
-            <Label text="Báo cáo chi tiết" styleClass="header"/>
+            <Label text="Báo cáo chi tiết" styleClass="label"/>
             <Button fx:id="btnExportMonthPdf" text="Xuất PDF tháng"/>
             <Pane prefHeight="250">
                 <PieChart fx:id="pieChart" prefWidth="480" prefHeight="240"/>
