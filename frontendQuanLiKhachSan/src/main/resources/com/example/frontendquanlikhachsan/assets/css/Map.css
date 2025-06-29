@@ -1,62 +1,82 @@
-/* map-style.css */
-
 .header-bar {
     -fx-padding: 20;
-    -fx-background-color: linear-gradient(to bottom, #ffffff, #e0f7fa);
-    -fx-border-color: #b2ebf2;
-    -fx-border-width: 0 0 1 0;
+    -fx-background-color: linear-gradient(to bottom, #667EEA, #9769c7);
+    -fx-border-color: #9769c7;
+    -fx-border-width: 0 0 2 0;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
 }
 
 .main-title {
-    -fx-font-size: 24px;
+    -fx-font-size: 28px;
     -fx-font-weight: bold;
-    -fx-text-fill: #0077c2;
+    -fx-text-fill: #ffffff;
+    -fx-font-family: "Segoe UI";
+    -fx-padding: 0 0 10 0;
 }
 
 .action-button {
-    -fx-background-color: #2196f3;
-    -fx-text-fill: white;
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #667EEA;
+    -fx-font-size: 14px;
     -fx-font-weight: bold;
-    -fx-padding: 6 14;
-    -fx-background-radius: 6;
+    -fx-font-family: "Segoe UI";
+    -fx-padding: 8 20;
+    -fx-background-radius: 8;
     -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
 }
 
 .action-button:hover {
-    -fx-background-color: #1976d2;
+    -fx-background-color: #f3e7ff;
+    -fx-text-fill: #764BA2;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+    -fx-transition: all 0.2s ease-in-out;
 }
 
-.map-area {
-    -fx-background-color: #f1f8ff;
-    -fx-border-color: #90caf9;
-    -fx-border-width: 1;
+.action-button:disabled {
+    -fx-background-color: #e0e0e0;
+    -fx-text-fill: #aaaaaa;
+    -fx-opacity: 0.7;
 }
 
-.map-scroll {
-    -fx-border-color: #ccc;
-    -fx-border-width: 1;
-}
-
-.unplaced-container {
-    -fx-background-color: #f5f5f5;
-    -fx-border-color: #b0bec5;
-    -fx-border-width: 1;
+.map-container {
+    -fx-background-color: #ffffff;
     -fx-padding: 10;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
 }
 
 .map-area {
+    -fx-background-color: #f3e7ff;
+    -fx-border-color: #b39ddb;
+    -fx-border-width: 2;
+    -fx-background-radius: 8;
     -fx-background-image: url("../images/map.jpg");
     -fx-background-repeat: no-repeat;
     -fx-background-size: cover;
     -fx-background-position: center;
-    -fx-border-color: #90caf9;
-    -fx-border-width: 1;
+}
+
+.map-scroll {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 8;
+}
+
+.unplaced-container {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 2;
+    -fx-padding: 15;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
 }
 
 .section-title {
     -fx-font-size: 16px;
     -fx-font-weight: bold;
-    -fx-text-fill: #444;
-    -fx-padding: 0 0 5 0;
+    -fx-text-fill: #667EEA;
+    -fx-font-family: "Segoe UI";
+    -fx-padding: 0 0 8 0;
 }
-

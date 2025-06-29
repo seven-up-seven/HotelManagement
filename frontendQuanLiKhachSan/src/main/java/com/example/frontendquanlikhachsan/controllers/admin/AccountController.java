@@ -396,6 +396,10 @@ public class AccountController {
         Alert a = new Alert(Alert.AlertType.ERROR);
         a.setHeaderText(header);
         a.setContentText(content);
+
+        a.getDialogPane().getStylesheets().add(
+                getClass().getResource("/com/example/frontendquanlikhachsan/assets/css/alert.css").toExternalForm()
+        );
         a.showAndWait();
     }
 

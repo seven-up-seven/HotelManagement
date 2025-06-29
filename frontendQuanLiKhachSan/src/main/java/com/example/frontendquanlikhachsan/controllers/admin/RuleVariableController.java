@@ -114,10 +114,15 @@ public class RuleVariableController {
         }
     }
 
-    private void showError(String msg) {
+    private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText("Lỗi");
-        alert.setContentText(msg);
+        alert.setContentText(message);
+
+        // Thêm stylesheet cho DialogPane
+        alert.getDialogPane().getStylesheets().add(
+                getClass().getResource("/com/example/frontendquanlikhachsan/assets/css/alert.css").toExternalForm()
+        );
         alert.showAndWait();
     }
 

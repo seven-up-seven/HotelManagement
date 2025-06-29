@@ -28,7 +28,7 @@ public class MainController {
     @FXML private HBox ADMIN, RECEPTIONIST, MANAGER, ACCOUNTANT;
 
     @FXML private TabPane tabPane;
-    @FXML private javafx.scene.control.ScrollPane dockScrollPane;
+    @FXML private ScrollPane dockScrollPane;
     @FXML private HBox dockItems;
 
     @FXML private Button adminButton;
@@ -40,17 +40,26 @@ public class MainController {
     @FXML private Button accountantButton;
     @FXML private ContextMenu accountantMenu;
 
-    private final Map<String, Runnable> quickAccessViews = new HashMap<>();
+    @FXML private VBox sidebarContainer; // Sidebar overlay
+    @FXML private Button toggleSidebarButton; // Nút toggle sidebar
+    @FXML private Pane overlayPane; // Overlay pane
 
+    private final Map<String, Runnable> quickAccessViews = new HashMap<>();
     private final Map<String, Integer> tabCounters = new HashMap<>();
 
     private List<String> currentUserPermissions = new ArrayList<>();
+
+    private boolean isSidebarVisible = false;
 
     @FXML
     public void initialize() {
         openHomeTab();
         adjustSidebarByPermission();
         setupDockSubMenus();
+        tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS);
+
+        overlayPane.setVisible(false);
+        overlayPane.setMouseTransparent(true);
 
         Platform.runLater(() -> {
             tabPane.getScene().addEventFilter(KeyEvent.KEY_PRESSED, event -> {
@@ -60,6 +69,42 @@ public class MainController {
                 }
             });
         });
+    }
+
+    @FXML
+    public void toggleSidebar() {
+        isSidebarVisible = !isSidebarVisible;
+        sidebarContainer.setVisible(isSidebarVisible);
+        overlayPane.setVisible(isSidebarVisible);
+        overlayPane.setMouseTransparent(!isSidebarVisible); // Enable/disable interaction
+
+        if (isSidebarVisible) {
+            sidebarContainer.setStyle("-fx-translate-x: 0;");
+        } else {
+            sidebarContainer.setStyle("-fx-translate-x: -280px;");
+        }
+    }
+
+    @FXML
+    public void handleOverlayClick() {
+        if (isSidebarVisible) {
+            isSidebarVisible = false;
+            sidebarContainer.setVisible(false);
+            overlayPane.setVisible(false);
+            overlayPane.setMouseTransparent(true);
+            sidebarContainer.setStyle("-fx-translate-x: -280px;");
+        }
+    }
+
+    @FXML
+    public void hideSidebar() {
+        if (isSidebarVisible) {
+            isSidebarVisible = false;
+            sidebarContainer.setVisible(false);
+            overlayPane.setVisible(false);
+            overlayPane.setMouseTransparent(true);
+            sidebarContainer.setStyle("-fx-translate-x: -280px;");
+        }
     }
 
     private void showSearchPopup() {
@@ -252,7 +297,7 @@ public class MainController {
     }
 
     public void openMapTab() {
-        openTab("Sơ đồ khách sạn", "/com/example/frontendquanlikhachsan/views/manager/Map.fxml",  null);
+        openTab("Sơ đồ khách sạn", "/com/example/frontendquanlikhachsan/views/manager/Map.fxml", null);
     }
 
     // ---------- Accountant ----------
@@ -335,6 +380,11 @@ public class MainController {
         alert.setTitle("Xác nhận đăng xuất");
         alert.setHeaderText("Bạn có chắc chắn muốn đăng xuất?");
         alert.setContentText("Hành động này sẽ đưa bạn về màn hình đăng nhập.");
+
+        // Thêm stylesheet cho DialogPane
+        alert.getDialogPane().getStylesheets().add(
+                getClass().getResource("/com/example/frontendquanlikhachsan/assets/css/alert.css").toExternalForm()
+        );
 
         // Tùy chọn xác nhận hoặc hủy
         Optional<ButtonType> result = alert.showAndWait();

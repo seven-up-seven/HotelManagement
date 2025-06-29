@@ -1,34 +1,39 @@
-/* Đặt trong resources/com/example/frontendquanlikhachsan/styles/structure.css */
-
-/* Toàn bộ TreeView */
 #structureTree {
     -fx-font-size: 14px;
-    /* Nền xanh dương nhạt */
-    -fx-background-color: #e3f2fd;
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 8;
+    -fx-border-color: #b39ddb;
+    -fx-border-radius: 8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 1);
+    -fx-padding: 10;
 }
 
-/* TreeCell cho Building (depth 0) */
 .tree-cell.building {
-    -fx-text-fill: #2a5d34; /* xanh lá đậm */
+    -fx-text-fill: #764BA2;
     -fx-font-weight: bold;
+    -fx-font-size: 15px;
+    -fx-padding: 6 0;
 }
 
-/* TreeCell cho Floor (depth 1) */
 .tree-cell.floor {
-    -fx-text-fill: #1e3a5f; /* xanh dương đậm */
+    -fx-text-fill: #667EEA;
+    -fx-font-size: 14px;
+    -fx-padding: 4 0;
 }
 
-/* TreeCell cho Room (depth 2) */
 .tree-cell.room {
-    -fx-text-fill: #444444; /* xám */
+    -fx-text-fill: #888888;
+    -fx-font-size: 13px;
+    -fx-padding: 4 0;
 }
 
-/* Khi hover */
 .tree-cell:hover {
-    -fx-background-color: #e8f5e9;
+    -fx-background-color: #f3e7ff;
+    -fx-background-radius: 4;
 }
 
-/* Khi chọn */
 .tree-cell:selected {
-    -fx-background-color: #c8e6c9;
+    -fx-background-color: #e8eaff;
+    -fx-background-radius: 4;
+    -fx-text-fill: #333333;
 }

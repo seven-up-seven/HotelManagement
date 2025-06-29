@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.ImageView?>
+
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.frontendquanlikhachsan.controllers.HomeController"
+            stylesheets="@../assets/css/Home.css"
+            prefWidth="1200" prefHeight="700">
+
+    <!-- TOP: Clock and User Info -->
+    <top>
+        <HBox alignment="TOP_RIGHT" styleClass="header-container">
+            <padding><Insets top="15" right="25" bottom="15" left="25"/></padding>
+            <VBox spacing="8" alignment="CENTER" styleClass="clock-user-box">
+                <Label fx:id="clockLabel" text="00:00:00" styleClass="clock-time"/>
+                <Label fx:id="dateDayLabel" text="Ngày 22-06-2025 – Chủ nhật" styleClass="clock-date"/>
+                <Label fx:id="userRoleLabel" text="Xin chào, Manager John Doe" styleClass="user-role"/>
+            </VBox>
+        </HBox>
+    </top>
+
+    <!-- CENTER: Main Content with Card Design -->
+    <center>
+        <VBox spacing="30" alignment="CENTER" styleClass="main-content">
+            <Label text="Trang Chủ Quản Lý Khách Sạn" styleClass="main-title"/>
+
+            <!-- User Info Card -->
+            <VBox styleClass="user-card" spacing="20">
+                <HBox alignment="CENTER" spacing="30">
+                    <VBox alignment="CENTER">
+                        <ImageView fx:id="avatarImageView"
+                                   fitHeight="120" fitWidth="120"
+                                   preserveRatio="true"
+                                   styleClass="avatar-img"/>
+                    </VBox>
+                    <GridPane fx:id="infoForm" hgap="15" vgap="10" styleClass="info-grid">
+                        <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+                        <Label text="Mã nhân viên:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="info-label"/>
+                        <Label fx:id="staffIdLabel" text="1111111111" GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="info-value"/>
+                        <Label text="Tên nhân viên:" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="info-label"/>
+                        <Label fx:id="staffNameLabel" text="John Doe" GridPane.rowIndex="1" GridPane.columnIndex="1" styleClass="info-value"/>
+                        <Label text="CCCD:" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="info-label"/>
+                        <Label fx:id="staffIdentifyNumberLabel" text="1111111111" GridPane.rowIndex="2" GridPane.columnIndex="1" styleClass="info-value"/>
+                        <Label text="Email:" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="info-label"/>
+                        <Label fx:id="staffEmailLabel" text="john.doe@example.com" GridPane.rowIndex="3" GridPane.columnIndex="1" styleClass="info-value"/>
+                        <Label text="Quyền hạn:" GridPane.rowIndex="4" GridPane.columnIndex="0" styleClass="info-label"/>
+                        <Label fx:id="staffRoleLabel" text="Manager" GridPane.rowIndex="4" GridPane.columnIndex="1" styleClass="info-value"/>
+                        <Label text="Địa chỉ:" GridPane.rowIndex="5" GridPane.columnIndex="0" styleClass="info-label"/>
+                        <Label fx:id="staffAddressLabel" text="123 Street" GridPane.rowIndex="5" GridPane.columnIndex="1" styleClass="info-value"/>
+                        <Label text="Tuổi:" GridPane.rowIndex="6" GridPane.columnIndex="0" styleClass="info-label"/>
+                        <Label fx:id="staffAgeLabel" text="30" GridPane.rowIndex="6" GridPane.columnIndex="1" styleClass="info-value"/>
+                        <Label text="Vị trí:" GridPane.rowIndex="7" GridPane.columnIndex="0" styleClass="info-label"/>
+                        <Label fx:id="staffPositionLabel" text="Manager" GridPane.rowIndex="7" GridPane.columnIndex="1" styleClass="info-value"/>
+                    </GridPane>
+                </HBox>
+            </VBox>
+        </VBox>
+    </center>
+
+    <!-- BOTTOM: Enhanced Dock Bar with Hover Tooltips -->
+    <bottom>
+        <HBox alignment="CENTER" styleClass="dock-container">
+            <ScrollPane fx:id="dockScrollPane" hbarPolicy="NEVER" vbarPolicy="NEVER" fitToHeight="true">
+                <HBox fx:id="dockItems" alignment="CENTER" spacing="25" styleClass="dock-items">
+                    <!-- ADMIN Group -->
+                    <Button fx:id="adminButton" text="👤" styleClass="dock-icon">
+                        <tooltip>
+                            <Tooltip text="Quản trị viên" showDelay="0.2s"/>
+                        </tooltip>
+                        <contextMenu>
+                            <ContextMenu fx:id="adminMenu">
+                                <items>
+                                    <MenuItem text="🔐 Quản lý tài khoản" onAction="#openAccountManagement"/>
+                                    <MenuItem text="🧩 Quản lý vai trò" onAction="#openUserRoleManagement"/>
+                                    <MenuItem text="📜 Quản lý lịch sử" onAction="#openHistoryManagement"/>
+                                    <MenuItem text="⚙️ Quản lý tham số" onAction="#openVariableManagement"/>
+                                </items>
+                            </ContextMenu>
+                        </contextMenu>
+                    </Button>
+
+                    <!-- RECEPTIONIST Group -->
+                    <Button fx:id="receptionistButton" text="🛎" styleClass="dock-icon">
+                        <tooltip>
+                            <Tooltip text="Lễ tân" showDelay="0.2s"/>
+                        </tooltip>
+                        <contextMenu>
+                            <ContextMenu fx:id="receptionistMenu">
+                                <items>
+                                    <MenuItem text="🛏 Lập phiếu thuê phòng" onAction="#openRoomRentingTab"/>
+                                    <MenuItem text="➕ Bổ sung phiếu thuê" onAction="#openEditTab"/>
+                                    <MenuItem text="🧾 Khởi tạo hóa đơn" onAction="#openRentalFormViewTab"/>
+                                    <MenuItem text="📂 Tra cứu hóa đơn" onAction="#openInvoiceAccountantTab"/>
+                                </items>
+                            </ContextMenu>
+                        </contextMenu>
+                    </Button>
+
+                    <!-- MANAGER Group -->
+                    <Button fx:id="managerButton" text="📋" styleClass="dock-icon">
+                        <tooltip>
+                            <Tooltip text="Quản lý" showDelay="0.2s"/>
+                        </tooltip>
+                        <contextMenu>
+                            <ContextMenu fx:id="managerMenu">
+                                <items>
+                                    <MenuItem text="👨‍💼 Quản lý nhân viên" onAction="#openStaffTab"/>
+                                    <MenuItem text="🪪 Quản lý chức vụ" onAction="#openPositionTab"/>
+                                    <MenuItem text="🙋‍♂️ Quản lý khách hàng" onAction="#openGuestTab"/>
+                                    <MenuItem text="📑 Quản lý phiếu thuê" onAction="#openRentalFormTab"/>
+                                    <MenuItem text="📃 Quản lý hóa đơn" onAction="#openInvoiceTab"/>
+                                    <MenuItem text="🏨 Cấu trúc khách sạn" onAction="#openStructureTab"/>
+                                    <MenuItem text="📅 Đặt phòng" onAction="#openBookingConfirmationFormTab"/>
+                                    <MenuItem text="⏳ Gia hạn" onAction="#openRentalExtensionFormTab"/>
+                                    <MenuItem text="⏳ Sơ đồ khách sạn" onAction="#openMapTab"/>
+                                </items>
+                            </ContextMenu>
+                        </contextMenu>
+                    </Button>
+
+                    <!-- ACCOUNTANT Group -->
+                    <Button fx:id="accountantButton" text="💰" styleClass="dock-icon">
+                        <tooltip>
+                            <Tooltip text="Kế toán" showDelay="0.2s"/>
+                        </tooltip>
+                        <contextMenu>
+                            <ContextMenu fx:id="accountantMenu">
+                                <items>
+                                    <MenuItem text="📊 Báo cáo tháng" onAction="#openReportTab"/>
+                                    <MenuItem text="🔍 Tra cứu hóa đơn" onAction="#openInvoiceAccountantTab"/>
+                                    <MenuItem text="💸 Lương nhân viên" onAction="#openSalaryTab"/>
+                                </items>
+                            </ContextMenu>
+                        </contextMenu>
+                    </Button>
+
+                    <!-- Other Buttons -->
+                    <Button text="🏠" onAction="#openHomeTab" styleClass="dock-icon">
+                        <tooltip>
+                            <Tooltip text="Trang chủ" showDelay="0.2s"/>
+                        </tooltip>
+                    </Button>
+                    <Button text="🤖" onAction="#openChatbot" styleClass="dock-icon">
+                        <tooltip>
+                            <Tooltip text="Trợ lý AI" showDelay="0.2s"/>
+                        </tooltip>
+                    </Button>
+                    <Button text="🚪" onAction="#logout" styleClass="dock-icon">
+                        <tooltip>
+                            <Tooltip text="Đăng xuất" showDelay="0.2s"/>
+                        </tooltip>
+                    </Button>
+                </HBox>
+            </ScrollPane>
+        </HBox>
+    </bottom>
+</BorderPane>

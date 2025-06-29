@@ -1,279 +1,182 @@
-/* common.css */
-
-/* 1) Root and General Pane Styling */
 .root {
-    -fx-background-color: #f6f4f8;
+    -fx-background-color: #f5f5fa;
     -fx-font-family: "Segoe UI", Arial, sans-serif;
 }
 
-/* 2) SplitPane */
 .split-pane {
-    -fx-background-color: #f4f6f8;
+    -fx-background-color: #f5f5fa;
     -fx-padding: 0;
 }
 
 .split-pane *.split-pane-divider {
-    -fx-background-color: #dddddd;
+    -fx-background-color: #b39ddb;
     -fx-padding: 2;
 }
 
-/* 3) Left and Right Panes */
 .left-pane {
-    -fx-background-color: #f4f6f8; /* Consistent with login background */
+    -fx-background-color: #ffffff;
     -fx-padding: 16;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+    -fx-background-radius: 10;
 }
 
 .right-pane {
     -fx-background-color: #ffffff;
     -fx-padding: 16;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+    -fx-background-radius: 10;
 }
 
-/* 4) Headers (Labels with styleClass="header" or bold font) */
-.header, .label {
+.label {
     -fx-font-size: 18px;
     -fx-font-weight: bold;
-    -fx-text-fill: #333333;
-    -fx-padding: 8 0;
+    -fx-text-fill: #764BA2;
+    -fx-padding: 10 0;
 }
 
-/* 5) TextField, ComboBox, and DatePicker */
-.text-field, .combo-box, .date-picker {
+.column-header, .header {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 10 0;
+}
+
+.text-field, .combo-box, .date-picker, .text-area {
     -fx-background-color: #ffffff;
-    -fx-background-radius: 5;
-    -fx-border-color: #dddddd;
-    -fx-border-radius: 5;
-    -fx-padding: 8 12;
+    -fx-background-radius: 8;
+    -fx-border-color: #b39ddb;
+    -fx-border-radius: 8;
+    -fx-padding: 8 12; /* Giảm padding để bù chiều cao */
     -fx-font-size: 14px;
+    -fx-pref-height: 40;
+    -fx-min-height: 40;
+    -fx-max-height: 40;
+    -fx-pref-width: 150;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 1);
 }
 
-.text-field:focused, .combo-box:focused, .date-picker:focused {
-    -fx-border-color: #667eea; /* Blue from login.css */
-    -fx-effect: none;
+/* Điều chỉnh padding nội bộ của ComboBox */
+.combo-box .combo-box-base {
+    -fx-padding: 0 0 0 5; /* Giảm padding nội bộ */
+    -fx-background-insets: 0;
 }
 
-/* 6) Buttons */
+/* Điều chỉnh DatePicker */
+.date-picker .text-field {
+    -fx-padding: 0 5 0 5; /* Điều chỉnh padding nội bộ của TextField trong DatePicker */
+    -fx-background-insets: 0;
+}
+
+.date-picker .arrow-button {
+    -fx-padding: 0 5 0 0; /* Điều chỉnh padding của nút lịch */
+    -fx-background-insets: 0;
+}
+
+.text-field:focused, .combo-box:focused, .date-picker:focused, .text-area:focused {
+    -fx-border-color: #667EEA;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.3), 5, 0, 0, 1);
+}
+
 .button {
-    -fx-background-color: #667eea; /* Primary blue from login.css */
+    -fx-background-color: #667EEA;
     -fx-text-fill: #ffffff;
     -fx-font-size: 14px;
     -fx-font-weight: bold;
-    -fx-background-radius: 5;
+    -fx-background-radius: 8;
     -fx-padding: 10 20;
     -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
 }
 
 .button:hover {
-    -fx-background-color: #5a6dd0; /* Darker blue on hover */
+    -fx-background-color: #764BA2;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+    -fx-transition: all 0.2s ease-in-out;
 }
 
 .button:pressed {
-    -fx-background-color: #4a5bb5; /* Even darker when pressed */
+    -fx-background-color: #5a478e;
 }
 
-/* 7) TableView */
-.table-view {
-    -fx-background-color: #f6f4f8;
-    -fx-control-inner-background: #f6f4f8;
-    -fx-border-color: #dddddd;
-    -fx-border-radius: 5;
-    -fx-background-radius: 5;
-    -fx-font-size: 13px;
-}
-
-.table-view .column-header {
-    -fx-background-color: #667eea;
-    -fx-text-fill: #ffffff;
-    -fx-font-weight: bold;
-    -fx-padding: 8;
-}
-
-.table-view .table-cell {
-    -fx-padding: 8;
-    -fx-border-color: transparent #dddddd transparent transparent;
-}
-
-.table-view .table-row-cell:hover {
-    -fx-background-color: #e8f5e9; /* Light green on hover, inspired by structure.css */
-}
-
-.table-view .table-row-cell:selected {
-    -fx-background-color: #c8e6c9; /* Green selection, inspired by structure.css */
-}
-
-.table-view .filler {
-    -fx-background-color: #f6f4f8;
-}
-
-/* 8) ScrollPane */
-.scroll-pane {
-    -fx-background-color: #f6f4f8;
-    -fx-background: transparent;
-}
-
-.scroll-pane .viewport {
-    -fx-background-color: #f6f4f8;
-}
-
-/* 9) TreeView (for Structure.fxml) */
-.tree-view {
-    -fx-background-color: #e3f2fd; /* Light blue from structure.css */
-    -fx-font-size: 14px;
-}
-
-.tree-cell {
-    -fx-padding: 6;
-}
-
-.tree-cell.building {
-    -fx-text-fill: #2a5d34; /* Dark green from structure.css */
-    -fx-font-weight: bold;
-}
-
-.tree-cell.floor {
-    -fx-text-fill: #1e3a5f; /* Dark blue from structure.css */
-}
-
-.tree-cell.room {
-    -fx-text-fill: #444444; /* Gray from structure.css */
-}
-
-.tree-cell:hover {
-    -fx-background-color: #e8f5e9; /* Light green on hover */
-}
-
-.tree-cell:selected {
-    -fx-background-color: #c8e6c9; /* Green on selection */
-}
-
-/* 10) PieChart (for RevenueReport.fxml) */
-.chart-pie {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #dddddd;
-    -fx-border-radius: 5;
-}
-
-.chart-pie-label {
-    -fx-font-size: 12px;
-    -fx-font-weight: bold;
-}
-
-.default-color0.chart-pie { -fx-pie-color: #4caf50; }
-.default-color1.chart-pie { -fx-pie-color: #2196f3; }
-.default-color2.chart-pie { -fx-pie-color: #ff9800; }
-.default-color3.chart-pie { -fx-pie-color: #e91e63; }
-.default-color4.chart-pie { -fx-pie-color: #9c27b0; }
-.default-color5.chart-pie { -fx-pie-color: #ffc107; }
-.default-color6.chart-pie { -fx-pie-color: #00bcd4; }
-.default-color7.chart-pie { -fx-pie-color: #8bc34a; }
-
-/* 11) TitledPane (for Main.fxml sidebar) */
-.titled-pane {
-    -fx-background-color: #2c3e50; /* Dark blue-gray from Main.fxml */
-    -fx-text-fill: #ffffff;
-}
-
-.titled-pane > .title {
-    -fx-background-color: #2c3e50;
-    -fx-text-fill: #ffffff;
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-}
-
-.titled-pane > .content {
-    -fx-background-color: #34495e; /* Slightly lighter for content */
-}
-
-/* 12) Sidebar Buttons (for Main.fxml) */
-.sidebar-button {
-    -fx-background-color: #34495e;
-    -fx-text-fill: #ffffff;
-    -fx-font-size: 14px;
-    -fx-background-radius: 5;
-}
-
-.sidebar-button:hover {
-    -fx-background-color: #3e5f8a;
-}
-
-.submenu-button {
-    -fx-background-color: #465c71;
-    -fx-text-fill: #ffffff;
-    -fx-font-size: 13px;
-    -fx-background-radius: 5;
-}
-
-.submenu-button:hover {
-    -fx-background-color: #546e8f;
-}
-
-/* 14) Separator */
-.separator *.line {
-    -fx-border-color: #dddddd;
-    -fx-border-width: 1;
-}
-
-/* 15) TextArea */
-.text-area {
-    -fx-background-color: #ffffff;
-    -fx-background-radius: 5;
-    -fx-border-color: #dddddd;
-    -fx-border-radius: 5;
-    -fx-font-size: 14px;
-}
-
-.text-area:focused {
-    -fx-border-color: #667eea;
-}
-
-/* 16) Circle (for Structure.fxml room status) */
-.circle {
-    -fx-stroke-width: 1;
-}
-
-/* 17) HBox and VBox for Filter Bars */
-.hbox, .vbox {
-    -fx-spacing: 8;
-    -fx-padding: 8;
-}
-
-/* 18) Disabled State */
-.button:disabled, .combo-box:disabled, .text-field:disabled, .date-picker:disabled {
+.button:disabled {
+    -fx-background-color: #b39ddb;
     -fx-opacity: 0.6;
 }
 
-/* 19) Chatbot Specific Styling */
+.table-view {
+    -fx-background-color: #ffffff;
+    -fx-control-inner-background: #ffffff;
+    -fx-border-color: #b39ddb;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-font-size: 13px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 1);
+}
+
+.table-view .column-header {
+    -fx-background-color: #667EEA;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+    -fx-padding: 10;
+    -fx-background-radius: 5 5 0 0;
+}
+
+.table-view .table-cell {
+    -fx-padding: 10;
+    -fx-border-color: transparent #e0e0e0 transparent transparent;
+}
+
+.table-view .table-row-cell:hover {
+    -fx-background-color: #f3e7ff;
+}
+
+.table-view .table-row-cell:selected {
+    -fx-background-color: #e8eaff;
+}
+
+.table-view .filler {
+    -fx-background-color: #ffffff;
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background-radius: 10;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
 .list-view {
     -fx-background-color: #ffffff;
-    -fx-border-color: #dddddd;
-    -fx-border-radius: 5;
+    -fx-border-color: #b39ddb;
+    -fx-border-radius: 8;
     -fx-font-size: 14px;
 }
 
 .list-cell {
-    -fx-padding: 8;
+    -fx-padding: 10;
     -fx-background-color: #f9f9f9;
 }
 
 .list-cell:odd {
-    -fx-background-color: #f4f6f8;
+    -fx-background-color: #f5f5fa;
 }
 
-/* ➤ Khi dropdown mở ra: đánh dấu lựa chọn */
 .combo-box-popup .list-view .list-cell:selected {
-    -fx-background-color: #667eea;
+    -fx-background-color: #667EEA;
     -fx-text-fill: white;
 }
 
-/* ➤ Khi rê chuột trong dropdown */
 .combo-box-popup .list-view .list-cell:hover {
     -fx-background-color: #5a6dd0;
     -fx-text-fill: white;
 }
 
-/* ➤ Không tô nền cho ô hiển thị đã chọn */
 .combo-box .list-cell:selected {
     -fx-background-color: white;
-    -fx-text-fill: #333333; /* hoặc màu khác tuỳ bạn */
+    -fx-text-fill: #333333;
     -fx-font-weight: bold;
 }
