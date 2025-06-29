@@ -100,11 +100,15 @@ public class RevenueReportController {
     @FXML private PieChart    pieChart;
     @FXML private VBox detailContainer;
 
+    @FXML private Button btnExportMonthPdf;
+
     private final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
     private final String token = "";
 
     @FXML
     public void initialize() {
+
+        btnExportMonthPdf.setOnAction(e -> exportDetailPdf());
         // trong initialize()
         for(short y=2020; y<=2030; y++) cbYear.getItems().add(y);
         cbYear.getSelectionModel().select((short)2025);
@@ -143,6 +147,156 @@ public class RevenueReportController {
 
         tblReport.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
+
+    private void exportDetailPdf() {
+        // 1) Lấy mục đang chọn
+        ResponseRevenueReportDto sel = tblReport.getSelectionModel().getSelectedItem();
+        if (sel == null) {
+            showError("Chưa chọn tháng", "Bạn phải chọn 1 dòng trong báo cáo để xuất PDF chi tiết.");
+            return;
+        }
+
+        // 2) Chọn nơi lưu
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Lưu PDF chi tiết tháng " + sel.getMonth());
+        chooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("PDF Files", "*.pdf")
+        );
+        File pdfFile = chooser.showSaveDialog(tblReport.getScene().getWindow());
+        if (pdfFile == null) return;
+
+        try {
+            // 3) Snapshot PieChart của detail
+            WritableImage pieFx = pieChart.snapshot(new SnapshotParameters(), null);
+            File pieImgFile = File.createTempFile("detailPie", ".png");
+            ImageIO.write(SwingFXUtils.fromFXImage(pieFx, null), "png", pieImgFile);
+
+            // 4) Tạo PDF
+            PdfWriter writer = new PdfWriter(pdfFile);
+            PdfDocument pdf = new PdfDocument(writer);
+            Document doc = new Document(pdf);
+            doc.setMargins(36, 36, 36, 36);
+
+            // Font Unicode
+            String fontPath = Paths.get(getClass()
+                    .getResource("/com/example/frontendquanlikhachsan/assets/fonts/times.ttf").toURI()).toString();
+
+            PdfFont vnFont = PdfFontFactory.createFont(
+                    fontPath,
+                    PdfEncodings.IDENTITY_H,
+                    PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
+            );
+
+            // Header
+
+            pdf.addEventHandler(PdfDocumentEvent.END_PAGE, new IEventHandler() {
+                @Override
+                public void handleEvent(Event e) {
+                    PdfDocumentEvent ev = (PdfDocumentEvent) e;
+                    PdfPage page = ev.getPage();
+                    int pageNum = pdf.getPageNumber(page);
+                    new com.itextpdf.layout.Canvas(
+                            ev.getPage(), ev.getPage().getPageSize()
+                    ).showTextAligned(
+                            new Paragraph(String.format("Trang %d", pageNum))
+                                    .setFont(vnFont).setFontSize(9),
+                            ev.getPage().getPageSize().getWidth() / 2,
+                            20, TextAlignment.CENTER
+                    ).close();
+                }
+            });
+
+            // Thêm handler vẽ header (copyright) ở đầu mỗi trang
+            pdf.addEventHandler(PdfDocumentEvent.START_PAGE, new IEventHandler() {
+                @Override
+                public void handleEvent(Event e) {
+                    PdfDocumentEvent ev = (PdfDocumentEvent) e;
+                    PdfPage page = ev.getPage();
+                    Rectangle pageSize = page.getPageSize();
+                    // Tạo Canvas để vẽ
+                    new com.itextpdf.layout.Canvas(page, pageSize)
+                            .showTextAligned(
+                                    // Dùng createStyledParagraph nếu có định dạng bold, nhưng ở đây text thường cũng được
+                                    new Paragraph("© 2025 Công ty The Space. All rights reserved.")
+                                            .setFont(vnFont)
+                                            .setFontSize(9)
+                                            .setTextAlignment(TextAlignment.RIGHT),
+                                    // Vị trí: cách mép trên 20px, cách mép phải 36 (bằng right margin)
+                                    pageSize.getRight() - 36,
+                                    pageSize.getTop() - 20,
+                                    TextAlignment.RIGHT
+                            )
+                            .close();
+                }
+            });
+
+            doc.add(createStyledParagraph("Công Ty The Space", vnFont, 22f).setTextAlignment(TextAlignment.CENTER).setBold().setFontColor(
+                    ColorConstants.BLUE
+            ));
+            doc.add(new LineSeparator(new SolidLine(1f))
+                    .setMarginTop(5)
+                    .setMarginBottom(5)
+            );
+            doc.add(new Paragraph("BÁO CÁO CHI TIẾT THÁNG " + sel.getMonth() + " NĂM " + sel.getYear())
+                    .setFont(vnFont).setFontSize(18f).setBold().setTextAlignment(TextAlignment.CENTER));
+            doc.add(new Paragraph("Tổng doanh thu: " + String.format("%,.0f₫", sel.getTotalMonthRevenue()))
+                    .setFont(vnFont).setFontSize(14f).setTextAlignment(TextAlignment.CENTER));
+            doc.add(new Paragraph("*Báo cáo được tạo bởi hệ thống quản lí khách sạn Roomify").setFont(vnFont).setFontSize(10f).setItalic());
+            doc.add(new Paragraph("Ngày xuất: " +
+                    LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")))
+                    .setFont(vnFont).setFontSize(12f).setTextAlignment(TextAlignment.CENTER));
+
+            // Pie
+            doc.add(new Paragraph("I. Cơ cấu doanh thu theo loại phòng").setBold().setFont(vnFont));
+            Image pieImg = new Image(ImageDataFactory.create(pieImgFile.getAbsolutePath()))
+                    .scaleToFit(400, 300).setMarginBottom(10);
+            doc.add(pieImg);
+
+            // Bảng chi tiết
+            doc.add(new Paragraph("II. Bảng chi tiết doanh thu tháng " + sel.getMonth()).setBold().setFont(vnFont));
+            Table tbl = new Table(UnitValue.createPercentArray(new float[]{4, 4, 4}))
+                    .useAllAvailableWidth();
+            tbl.addHeaderCell(new Cell().add(new Paragraph("Loại phòng").setBold().setFont(vnFont)));
+            tbl.addHeaderCell(new Cell().add(new Paragraph("Doanh thu (₫)").setBold().setFont(vnFont)));
+            tbl.addHeaderCell(new Cell().add(new Paragraph("Tỷ lệ (%)").setBold().setFont(vnFont)));
+
+            // Lấy detail list
+            List<ResponseRevenueReportDetailDto> details = sel.getRevenueReportDetailIds().stream()
+                    .map(id -> {
+                        try {
+                            String j = ApiHttpClientCaller.call(
+                                    "revenue-report-detail/" + id, GET, null, token);
+                            return mapper.readValue(j, ResponseRevenueReportDetailDto.class);
+                        } catch (Exception ex) { return null; }
+                    })
+                    .filter(Objects::nonNull)
+                    .toList();
+
+            double total = details.stream()
+                    .mapToDouble(ResponseRevenueReportDetailDto::getTotalRoomRevenue)
+                    .sum();
+
+            // Fill rows
+            for (var d : details) {
+                tbl.addCell(new Cell().add(new Paragraph(d.getRoomTypeName())));
+                tbl.addCell(new Cell().add(new Paragraph(String.format("%,.0f", d.getTotalRoomRevenue()))));
+                double pct = total == 0 ? 0 : d.getTotalRoomRevenue() / total * 100;
+                tbl.addCell(new Cell().add(new Paragraph(String.format("%.1f%%", pct))));
+            }
+            // Dòng tổng
+            tbl.addCell(new Cell().add(new Paragraph("Tổng").setBold().setFont(vnFont)));
+            tbl.addCell(new Cell().add(new Paragraph(String.format("%,.0f₫", total)).setBold().setFont(vnFont)));
+            tbl.addCell(new Cell().add(new Paragraph("100%").setBold().setFont(vnFont)));
+
+            doc.add(tbl.setFont(vnFont));
+
+            doc.close();
+            showInfo("Thành công", "Đã xuất PDF chi tiết tháng " + sel.getMonth());
+        } catch (Exception e) {
+            showError("Lỗi khi tạo PDF chi tiết", e.getMessage());
+        }
+    }
+
 
     private String buildCurrentYear(){
         var year = cbYear.getValue();
@@ -556,8 +710,8 @@ public class RevenueReportController {
             }
 
             doc.add(createStyledParagraph("Công Ty The Space", vnFont, 22f).setTextAlignment(TextAlignment.CENTER).setBold().setFontColor(
-                    ColorConstants.BLUE
-            ));
+                            ColorConstants.BLUE
+                    ));
             doc.add(new LineSeparator(new SolidLine(1f))
                     .setMarginTop(5)
                     .setMarginBottom(5)

@@ -90,6 +90,7 @@ public class ChatbotController {
             knowledgeSections.put("rentalExtensions", KnowledgeSectionBuilder.buildRentalExtensionForms(mapper));
             knowledgeSections.put("invoiceDetails", KnowledgeSectionBuilder.buildInvoiceDetails(mapper));
             knowledgeSections.put("revenueDetails", KnowledgeSectionBuilder.buildRevenueReportDetails(mapper));
+
         } catch (Exception e) {
             e.printStackTrace();
         }

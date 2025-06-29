@@ -11,9 +11,9 @@
 <SplitPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="com.example.frontendquanlikhachsan.controllers.accountant.RevenueReportController"
-
+           stylesheets="@../../assets/css/ModernHotelApp.css"
            prefWidth="800" prefHeight="600"
-           dividerPositions="0.45">  <!-- 45% cho left pane -->
+           dividerPositions="0.65">  <!-- 45% cho left pane -->
 <!--     stylesheets="@../../assets/css/View.css"-->
     <items>
         <!-- LEFT PANE -->
@@ -38,20 +38,19 @@
                     VBox.vgrow="ALWAYS">
                 <content>
                     <VBox spacing="8">
-                        <HBox spacing="20">
-                            <Label text="Cơ cấu doanh thu theo tháng" styleClass="subheader"/>
-                            <BarChart fx:id="barChart"
-                                      prefHeight="300"
-                                      prefWidth="600">
-                                <xAxis>
-                                    <CategoryAxis label="Tháng"/>
-                                </xAxis>
-                                <yAxis>
-                                    <NumberAxis label="Doanh thu"/>
-                                </yAxis>
-                            </BarChart>
 
-                        </HBox>
+                        <Label text="Cơ cấu doanh thu theo tháng" styleClass="subheader"/>
+
+                        <BarChart fx:id="barChart"
+                                  prefHeight="300"
+                                  prefWidth="600">
+                            <xAxis>
+                                <CategoryAxis label="Tháng"/>
+                            </xAxis>
+                            <yAxis>
+                                <NumberAxis label="Doanh thu"/>
+                            </yAxis>
+                        </BarChart>
 
 
                         <Label text="Cơ cấu doanh thu theo loại phòng" styleClass="subheader"/>
@@ -83,6 +82,7 @@
                 <Insets top="16" right="16" bottom="16" left="16"/>
             </padding>
             <Label text="Báo cáo chi tiết" styleClass="header"/>
+            <Button fx:id="btnExportMonthPdf" text="Xuất PDF tháng"/>
             <Pane prefHeight="250">
                 <PieChart fx:id="pieChart" prefWidth="480" prefHeight="240"/>
             </Pane>
