@@ -1,96 +1,115 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.*?>
 
 <VBox xmlns="http://javafx.com/javafx/23.0.1"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.example.frontendquanlikhachsan.controllers.HomeController"
       stylesheets="@../assets/css/ModernHome.css"
-      prefWidth="900" prefHeight="550" spacing="20" styleClass="content">
+      spacing="30" alignment="TOP_CENTER" prefWidth="900" prefHeight="600" styleClass="root">
 
-    <!-- Dashboard Cards -->
-    <HBox spacing="20" styleClass="dashboard-grid">
+    <!-- Dashboard Section -->
+    <HBox spacing="25" styleClass="dashboard-grid" alignment="CENTER">
         <VBox styleClass="card" spacing="10">
-            <HBox spacing="15">
-                <Label text="🛌" styleClass="card-icon" style="-fx-background-color: linear-gradient(to bottom right, #667eea, #764ba2);"/>
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <StackPane prefWidth="40" prefHeight="40" style="-fx-background-radius: 20; -fx-background-color: linear-gradient(to right, #667eea, #764ba2); -fx-alignment: center;">
+                    <Label text="🛌" style="-fx-font-size: 20px; -fx-text-fill: white;" />
+                </StackPane>
                 <Label text="Tình trạng phòng" styleClass="card-title"/>
             </HBox>
             <Label text="128" styleClass="card-value"/>
             <Label text="Tổng số phòng khả dụng" styleClass="card-subtitle"/>
         </VBox>
+
         <VBox styleClass="card" spacing="10">
-            <HBox spacing="15">
-                <Label text="💰" styleClass="card-icon" style="-fx-background-color: linear-gradient(to bottom right, #11998e, #38ef7d);"/>
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <StackPane prefWidth="40" prefHeight="40"
+                           style="-fx-background-radius: 20; -fx-background-color: linear-gradient(to right, #11998e, #38ef7d); -fx-alignment: center;">
+                    <Label text="💰" style="-fx-font-size: 20px; -fx-text-fill: white;" />
+                </StackPane>
                 <Label text="Doanh thu" styleClass="card-title"/>
             </HBox>
             <Label text="2.5M" styleClass="card-value"/>
             <Label text="VNĐ trong tháng này" styleClass="card-subtitle"/>
         </VBox>
+
         <VBox styleClass="card" spacing="10">
-            <HBox spacing="15">
-                <Label text="📅" styleClass="card-icon" style="-fx-background-color: linear-gradient(to bottom right, #ff6b6b, #ffa726);"/>
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <StackPane prefWidth="40" prefHeight="40"
+                           style="-fx-background-radius: 20; -fx-background-color: linear-gradient(to right, #ff6b6b, #ffa726); -fx-alignment: center;">
+                    <Label text="📅" style="-fx-font-size: 20px; -fx-text-fill: white;" />
+                </StackPane>
                 <Label text="Đặt phòng" styleClass="card-title"/>
             </HBox>
             <Label text="89" styleClass="card-value"/>
             <Label text="Đặt phòng hôm nay" styleClass="card-subtitle"/>
         </VBox>
+
         <VBox styleClass="card" spacing="10">
-            <HBox spacing="15">
-                <Label text="👥" styleClass="card-icon" style="-fx-background-color: linear-gradient(to bottom right, #a8edea, #fed6e3);"/>
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <StackPane prefWidth="40" prefHeight="40"
+                           style="-fx-background-radius: 20; -fx-background-color: linear-gradient(to right, #a8edea, #fed6e3); -fx-alignment: center;">
+                    <Label text="👥" style="-fx-font-size: 20px; -fx-text-fill: white;" />
+                </StackPane>
                 <Label text="Nhân viên" styleClass="card-title"/>
             </HBox>
             <Label text="45" styleClass="card-value"/>
-            <Label text="Nhân viên đang làm việc" styleClass="card-subtitle"/>
+            <Label text="Số nhân viên hiện tại" styleClass="card-subtitle"/>
+        </VBox>
+        <VBox styleClass="card" spacing="10">
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <StackPane prefWidth="40" prefHeight="40"
+                           style="-fx-background-radius: 20; -fx-background-color: linear-gradient(to right, #fec194, #ff0061); -fx-alignment: center;">
+                    <Label text="👦" style="-fx-font-size: 20px; -fx-text-fill: white;" />
+                </StackPane>
+                <Label text="Khách lưu trú" styleClass="card-title"/>
+            </HBox>
+            <Label text="45" styleClass="card-value"/>
+            <Label text="Số khách đang ở" styleClass="card-subtitle"/>
         </VBox>
     </HBox>
 
-    <!-- User Info -->
-    <VBox styleClass="main-container" spacing="15">
-        <Label text="Hệ thống quản lý khách sạn" styleClass="title-text"/>
+    <!-- Thông tin người dùng -->
+    <VBox spacing="20" alignment="TOP_CENTER">
+        <Label text="HỆ THỐNG QUẢN LÝ KHÁCH SẠN ROOMIFY" styleClass="title-text"/>
         <Label fx:id="helloLabel" text="Xin chào, [Vai trò] [Tên]" styleClass="sub-title-text"/>
-        <HBox styleClass="user-card" spacing="20">
+
+        <HBox spacing="30" styleClass="user-card" alignment="CENTER">
             <ImageView fx:id="avatarImageView" fitHeight="100" fitWidth="100" preserveRatio="true" styleClass="avatar-img"/>
-            <VBox spacing="8">
-                <HBox spacing="10">
-                    <Label text="Mã nhân viên:" styleClass="info-label"/>
-                    <Label fx:id="staffIdLabel" styleClass="info-value"/>
-                </HBox>
-                <HBox spacing="10">
-                    <Label text="Tên nhân viên:" styleClass="info-label"/>
-                    <Label fx:id="staffNameLabel" styleClass="info-value"/>
-                </HBox>
-                <HBox spacing="10">
-                    <Label text="CCCD:" styleClass="info-label"/>
-                    <Label fx:id="staffIdentifyNumberLabel" styleClass="info-value"/>
-                </HBox>
-                <HBox spacing="10">
-                    <Label text="Email:" styleClass="info-label"/>
-                    <Label fx:id="staffEmailLabel" styleClass="info-value"/>
-                </HBox>
-                <HBox spacing="10">
-                    <Label text="Quyền hạn:" styleClass="info-label"/>
-                    <Label fx:id="staffRoleLabel" styleClass="info-value"/>
-                </HBox>
-                <HBox spacing="10">
-                    <Label text="Địa chỉ:" styleClass="info-label"/>
-                    <Label fx:id="staffAddressLabel" styleClass="info-value"/>
-                </HBox>
-                <HBox spacing="10">
-                    <Label text="Tuổi:" styleClass="info-label"/>
-                    <Label fx:id="staffAgeLabel" styleClass="info-value"/>
-                </HBox>
-                <HBox spacing="10">
-                    <Label text="Giới tính:" styleClass="info-label"/>
-                    <Label fx:id="staffGenderLabel" styleClass="info-value"/>
-                </HBox>
-                <HBox spacing="10">
-                    <Label text="Vị trí:" styleClass="info-label"/>
-                    <Label fx:id="staffPositionLabel" styleClass="info-value"/>
-                </HBox>
-            </VBox>
+            <GridPane hgap="15" vgap="8">
+                <columnConstraints>
+                    <ColumnConstraints halignment="RIGHT"/>
+                    <ColumnConstraints halignment="LEFT"/>
+                </columnConstraints>
+
+                <Label text="🆔 Mã NV:" styleClass="info-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                <Label fx:id="staffIdLabel" styleClass="info-value" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                <Label text="👤 Tên:" styleClass="info-label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                <Label fx:id="staffNameLabel" styleClass="info-value" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                <Label text="📇 CCCD:" styleClass="info-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                <Label fx:id="staffIdentifyNumberLabel" styleClass="info-value" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                <Label text="📧 Email:" styleClass="info-label" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                <Label fx:id="staffEmailLabel" styleClass="info-value" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                <Label text="🔑 Quyền:" styleClass="info-label" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                <Label fx:id="staffRoleLabel" styleClass="info-value" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+                <Label text="🏠 Địa chỉ:" styleClass="info-label" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+                <Label fx:id="staffAddressLabel" styleClass="info-value" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+                <Label text="🎂 Tuổi:" styleClass="info-label" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+                <Label fx:id="staffAgeLabel" styleClass="info-value" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+
+                <Label text="⚧ Giới tính:" styleClass="info-label" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
+                <Label fx:id="staffGenderLabel" styleClass="info-value" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+
+                <Label text="📌 Vị trí:" styleClass="info-label" GridPane.rowIndex="8" GridPane.columnIndex="0"/>
+                <Label fx:id="staffPositionLabel" styleClass="info-value" GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+            </GridPane>
         </HBox>
     </VBox>
 </VBox>
