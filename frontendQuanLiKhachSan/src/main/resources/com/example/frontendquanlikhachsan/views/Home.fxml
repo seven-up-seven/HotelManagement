@@ -40,10 +40,10 @@
                            style="-fx-background-radius: 20; -fx-background-color: linear-gradient(to right, #ff6b6b, #ffa726); -fx-alignment: center;">
                     <Label text="📅" style="-fx-font-size: 20px; -fx-text-fill: white;" />
                 </StackPane>
-                <Label text="Đặt phòng" styleClass="card-title"/>
+                <Label text="Thuê phòng" styleClass="card-title"/>
             </HBox>
             <Label fx:id="todayRentedRoomLabel" text="89" styleClass="card-value"/>
-            <Label text="Đặt phòng hôm nay" styleClass="card-subtitle"/>
+            <Label text="Thuê phòng hôm nay" styleClass="card-subtitle"/>
         </VBox>
 
         <VBox styleClass="card" spacing="10">
