@@ -1135,11 +1135,20 @@ public class RevenueReportController {
         chart2.plot(pieData);
 
         // 7. Lưu & thông báo
-        try (FileOutputStream out = new FileOutputStream("report_" + year + ".xlsx")) {
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Lưu Báo Cáo Excel");
+        chooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Excel Files", "*.xlsx")
+        );
+        chooser.setInitialFileName("report_" + year + ".xlsx");
+        File excelFile = chooser.showSaveDialog(cbYear.getScene().getWindow());
+        if (excelFile == null) return;
+
+        try (FileOutputStream out = new FileOutputStream(excelFile)) {
             wb.write(out);
         }
         wb.close();
-        showInfo("Thành công", "Đã xuất Excel: report_" + year + ".xlsx");
+        showInfo("Thành công", "Đã xuất Excel: " + excelFile.getName());
     }
 
     private void loadReportsByYear(Short year) {
